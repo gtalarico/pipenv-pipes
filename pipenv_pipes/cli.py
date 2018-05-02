@@ -24,36 +24,41 @@ from .utils import (
     has_pipfile,
 )
 
-# CLI Constants
+if not os.path.exists(PIPENV_HOME):
+    msg = ('Could not find Pipenv Environments location. [{}] \n'
+            'If you are using a non-default location you will need to '
+            'add the path to $WORKON_HOME.'.format(PIPENV_HOME))
+    click.echo(click.style(msg, fg='red'))
+    sys.exit(1)
+
+if PIPENV_ACTIVE:
+    msg = ("Pipenv Shell is already active. \n"
+            "Use 'exit' to close the shell before starting a new one.")
+    click.echo(click.style(msg, fg='red'))
+    sys.exit(1)
+
+if VENV_IS_ACTIVE:
+    msg = ("A Virtual Environemnt is already active.\n"
+            "Use 'deactivate' to close disable the enviroment "
+            "before starting a new one.")
+    click.echo(click.style(msg, fg='red'))
+    sys.exit(1)
+
+if PIPENV_VENV_IN_PROJECT:
+    msg = 'PIPENV_VENV_IN_PROJECT is not supported at this time'
+    click.echo(click.style(msg, fg='red'))
+    sys.exit(1)
+
+# Set Environments
 ENVIRONMENTS = get_environments(PIPENV_HOME)
 NUM_ENVIRONMENTS = len(ENVIRONMENTS)
+if not ENVIRONMENTS:
+    click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
+    sys.exit(1)
 
 
 def entry():
     """ Pipes Entry Point """
-
-    if PIPENV_ACTIVE:
-        msg = ("Pipenv Shell is already active. \n"
-               "Use 'exit' to close the shell before starting a new one.")
-        click.echo(click.style(msg, fg='red'))
-        return
-
-    if VENV_IS_ACTIVE:
-        msg = ("A Virtual Environemnt is already active.\n"
-               "Use 'deactivate' to close disable the enviroment "
-               "before starting a new one.")
-        click.echo(click.style(msg, fg='red'))
-        return
-
-    if PIPENV_VENV_IN_PROJECT:
-        msg = 'PIPENV_VENV_IN_PROJECT is not supported at this time'
-        click.echo(click.style(msg, fg='red'))
-        return
-
-    if not ENVIRONMENTS:
-        click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
-        return
-
     pipes()
 
 
