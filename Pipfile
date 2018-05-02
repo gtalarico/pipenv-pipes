@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+"e1839a8" = {path = ".", editable = true}
 
 [dev-packages]
 twine = "*"
@@ -13,6 +14,8 @@ click = "*"
 "e1839a8" = {path = ".", editable = true}
 sphinx = "*"
 coverage = "*"
+tox = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"
