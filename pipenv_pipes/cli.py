@@ -105,7 +105,6 @@ def go(ctx, index, query, verbose):
     if index:
         project = PROJECTS[index]
         _launch_env(project)
-
     matches = get_matches(PROJECTS, query)
     _validate_one_match(query, matches)
     project = matches[0]
@@ -123,7 +122,7 @@ def set(query, project_dir):
 
     click.echo(
         "Enviroment: '{}' \nSet to directory '{}'".format(project.envpath,
-                                                          project_dir))
+                                                            project_dir))
 
 
 def _launch_env(project):
@@ -177,15 +176,19 @@ def _validate_one_match(query, matches):
 
     # No Matches
     if not matches:
-        err_msg = click.style("No projec matches for query '{}'", fg='red')
+        err_msg = click.style(
+            "No projec matches for query '{}'\n".format(query), fg='red')
         click.echo(err_msg)
+        _print_project_list(PROJECTS, verbose=False)
+        sys.exit(1)
 
-    # One + Matches
+    # 2+ Matches
     elif len(matches) > 1:
         msg = ("Query '{}' matches more than one project."
                "Use a more sepecific name.\n".format(query))
         click.echo(click.style(msg, fg='red'), err=True)
         _print_project_list(matches, verbose=False)
+        sys.exit(1)
 
     else:
         return True
