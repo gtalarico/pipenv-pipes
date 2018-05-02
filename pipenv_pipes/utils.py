@@ -40,7 +40,7 @@ def get_projects(pipenv_home):
 def get_matches(projects, query):
     matches = []
     for project in projects:
-        if query.lower() in project.name.lower():
+        if query.lower() in project.envname.lower():
             matches.append(project)
     return matches
 
