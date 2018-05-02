@@ -6,16 +6,16 @@ import os
 import re
 from collections import namedtuple
 
-Project = namedtuple('Project', ['name', 'envname', 'envpath'])
+Environment = namedtuple('Environment', ['project_name', 'envname', 'envpath'])
 
 
-def get_project_name(folder_name):
+def get_env_name(folder_name):
     PIPENV_FOLDER_PAT = r'^(.+)-\w{8}$'
     match = re.search(PIPENV_FOLDER_PAT, folder_name)
     return None if not match else match.group(1)
 
 
-def get_projects(pipenv_home):
+def get_environments(pipenv_home):
     """Get Projects
 
     Args:
@@ -24,17 +24,17 @@ def get_projects(pipenv_home):
     Returns:
         (List[Project]): List of Projects
     """
-    projects = []
+    environments = []
     for folder_name in sorted(os.listdir(pipenv_home)):
         folder_path = os.path.join(pipenv_home, folder_name)
-        project_name = get_project_name(folder_name)
+        project_name = get_env_name(folder_name)
         if not project_name:
             continue
-        project = Project(name=project_name,
-                          envpath=folder_path,
-                          envname=folder_name)
-        projects.append(project)
-    return projects
+        environment = Environment(project_name=project_name,
+                                  envpath=folder_path,
+                                  envname=folder_name)
+        environments.append(environment)
+    return environments
 
 
 def get_matches(projects, query):
@@ -63,8 +63,14 @@ def set_project_dir(envpath, project_dir):
     with open(project_file, 'w') as fp:
         return fp.write(project_dir)
 
-def get_envname_index(envname):
+def get_envname_index(query):
     """ Index should be passed as 1: """
     pat = r'(\d+):$'
-    match = re.match(pat, envname)
+    match = re.match(pat, query)
     return None if not match else int(match.group(1))
+
+
+def has_pipfile(folderpath):
+    for filename in os.listdir(folderpath):
+        if 'pipfile' in filename.lower():
+            return True

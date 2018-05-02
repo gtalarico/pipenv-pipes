@@ -16,16 +16,17 @@ from .environment import (
 )
 
 from .utils import (
-    get_projects,
+    get_environments,
     get_matches,
     get_project_dir,
     set_project_dir,
     get_envname_index,
+    has_pipfile,
 )
 
 # CLI Constants
-PROJECTS = get_projects(PIPENV_HOME)
-NUM_PROJECTS = len(PROJECTS)
+ENVIRONMENTS = get_environments(PIPENV_HOME)
+NUM_ENVIRONMENTS = len(ENVIRONMENTS)
 
 
 def entry():
@@ -49,8 +50,8 @@ def entry():
         click.echo(click.style(msg, fg='red'))
         return
 
-    if not PROJECTS:
-        click.echo('No pipenv projects found in {}'.format(PIPENV_HOME))
+    if not ENVIRONMENTS:
+        click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
         return
 
     pipes()
@@ -59,9 +60,11 @@ def entry():
 # @click.group(invoke_without_command=True)
 @click.command()
 @click.argument('envname', required=False)
-@click.option('--list', '-l', 'list_', is_flag=True, help='List Pipenv Projects')
-@click.option('--set', '-s', 'set_', is_flag=True, help='Set Project Directory for the Enviroment')
-@click.option('--setdir', '-d', 'setdir', help='Project Directory',
+@click.option('--list', '-l', 'list_', is_flag=True,
+              help='List Pipenv Projects')
+@click.option('--set', '-s', 'set_', is_flag=True,
+              help='Set Project Directory for the Enviroment')
+@click.option('--dir', '-d', 'setdir', help='Set Project Directory Target',
               default='.', type=click.Path(exists=True, resolve_path=True))
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
 @click.pass_context
@@ -69,7 +72,7 @@ def pipes(ctx, envname, list_, set_, setdir, verbose):
     """ Pipenv Environment Switcher """
 
     if not envname or list_:
-        _print_project_list(projects=PROJECTS, verbose=verbose)
+        _print_project_list(environments=ENVIRONMENTS, verbose=verbose)
         err = "\nUse pipes --help for usage"
         click.echo(err, err=True)
         ctx.exit()
@@ -77,11 +80,12 @@ def pipes(ctx, envname, list_, set_, setdir, verbose):
     # Check if using index and if yes launch
     project_index = get_envname_index(envname)
     if project_index:
-        project = PROJECTS[project_index]
+        project = ENVIRONMENTS[project_index]
 
-    # Envname check
-    matches = get_matches(PROJECTS, envname)
-    project = ensure_one_match(envname, matches)
+    else:
+        # Envname check
+        matches = get_matches(ENVIRONMENTS, envname)
+        project = ensure_one_match(envname, matches)
 
     if not set_:
         launch_env(project)
@@ -116,6 +120,17 @@ def launch_env(project):
     click.echo("Environment is '{}'".format(project.envpath))
 
     if click.confirm('Activate?', default=True):
+
+        if not has_pipfile(project_dir):
+            msg = (
+                "Target Project Directory does not appear "
+                "to be initialized with Pipenv.\n"
+                "Do you want to cd into the target directory and activate "
+                "'pipenv shell' anyway? \n"
+                "(This could result in a new created pipenv environment!)")
+            if not click.confirm(click.style(msg, fg='red'), default=False):
+                sys.exit(0)
+
         env = os.environ.copy()
         env['PROMPT'] = '({}){}'.format(project.envname, PROMPT)
         os.chdir(project_dir)
@@ -127,18 +142,18 @@ def launch_env(project):
     sys.exit(0)
 
 
-def _print_project_list(projects, verbose):
+def _print_project_list(environments, verbose):
     """ Prints Enviroments List """
     header = '[ Pipenv Enviroments ] '
     if verbose:
         header += ' {}'.format(PIPENV_HOME)
     click.echo(click.style(header, fg='white', bold=True))
 
-    for index, project in enumerate(projects):
-        project_dir = get_project_dir(project)
+    for index, environment in enumerate(environments):
+        project_dir = get_project_dir(environment)
         has_project_dir = bool(project_dir)
-        name = click.style(project.envname, fg='yellow')
-        path = click.style(project.envpath, fg='blue')
+        name = click.style(environment.envname, fg='yellow')
+        path = click.style(environment.envpath, fg='blue')
         index = click.style(str(index), fg='red')
 
         entry = ' {}: {}'.format(index, name)
@@ -185,7 +200,7 @@ def ensure_one_match(query, matches):
         err_msg = click.style(
             "No projec matches for query '{}'\n".format(query), fg='red')
         click.echo(err_msg)
-        _print_project_list(PROJECTS, verbose=False)
+        _print_project_list(environments=ENVIRONMENTS, verbose=False)
         sys.exit(1)
 
     # 2+ Matches
@@ -193,7 +208,7 @@ def ensure_one_match(query, matches):
         msg = ("Query '{}' matches more than one project (shown below)."
                "Try using a more sepecific query term.\n".format(query))
         click.echo(click.style(msg, fg='red'), err=True)
-        _print_project_list(matches, verbose=False)
+        _print_project_list(environments=matches, verbose=False)
         sys.exit(1)
 
     else:
