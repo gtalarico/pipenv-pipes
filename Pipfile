@@ -11,6 +11,8 @@ pytest = "*"
 "bump2version" = "*"
 click = "*"
 "e1839a8" = {path = ".", editable = true}
+sphinx = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.6"
