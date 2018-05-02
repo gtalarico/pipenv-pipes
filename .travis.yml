@@ -25,5 +25,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: gtalarico/pipenv_pipes
+    repo: gtalarico/pipenv-pipes
     python: 3.6
