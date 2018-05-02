@@ -5,12 +5,15 @@ Pipes - Pipenv Environment Switcher
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
         :target: https://pypi.python.org/pypi/pipenv_pipes
+        :alt: Pypi Badge
 
 .. image:: https://img.shields.io/travis/gtalarico/pipenv_pipes.svg
         :target: https://travis-ci.org/gtalarico/pipenv_pipes
+        :alt: Traves CI Badge
 
-.. image:: https://img.shields.io/codecov/gtalarico/pipenv_pipes.svg
+.. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg  
         :target: https://codecov.io/gh/gtalarico/pipenv-pipes
+        :alt: Codecov Badge
 
 .. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=latest
         :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
