@@ -8,6 +8,7 @@ History
 ------------------
 
 * Bug Fixes
+* Updated PipFile
 
 
 0.1.1 (2018-05-02)
