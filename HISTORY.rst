@@ -4,6 +4,13 @@ History
 
 
 
+0.3.0 (2018-05-02)
+------------------
+
+* Improved Set/Unset CLI
+* Improved validation for Project Directories
+
+
 0.2.0 (2018-05-02)
 ------------------
 
