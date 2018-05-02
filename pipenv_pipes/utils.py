@@ -10,8 +10,8 @@ Project = namedtuple('Project', ['name', 'envname', 'envpath'])
 
 
 def get_project_name(folder_name):
-    pat = r'(\w+)-\w{8}'
-    match = re.search(r'(\w+)-\w{8}', folder_name)
+    PIPENV_FOLDER_PAT = r'^(.+)-\w{8}$'
+    match = re.search(PIPENV_FOLDER_PAT, folder_name)
     return None if not match else match.group(1)
 
 
