@@ -52,27 +52,27 @@ def entry():
         click.echo('No pipenv projects found in {}'.format(PIPENV_HOME))
         return
 
-    pipenvgo()
+    pipes()
 
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def pipenvgo(ctx):
-    """ PipenvGo Project Switcher """
+def pipes(ctx):
+    """ pipes Project Switcher """
     if not ctx.invoked_subcommand:
         ctx.invoke(list_envs)
-        err = "\nUse pipenvgo --help for usage"
+        err = "\nUse pipes --help for usage"
         click.echo(err, err=True)
 
 
-@pipenvgo.command(name='list')
+@pipes.command(name='list')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
 def list_envs(verbose):
     """ List Pipenv Projects """
     _print_project_list(projects=PROJECTS, verbose=verbose)
 
 
-@pipenvgo.command(name='go')
+@pipes.command(name='go')
 @click.option(
     '--index', '-i',
     required=False,
@@ -92,7 +92,7 @@ def go(ctx, index, query, verbose):
     # Check if it has index or query
     if not index and not query:
         # ctx.invoke(list_envs)
-        raise click.UsageError('project or index are required')
+        raise click.UsageError('EnvName or index are required')
 
     # Both Options, not allowed
     if index and query:
@@ -111,7 +111,7 @@ def go(ctx, index, query, verbose):
     _launch_env(project)
 
 
-@pipenvgo.command()
+@pipes.command()
 @click.argument('query', metavar='envname')
 @click.argument('project_dir', type=click.Path(exists=True, resolve_path=True))
 def set(query, project_dir):
@@ -130,9 +130,9 @@ def _launch_env(project):
     try:
         project_dir = get_project_dir(project)
     except IOError:
-        msg = ("Pipenv enviroment does not have set a project path.\n"
-               "Use 'pipenvgo set [envname] [projectpath]' "
-               "to set the project directory for this enviroment")
+        msg = ("Pipenv enviroment '{env}' does not have set a project path.\n"
+               "Use 'pipes set' to set the directory for this enviroment\n\n"
+               "$ pipes set {env} [projectpath]".format(env=project.envname))
         click.echo(click.style(msg, fg='red'), err=True)
         sys.exit()
 
@@ -146,7 +146,7 @@ def _launch_env(project):
         out = subprocess.call(
             'cd {dir} & pipenv shell'.format(dir=project_dir),
             shell=True, env=env)
-        click.echo('Terminating PipenvGo Shell...')
+        click.echo('Terminating pipes Shell...')
     sys.exit()
 
 
