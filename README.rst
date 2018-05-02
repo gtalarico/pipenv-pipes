@@ -35,20 +35,23 @@ Usage
 
 * Show Available Pipenv Environments
 
-``pipes list``
+``pipes``
 
 * Link Project Directory to Pipenv Environment (this adds a .project file to your environment folder)
 
-``pipes set projectname /path/to/project``
+``pipes projectbame --set --dir /path/to/project``
 
 * Go to directory and Activate Pipenv Shell
 
-``pipes go projectname``
+``pipes projectname``
 
 Todo
 -------
 
-* Simplify CLI Api (pipes only)
+* Remove unnecessary --set flag 
+* Add cd-only flag (don't activate shell) 
+* Add tests
+* Documentation 
 
 
 Credits
