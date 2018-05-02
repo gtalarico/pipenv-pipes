@@ -184,8 +184,8 @@ def _validate_one_match(query, matches):
 
     # 2+ Matches
     elif len(matches) > 1:
-        msg = ("Query '{}' matches more than one project."
-               "Use a more sepecific name.\n".format(query))
+        msg = ("Query '{}' matches more than one project (shown below)."
+               "Try using a more sepecific query term.\n".format(query))
         click.echo(click.style(msg, fg='red'), err=True)
         _print_project_list(matches, verbose=False)
         sys.exit(1)
