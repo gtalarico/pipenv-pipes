@@ -19,7 +19,8 @@ from .utils import (
     get_projects,
     get_matches,
     get_project_dir,
-    set_project_dir
+    set_project_dir,
+    get_envname_index,
 )
 
 # CLI Constants
@@ -55,87 +56,62 @@ def entry():
     pipes()
 
 
-@click.group(invoke_without_command=True)
+# @click.group(invoke_without_command=True)
+@click.command()
+@click.argument('envname', required=False)
+@click.option('--list', '-l', 'list_', is_flag=True, help='List Pipenv Projects')
+@click.option('--set', '-s', 'set_', is_flag=True, help='Set Project Directory for the Enviroment')
+@click.option('--setdir', '-d', 'setdir', help='Project Directory',
+              default='.', type=click.Path(exists=True, resolve_path=True))
+@click.option('--verbose', '-v', is_flag=True, help='Verbose')
 @click.pass_context
-def pipes(ctx):
-    """ pipes Project Switcher """
-    if not ctx.invoked_subcommand:
-        ctx.invoke(list_envs)
+def pipes(ctx, envname, list_, set_, setdir, verbose):
+    """ Pipenv Environment Switcher """
+
+    if not envname or list_:
+        _print_project_list(projects=PROJECTS, verbose=verbose)
         err = "\nUse pipes --help for usage"
         click.echo(err, err=True)
+        ctx.exit()
+
+    # Check if using index and if yes launch
+    project_index = get_envname_index(envname)
+    if project_index:
+        project = PROJECTS[project_index]
+
+    # Envname check
+    matches = get_matches(PROJECTS, envname)
+    project = ensure_one_match(envname, matches)
+
+    if not set_:
+        launch_env(project)
+    else:
+        set_env_dir(
+            envname=project.envname,
+            envpath=project.envpath,
+            setdir=setdir)
 
 
-@pipes.command(name='list')
-@click.option('--verbose', '-v', is_flag=True, help='Verbose')
-def list_envs(verbose):
-    """ List Pipenv Projects """
-    _print_project_list(projects=PROJECTS, verbose=verbose)
+def set_env_dir(envname, envpath, setdir):
+    click.echo("Setting Environment '{}'".format(envname))
+    click.echo("To Project Directory '{}'".format(setdir))
+
+    if click.confirm('Confirm?', default=True):
+        set_project_dir(envpath, setdir)
+
+        msg = ("Project Direectory Set.\n"
+               "To modify the directory edit the '.project' in the enviroment"
+               "or run the 'pipes --set' command again")
+
+        click.echo(msg)
+
+    sys.exit(0)
 
 
-@pipes.command(name='go')
-@click.option(
-    '--index', '-i',
-    required=False,
-    help='Index of Project in list',
-    type=click.IntRange(0, NUM_PROJECTS - 1))
-@click.argument(
-    'query',
-    metavar='[EnvName]',
-    required=False,
-    type=click.STRING,
-    default='')
-@click.pass_context
-@click.option('--verbose', '-v', is_flag=True, help='Verbose')
-def go(ctx, index, query, verbose):
-    """ Activate Pipenv Shell """
-
-    # Check if it has index or query
-    if not index and not query:
-        # ctx.invoke(list_envs)
-        raise click.UsageError('EnvName or index are required')
-
-    # Both Options, not allowed
-    if index and query:
-        err_msg = click.style(
-            "index option cannot be used with project name", fg='red')
-        click.echo(err_msg)
-        return
-
-    # Has index Retrieved project
-    if index:
-        project = PROJECTS[index]
-        _launch_env(project)
-    matches = get_matches(PROJECTS, query)
-    _validate_one_match(query, matches)
-    project = matches[0]
-    _launch_env(project)
-
-
-@pipes.command()
-@click.argument('query', metavar='envname')
-@click.argument('project_dir', type=click.Path(exists=True, resolve_path=True))
-def set(query, project_dir):
-    matches = get_matches(PROJECTS, query)
-    _validate_one_match(query, matches)
-    project = matches[0]
-    set_project_dir(project.envpath, project_dir)
-
-    click.echo(
-        "Enviroment: '{}' \nSet to directory '{}'".format(project.envpath,
-                                                            project_dir))
-
-
-def _launch_env(project):
+def launch_env(project):
     """ Launch Pipenv Shell """
-    try:
-        project_dir = get_project_dir(project)
-    except IOError:
-        msg = ("Pipenv enviroment '{env}' does not have set a project path.\n"
-               "Use 'pipes set' to set the directory for this enviroment\n\n"
-               "$ pipes set {env} [projectpath]".format(env=project.envname))
-        click.echo(click.style(msg, fg='red'), err=True)
-        sys.exit()
 
+    project_dir = ensure_has_project_dir_file(project)
     click.echo("Project dir is '{}'".format(project_dir))
     click.echo("Environment is '{}'".format(project.envpath))
 
@@ -147,7 +123,8 @@ def _launch_env(project):
             'cd {dir} & pipenv shell'.format(dir=project_dir),
             shell=True, env=env)
         click.echo('Terminating pipes Shell...')
-    sys.exit()
+
+    sys.exit(0)
 
 
 def _print_project_list(projects, verbose):
@@ -158,20 +135,49 @@ def _print_project_list(projects, verbose):
     click.echo(click.style(header, fg='white', bold=True))
 
     for index, project in enumerate(projects):
+        project_dir = get_project_dir(project)
+        has_project_dir = bool(project_dir)
         name = click.style(project.envname, fg='yellow')
-        path = click.style(project.envpath, fg='white')
+        path = click.style(project.envpath, fg='blue')
         index = click.style(str(index), fg='red')
-        numbered = ' {} : {}'.format(index, name)
+
+        entry = ' {}: {}'.format(index, name)
+
         if not verbose:
-            click.echo(numbered)
+            entry = entry if not has_project_dir else entry + ' *'
+            click.echo(entry)
         else:
-            click.echo('{} {}'.format(numbered, path))
+            empty = click.style('NOT SET', fg='red')
+            project_dir = project_dir if has_project_dir else empty
+            click.echo(
+                '{} \n    Environment: {}\n    Project Dir: {}'.format(
+                    entry,
+                    path,
+                    project_dir))
 
-
-def _validate_one_match(query, matches):
+def ensure_has_project_dir_file(project):
     """
-    Checks Matches and prints messages if validation does not pass
-    Returns True if passes validation
+    Ensures the enviromend has .project file.
+    If check failes, error is printed recommending course of action
+    """
+    project_dir = get_project_dir(project)
+
+    if project_dir:
+        return project_dir
+
+    else:
+        msg = ("Pipenv enviroment '{env}' does not have set a project path.\n"
+               "Use 'pipes set' to set the directory for this enviroment\n\n"
+               "$ pipes set {env} [projectpath]".format(env=project.envname))
+        click.echo(click.style(msg, fg='red'), err=True)
+        sys.exit()
+
+def ensure_one_match(query, matches):
+    """
+    Checks envname query matches exactly one match.
+    If matches zero, project list is printed.
+    If matches >= 2, matching project list is printed.
+    In both cases, program exists if validation fails.
     """
 
     # No Matches
@@ -191,7 +197,7 @@ def _validate_one_match(query, matches):
         sys.exit(1)
 
     else:
-        return True
+        return matches[0]
 
 
 if __name__ == "__main__":

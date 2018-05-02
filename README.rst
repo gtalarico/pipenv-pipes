@@ -43,6 +43,12 @@ Usage
 
 ``pipes go projectname``
 
+Todo
+-------
+
+* Simplify CLI Api (pipes only)
+
+
 Credits
 -------
 

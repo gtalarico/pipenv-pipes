@@ -4,6 +4,14 @@ History
 
 
 
+0.2.0 (2018-05-02)
+------------------
+
+* New CLI API (single command for simplicity)
+* Indicates if has project directory set on project list
+* Updated Verbose Project List
+
+
 0.1.2 (2018-05-02)
 ------------------
 
