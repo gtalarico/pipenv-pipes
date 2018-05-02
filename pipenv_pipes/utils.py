@@ -51,11 +51,20 @@ def get_project_path_file(project_env_path):
 
 def get_project_dir(project):
     project_file = get_project_path_file(project.envpath)
-    with open(project_file) as fp:
-        return fp.read()
+    try:
+        with open(project_file) as fp:
+            return fp.read()
+    except IOError:
+        return
 
 
 def set_project_dir(envpath, project_dir):
     project_file = get_project_path_file(envpath)
     with open(project_file, 'w') as fp:
         return fp.write(project_dir)
+
+def get_envname_index(envname):
+    """ Index should be passed as 1: """
+    pat = r'(\d+):$'
+    match = re.match(pat, envname)
+    return None if not match else int(match.group(1))
