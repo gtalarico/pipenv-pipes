@@ -25,7 +25,7 @@ def get_projects(pipenv_home):
         (List[Project]): List of Projects
     """
     projects = []
-    for folder_name in os.listdir(pipenv_home):
+    for folder_name in sorted(os.listdir(pipenv_home)):
         folder_path = os.path.join(pipenv_home, folder_name)
         project_name = get_project_name(folder_name)
         if not project_name:

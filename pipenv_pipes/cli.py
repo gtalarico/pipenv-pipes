@@ -151,8 +151,8 @@ def _launch_env(project):
 
 
 def _print_project_list(projects, verbose):
-    """ Prints Projects List """
-    header = '[ Pipenv Projects ] '
+    """ Prints Enviroments List """
+    header = '[ Pipenv Enviroments ] '
     if verbose:
         header += ' {}'.format(PIPENV_HOME)
     click.echo(click.style(header, fg='white', bold=True))
