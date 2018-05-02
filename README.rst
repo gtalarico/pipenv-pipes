@@ -9,6 +9,9 @@ Pipes - Pipenv Environment Switcher
 .. image:: https://img.shields.io/travis/gtalarico/pipenv_pipes.svg
         :target: https://travis-ci.org/gtalarico/pipenv_pipes
 
+.. image:: https://img.shields.io/codecov/gtalarico/pipenv_pipes.svg
+        :target: https://codecov.io/gh/gtalarico/pipenv-pipes
+
 .. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=latest
         :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
@@ -33,23 +36,27 @@ Install
 Usage
 --------
 
-* Show Available Pipenv Environments
+Show Available Pipenv Environments
 
 ``pipes``
 
-* Link Project Directory to Pipenv Environment (this adds a .project file to your environment folder)
+Link Project Directory to Pipenv Environment (this adds a .project file to your environment folder)
 
 ``pipes envname --set /path/to/project``
 
-* Go to directory and Activate Pipenv Enviroment Shell
+Go to directory and Activate Pipenv Enviroment Shell
 
 ``pipes envname``
+
+For more details check ``pipes --help``
+
 
 Todo
 -------
 
 * Add cd-only flag (don't activate shell)
 * Add tests + Contributing
+* Setup Travis CI + Code Cov
 * Add Documentation
 
 

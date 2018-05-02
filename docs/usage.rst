@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Pipenv Pipes in a project::
+For usage help run::
 
-    import pipenv_pipes
+    $ pipes --help
