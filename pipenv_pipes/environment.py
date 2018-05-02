@@ -11,4 +11,5 @@ default_home = os.path.join(
 PIPENV_HOME = os.getenv('WORKON_HOME', default_home)
 PIPENV_ACTIVE = os.getenv('PIPENV_ACTIVE', 0) == '1'
 PROMPT = os.getenv('PROMPT', '')
-PIPENV_VENV_IN_PROJECT = os.getenv('PIPENV_VENV_IN_PROJECT', False)
+PIPENV_VENV_IN_PROJECT = os.getenv('PIPENV_VENV_IN_PROJECT')
+VENV_IS_ACTIVE = os.getenv('VENV')

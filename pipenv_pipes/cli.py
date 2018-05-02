@@ -12,6 +12,7 @@ from .environment import (
     PIPENV_ACTIVE,
     PROMPT,
     PIPENV_VENV_IN_PROJECT,
+    VENV_IS_ACTIVE,
 )
 
 from .utils import (
@@ -32,6 +33,13 @@ def entry():
     if PIPENV_ACTIVE:
         msg = ("Pipenv Shell is already active. \n"
                "Use 'exit' to close the shell before starting a new one.")
+        click.echo(click.style(msg, fg='red'))
+        return
+
+    if VENV_IS_ACTIVE:
+        msg = ("A Virtual Environemnt is already active.\n"
+               "Use 'deactivate' to close disable the enviroment "
+               "before starting a new one.")
         click.echo(click.style(msg, fg='red'))
         return
 
