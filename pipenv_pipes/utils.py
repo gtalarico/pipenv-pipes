@@ -22,7 +22,7 @@ def get_environments(pipenv_home):
         pipenv_home (str): Absolute path of pipenv home folder
 
     Returns:
-        (List[Project]): List of Projects
+        (List[Environment]): List of Environments Tuples
     """
     environments = []
     for folder_name in sorted(os.listdir(pipenv_home)):

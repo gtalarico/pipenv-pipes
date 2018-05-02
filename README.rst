@@ -39,19 +39,18 @@ Usage
 
 * Link Project Directory to Pipenv Environment (this adds a .project file to your environment folder)
 
-``pipes projectbame --set --dir /path/to/project``
+``pipes envname --set /path/to/project``
 
-* Go to directory and Activate Pipenv Shell
+* Go to directory and Activate Pipenv Enviroment Shell
 
-``pipes projectname``
+``pipes envname``
 
 Todo
 -------
 
-* Remove unnecessary --set flag 
-* Add cd-only flag (don't activate shell) 
-* Add tests
-* Documentation 
+* Add cd-only flag (don't activate shell)
+* Add tests + Contributing
+* Add Documentation
 
 
 Credits
