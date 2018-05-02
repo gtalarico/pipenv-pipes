@@ -1,5 +1,5 @@
 ============
-Pipenv Pipes
+Pipes - Pipenv Environment Switcher
 ============
 
 
@@ -16,11 +16,13 @@ Pipenv Pipes
 
 
 
-CLI Tool to help manage Pipenv Enviroments and corresponding Project Directories.
+CLI tool to speed up navigating your Pipenv Enviroments and the corresponding Project Directories.
+
+The goal of Pipes is to provide a pipenv equivalent of the ``workon`` tool provided by virtualenvwrapper.
 
 
-* Free software: MIT license
 * Documentation: https://pipenv-pipes.readthedocs.io.
+* Free software: MIT license
 
 
 Install
@@ -31,15 +33,15 @@ Install
 Usage
 --------
 
-* List Pipenv Environments
+* Show Available Pipenv Environments
 
 ``pipes list``
 
-* Add Project Directory to Pipenv Environment
+* Link Project Directory to Pipenv Environment (this adds a .project file to your environment folder)
 
 ``pipes set projectname /path/to/project``
 
-* Activate Pipenv Environments and Go to directory
+* Go to directory and Activate Pipenv Shell
 
 ``pipes go projectname``
 
