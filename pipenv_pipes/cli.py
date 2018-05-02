@@ -112,12 +112,12 @@ def set_env_dir(envname, envpath, setdir):
     sys.exit(0)
 
 
-def launch_env(project):
+def launch_env(environment):
     """ Launch Pipenv Shell """
 
-    project_dir = ensure_has_project_dir_file(project)
+    project_dir = ensure_has_project_dir_file(environment)
     click.echo("Project dir is '{}'".format(project_dir))
-    click.echo("Environment is '{}'".format(project.envpath))
+    click.echo("Environment is '{}'".format(environment.envpath))
 
     if click.confirm('Activate?', default=True):
 
@@ -132,7 +132,7 @@ def launch_env(project):
                 sys.exit(0)
 
         env = os.environ.copy()
-        env['PROMPT'] = '({}){}'.format(project.envname, PROMPT)
+        env['PROMPT'] = '({}){}'.format(environment.envname, PROMPT)
         os.chdir(project_dir)
         out = subprocess.call(
             'cd {dir} & pipenv shell'.format(dir=project_dir),
@@ -170,21 +170,23 @@ def _print_project_list(environments, verbose):
                     path,
                     project_dir))
 
-def ensure_has_project_dir_file(project):
+def ensure_has_project_dir_file(environment):
     """
     Ensures the enviromend has .project file.
     If check failes, error is printed recommending course of action
     """
-    project_dir = get_project_dir(project)
+    project_dir = get_project_dir(environment)
 
     if project_dir:
         return project_dir
 
     else:
-        msg = ("Pipenv enviroment '{env}' does not have set a project path.\n"
-               "Use 'pipes set' to set the directory for this enviroment\n\n"
-               "$ pipes set {env} [projectpath]".format(env=project.envname))
-        click.echo(click.style(msg, fg='red'), err=True)
+        msg = (
+            "Pipenv enviroment '{env}' does not have project directory.\n"
+            "Use 'pipes --set' to set the directory for this enviroment\n\n"
+            "$ pipes --set {env} --dir [projectpath]".format(
+                env=environment.envname))
+        click.echo(click.style(msg, fg='yellow'), err=True)
         sys.exit()
 
 def ensure_one_match(query, matches):
