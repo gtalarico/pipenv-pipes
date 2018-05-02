@@ -23,10 +23,25 @@ CLI Tool to help manage Pipenv Enviroments and corresponding Project Directories
 * Documentation: https://pipenv-pipes.readthedocs.io.
 
 
-Features
+Install
 --------
 
-* TODO
+``pip install pipenv-pipes``
+
+Usage
+--------
+
+* List Pipenv Environments
+
+``pipes list``
+
+* Add Project Directory to Pipenv Environment
+
+``pipes set projectname /path/to/project``
+
+* Activate Pipenv Environments and Go to directory
+
+``pipes go projectname``
 
 Credits
 -------
