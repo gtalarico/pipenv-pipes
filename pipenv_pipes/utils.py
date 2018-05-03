@@ -54,7 +54,7 @@ def get_project_dir(project):
     project_file = get_project_path_file(project.envpath)
     try:
         with open(project_file) as fp:
-            return fp.read()
+            return fp.read().strip()
     except IOError:
         return
 
