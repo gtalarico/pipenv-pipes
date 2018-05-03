@@ -122,10 +122,10 @@ To see a detail output of the enviroments and the corresponding paths use the ``
 
     [ Pipenv Environments ]  /Users/gtalarico/.local/share/virtualenvs
       0: project1-LwEMcb8W
-         Environment: /Users/gtalarico/.local/share/virtualenvs/flask-vue-LwEMcb8W
+         Environment: /Users/gtalarico/.local/share/virtualenvs/project1-LwEMcb8W
          Project Dir: /Users/gtalarico/dev/flask-vue
       1: project2-R1v7_ynT
-         Environment: /Users/gtalarico/.local/share/virtualenvs/genome-R1v7_ynT
+         Environment: /Users/gtalarico/.local/share/virtualenvs/project2-R1v7_ynT
          Project Dir: /Users/gtalarico/dev/genome
 
 
