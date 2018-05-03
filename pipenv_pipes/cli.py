@@ -19,9 +19,10 @@ from .utils import (
     get_environments,
     get_matches,
     get_project_dir,
-    set_project_dir,
     get_envname_index,
-    has_pipfile,
+    get_env_path_from_project_dir,
+    unset_project_dir,
+    set_project_dir_project_file,
 )
 
 if not os.path.exists(PIPENV_HOME):
@@ -62,57 +63,98 @@ def entry():
     pipes()
 
 
-# @click.group(invoke_without_command=True)
 @click.command()
 @click.argument('envname', required=False)
 @click.option('--list', '-l', 'list_', is_flag=True,
               help='List Pipenv Projects')
-@click.option('--set', '-s', 'set_', is_flag=True,
-              help='Set Project Directory for the Enviroment')
-@click.option('--dir', '-d', 'setdir', help='Set Project Directory Target',
-              default='.', type=click.Path(exists=True, resolve_path=True))
+@click.option('--link', '-l', 'setlink',
+              help='Crete Environment Link to the Target Project Directory',
+              metavar='<ProjectDir>',
+              required=False, type=click.Path(exists=True, resolve_path=True))
+@click.option('--unlink', '-u', 'unlink',
+              is_flag=True,
+              help='Unlink Project Directory from this Environment')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
 @click.pass_context
-def pipes(ctx, envname, list_, set_, setdir, verbose):
-    """ Pipenv Environment Switcher """
+def pipes(ctx, envname, list_, setlink, unlink, verbose):
+    """
 
-    if not envname or list_:
-        _print_project_list(environments=ENVIRONMENTS, verbose=verbose)
-        err = "\nUse pipes --help for usage"
+    Pipes - PipEnv Environment Switcher
+
+    Go To Project:\n
+        >>> pipes envname
+
+    Set Project Directory:\n
+        >>> pipes --link path/to/project/path
+
+    Unset Project Directory:\n
+        >>> pipes envname --unlink
+
+    Remove link between enviroment and project directory
+
+    See all Pipenv Environments:\n
+        >>> pipes --list
+        >>> pipes --list --verbose
+
+    """
+
+    if list_ or (not envname and not setlink):
+        print_project_list(environments=ENVIRONMENTS, verbose=verbose)
+        err = "\nCheck 'pipes --help' for usage"
         click.echo(err, err=True)
-        ctx.exit()
+        sys.exit(0)
+
+    if setlink and envname:
+        msg = ("--link cannot be user with envname query")
+        raise click.UsageError(msg)
+
+    if setlink:
+        set_env_dir(project_dir=setlink)
 
     # Check if using index and if yes launch
     project_index = get_envname_index(envname)
     if project_index:
-        project = ENVIRONMENTS[project_index]
+        environment = ENVIRONMENTS[project_index]
 
     else:
         # Envname check
         matches = get_matches(ENVIRONMENTS, envname)
-        project = ensure_one_match(envname, matches)
+        environment = ensure_one_match(envname, matches)
 
-    if not set_:
-        launch_env(project)
+    if unlink:
+        if unset_project_dir(environment.envpath):
+            click.echo(
+                'Project directory cleared [{}]'.format(environment.envpath))
+        else:
+            click.echo('Project directory was already clear.')
+        sys.exit(0)
+
     else:
-        set_env_dir(
-            envname=project.envname,
-            envpath=project.envpath,
-            setdir=setdir)
+        launch_env(environment)
 
 
-def set_env_dir(envname, envpath, setdir):
-    click.echo("Setting Environment '{}'".format(envname))
-    click.echo("To Project Directory '{}'".format(setdir))
+# def set_env_dir(envname, envpath, project_dir):
+def set_env_dir(project_dir):
 
-    if click.confirm('Confirm?', default=True):
-        set_project_dir(envpath, setdir)
+    click.echo('Target Project Directory is: ', nl=False)
+    click.echo(click.style(project_dir, fg='blue'))
+    click.echo('Looking for associated Pipenv Environment...')
 
-        msg = ("Project Direectory Set.\n"
-               "To modify the directory edit the '.project' in the enviroment"
-               "or run the 'pipes --set' command again")
+    # Before setting project_dir, let's make sure directory is actually
+    # Associated with the env, otherwise activation will not work
+    project_dir_envpath = ensure_project_dir_has_env(project_dir)
 
-        click.echo(msg)
+    click.echo("Environment is: ", nl=False)
+    click.echo(click.style(project_dir_envpath, fg='blue'))
+
+    prompt = click.style(
+        'Set Project Directory + Environment association?', fg='yellow')
+
+    if click.confirm(prompt):
+        set_project_dir_project_file(project_dir_envpath, project_dir)
+        msg = ("\nProject Direectory Set.")
+
+        click.echo(click.style(msg, bold=True))
 
     sys.exit(0)
 
@@ -124,35 +166,26 @@ def launch_env(environment):
     click.echo("Project dir is '{}'".format(project_dir))
     click.echo("Environment is '{}'".format(environment.envpath))
 
-    if click.confirm('Activate?', default=True):
 
-        if not has_pipfile(project_dir):
-            msg = (
-                "Target Project Directory does not appear "
-                "to be initialized with Pipenv.\n"
-                "Do you want to cd into the target directory and activate "
-                "'pipenv shell' anyway? \n"
-                "(This could result in a new created pipenv environment!)")
-            if not click.confirm(click.style(msg, fg='red'), default=False):
-                sys.exit(0)
+    ensure_project_dir_has_env(project_dir)
 
-        env = os.environ.copy()
-        env['PROMPT'] = '({}){}'.format(environment.envname, PROMPT)
-        os.chdir(project_dir)
-        out = subprocess.call(
-            'cd {dir} & pipenv shell'.format(dir=project_dir),
-            shell=True, env=env)
-        click.echo('Terminating pipes Shell...')
+    env = os.environ.copy()
+    env['PROMPT'] = '({}){}'.format(environment.envname, PROMPT)
+    os.chdir(project_dir)
+    out = subprocess.call(
+        'cd {dir} & pipenv shell'.format(dir=project_dir),
+        shell=True, env=env)
+    click.echo('Terminating pipes Shell...')
 
     sys.exit(0)
 
 
-def _print_project_list(environments, verbose):
+def print_project_list(environments, verbose):
     """ Prints Environments List """
     header = '[ Pipenv Environments ] '
     if verbose:
         header += ' {}'.format(PIPENV_HOME)
-    click.echo(click.style(header, fg='white', bold=True))
+    click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
         project_dir = get_project_dir(environment)
@@ -188,10 +221,10 @@ def ensure_has_project_dir_file(environment):
     else:
         msg = (
             "Pipenv enviroment '{env}' does not have project directory.\n"
-            "Use 'pipes --set' to set the directory for this enviroment\n\n"
-            "$ pipes --set {env} --dir [projectpath]".format(
-                env=environment.envname))
-        click.echo(click.style(msg, fg='yellow'), err=True)
+            "Use 'pipes --link <project-dir>' to link a project directory"
+            "with this enviroment".format(env=environment.envname))
+
+        click.echo(click.style(msg, fg='red'), err=True)
         sys.exit()
 
 def ensure_one_match(query, matches):
@@ -207,7 +240,7 @@ def ensure_one_match(query, matches):
         err_msg = click.style(
             "No projec matches for query '{}'\n".format(query), fg='red')
         click.echo(err_msg)
-        _print_project_list(environments=ENVIRONMENTS, verbose=False)
+        print_project_list(environments=ENVIRONMENTS, verbose=False)
         sys.exit(1)
 
     # 2+ Matches
@@ -215,11 +248,23 @@ def ensure_one_match(query, matches):
         msg = ("Query '{}' matches more than one project (shown below)."
                "Try using a more sepecific query term.\n".format(query))
         click.echo(click.style(msg, fg='red'), err=True)
-        _print_project_list(environments=matches, verbose=False)
+        print_project_list(environments=matches, verbose=False)
         sys.exit(1)
 
     else:
         return matches[0]
+
+
+def ensure_project_dir_has_env(project_dir):
+    envpath = get_env_path_from_project_dir(project_dir)
+    if envpath:
+        return envpath
+    else:
+        msg = (
+            "\nThe target Project Directocd ry is not "
+            "associated with any Pipenv Environments.")
+        click.echo(click.style(msg, fg='red'))
+        sys.exit(1)
 
 
 if __name__ == "__main__":

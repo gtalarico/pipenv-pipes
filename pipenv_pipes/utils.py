@@ -5,6 +5,7 @@
 import os
 import re
 from collections import namedtuple
+import subprocess
 
 Environment = namedtuple('Environment', ['project_name', 'envname', 'envpath'])
 
@@ -45,8 +46,8 @@ def get_matches(projects, query):
     return matches
 
 
-def get_project_path_file(project_env_path):
-    return os.path.join(project_env_path, '.project')
+def get_project_path_file(envpath):
+    return os.path.join(envpath, '.project')
 
 
 def get_project_dir(project):
@@ -58,10 +59,11 @@ def get_project_dir(project):
         return
 
 
-def set_project_dir(envpath, project_dir):
+def set_project_dir_project_file(envpath, project_dir):
     project_file = get_project_path_file(envpath)
     with open(project_file, 'w') as fp:
         return fp.write(project_dir)
+
 
 def get_envname_index(query):
     """ Index should be passed as 1: """
@@ -70,7 +72,19 @@ def get_envname_index(query):
     return None if not match else int(match.group(1))
 
 
-def has_pipfile(folderpath):
-    for filename in os.listdir(folderpath):
-        if 'pipfile' in filename.lower():
-            return True
+def unset_project_dir(envpath):
+    project_file = get_project_path_file(envpath)
+    try:
+        os.remove(project_file)
+    except IOError:
+        pass
+    else:
+        return project_file
+
+def get_env_path_from_project_dir(project_dir):
+    try:
+        output = subprocess.check_output(['pipenv', '--venv'], cwd=project_dir)
+    except subprocess.CalledProcessError as exc:
+        pass
+    else:
+        return output.decode().strip()
