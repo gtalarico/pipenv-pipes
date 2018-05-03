@@ -1,6 +1,8 @@
-============
-Pipes - Pipenv Environment Switcher
-============
+===================================
+Pipes
+===================================
+
+Friendly Pipenv Environment Switcher for your shell
 
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
@@ -20,15 +22,15 @@ Pipes - Pipenv Environment Switcher
         :alt: Documentation Status
 
 
+Overview
+---------
 
-
-CLI tool to speed up navigating your Pipenv Enviroments and the corresponding Project Directories.
-
-The goal of Pipes is to provide a pipenv equivalent of the ``workon`` tool provided by virtualenvwrapper.
+Pipes is a Pipenv-companion CLI tool that provides a quick way to jump between your pipenv powered projects.
 
 
 * Documentation: https://pipenv-pipes.readthedocs.io.
-* Free software: MIT license
+
+.. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
 
 
 Install
