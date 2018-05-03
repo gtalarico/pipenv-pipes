@@ -261,7 +261,7 @@ def ensure_project_dir_has_env(project_dir):
         return envpath
     else:
         msg = (
-            "\nThe target Project Directocd ry is not "
+            "\nThe target Project Directory is not "
             "associated with any Pipenv Environments.")
         click.echo(click.style(msg, fg='red'))
         sys.exit(1)
