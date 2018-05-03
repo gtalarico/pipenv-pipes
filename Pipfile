@@ -16,6 +16,7 @@ sphinx = "*"
 coverage = "*"
 tox = "*"
 pytest-cov = "*"
+sphinx-autobuild = "*"
 
 [requires]
 python_version = "3.6"
