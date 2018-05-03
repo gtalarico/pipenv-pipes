@@ -65,13 +65,7 @@ Activate Pipenv Enviroment Shell
 
     $ pipes project1
 
-.. code:: bash
-
-    Project dir is '/Users/dev/project2'
-    Environment is '/Users/username/.local/share/virtualenvs/project2-R1v7_ynT'
-    Activate? [Y/n]:
-
-If confirmed cwd is changed to '/Users/dev/project2' and the corresponding Pipenv Shell is activated.
+This would cd into directory '`/path/to/project1'` and the corresponding Pipenv Shell is activated.
 
 If query term (``project1``) returns 2 or more matches, a more specific query term needs to be used.
 For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` or ``Lw` to get a single match.
@@ -83,12 +77,6 @@ The environment index can also be used. To active the enviroment ``1: project2-R
 
     $ pipes 1:
 
-.. code:: bash
-
-    Project dir is '/Users/dev/project2'
-    Environment is '/Users/username/.local/share/virtualenvs/project2-R1v7_ynT'
-    Activate? [Y/n]:
-
 
 Link Pipenv Environment to a Project Directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -99,7 +87,7 @@ To link a project directory with its environment run:
 
 .. code:: bash
 
-    $ pipes --set /path/to/project1
+    $ pipes --link /path/to/project1
 
 Pipes will find the associated Pipenv Environmnet by using ``pipenv --venv`` from that location,
 and then store the project directory path within the environment (``.project`` file)
@@ -111,15 +99,13 @@ Environments that have associated project folders are shown with an asterisk `*`
 
 .. code:: bash
 
-    $ pipes
-    # or
     $ pipes --list
 
 To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
 
 .. code:: bash
 
-    $ pipes -v
+    $ pipes -0-verbose
 
 .. code:: bash
 
