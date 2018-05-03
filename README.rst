@@ -97,17 +97,26 @@ and then store the project directory path within the environment (``.project`` f
 This pattern is similar to what virtualenvwrapper's ``workon`` uses to link a VirtualEnviroment folder to
 the corresponding project.
 
-Environments that have associated project folders are shown with an asterisk `*` on the Pipenv Environment list:
+Environments that have associated project folders are shown with an asterisk `*` on the Pipenv Environment.
+To see the Environment list use:
 
 .. code:: bash
 
     $ pipes --list
+    
+.. code:: bash
+
+  [ Pipenv Environments ]
+    0: project1-LwEMcb8W *
+    1: project2-R1v7_ynT *
+
+
 
 To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
 
 .. code:: bash
 
-    $ pipes -0-verbose
+    $ pipes --list -verbose
 
 .. code:: bash
 
