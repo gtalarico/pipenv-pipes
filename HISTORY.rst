@@ -3,6 +3,12 @@ History
 =======
 
 
+0.4.0 (2018-05-02)
+------------------
+
+* Renamed Set/Unset to Link/Unlink
+* Use pipenv --venv to verify project directory
+
 
 0.3.0 (2018-05-02)
 ------------------
