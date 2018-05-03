@@ -67,7 +67,7 @@ Activate Pipenv Enviroment Shell
 
     $ pipes project1
 
-This would cd into directory '`/path/to/project1'` and the corresponding Pipenv Shell is activated.
+This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
 
 If query term (``project1``) returns 2 or more matches, a more specific query term needs to be used.
 For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` or ``Lw` to get a single match.
