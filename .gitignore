@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 .vscode
 
+docs/_build
+
 # C extensions
 *.so
 

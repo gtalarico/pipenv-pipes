@@ -11,7 +11,7 @@ Pipes - Pipenv Environment Switcher
         :target: https://travis-ci.org/gtalarico/pipenv_pipes
         :alt: Traves CI Badge
 
-.. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg  
+.. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg
         :target: https://codecov.io/gh/gtalarico/pipenv-pipes
         :alt: Codecov Badge
 
@@ -53,8 +53,8 @@ List available Pipenv Environments
   [ Pipenv Environments ]
     0: project1-LwEMcb8W *
     1: project2-R1v7_ynT *
-  
-  
+
+
 \* Indicates the Environment already has a Project Directory associated.
 
 
@@ -64,7 +64,7 @@ Activate Pipenv Enviroment Shell
 .. code:: bash
 
     $ pipes project1
-    
+
 .. code:: bash
 
     Project dir is '/Users/dev/project2'
@@ -82,14 +82,14 @@ The environment index can also be used. To active the enviroment ``1: project2-R
 .. code:: bash
 
     $ pipes 1:
-    
+
 .. code:: bash
 
     Project dir is '/Users/dev/project2'
     Environment is '/Users/username/.local/share/virtualenvs/project2-R1v7_ynT'
     Activate? [Y/n]:
-    
- 
+
+
 Link Pipenv Environment to a Project Directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -100,21 +100,21 @@ To link a project directory with its environment run:
 .. code:: bash
 
     $ pipes --set /path/to/project1
-    
-Pipes will find the associated Pipenv Environmnet by using ``pipenv --venv`` from that location, 
+
+Pipes will find the associated Pipenv Environmnet by using ``pipenv --venv`` from that location,
 and then store the project directory path within the environment (``.project`` file)
 
 This pattern is similar to what virtualenvwrapper's ``workon`` uses to link a VirtualEnviroment folder to
 the corresponding project.
 
-Environments that have associated project folders are shown with an asterisk `* on the Pipenv Environment list:
+Environments that have associated project folders are shown with an asterisk `*` on the Pipenv Environment list:
 
 .. code:: bash
 
-    $ pipes 
+    $ pipes
     # or
     $ pipes --list
-    
+
 To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
 
 .. code:: bash
@@ -131,7 +131,6 @@ To see a detail output of the enviroments and the corresponding paths use the ``
          Environment: /Users/gtalarico/.local/share/virtualenvs/genome-R1v7_ynT
          Project Dir: /Users/gtalarico/dev/genome
 
-Use pipes --help for usage
 
 
 Other Commands
@@ -143,10 +142,10 @@ For more details check ``pipes --help``
 Todo
 -------
 
-* Add cd-only flag (don't activate shell)
-* Add tests + Contributing
-* Setup Travis CI + Code Cov
 * Add Documentation
+* Add tests + Contributing
+* Setup Travis CI
+* Add cd-only flag (don't activate shell)
 
 
 Credits
