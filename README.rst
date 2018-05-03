@@ -2,7 +2,8 @@
 Pipes
 ===================================
 
-Friendly Pipenv Environment Switcher for your shell
+
+A friendly Pipenv Environment Switcher for your shell
 
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
@@ -25,13 +26,12 @@ Friendly Pipenv Environment Switcher for your shell
 Overview
 ---------
 
-Pipes is a Pipenv-companion CLI tool that provides a quick way to jump between your pipenv powered projects.
+Pipes is a Pipenv companion CLI tool that provides a quick way to jump between your pipenv powered projects.
 
 
 * Documentation: https://pipenv-pipes.readthedocs.io.
 
 .. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
-
 
 Install
 --------
@@ -138,6 +138,11 @@ Todo
 
 Credits
 -------
+
+Send me a message on twitter_
+
+.. _twitter: https://twitter.com/gtalarico
+
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
