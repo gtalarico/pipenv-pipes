@@ -18,7 +18,7 @@ requirements = [
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', 'click']
+test_requirements = ['pytest', 'pytest-lazy-fixture', 'click']
 
 setup(
     author="Gui Talarico",
@@ -35,7 +35,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    description="CLI Tool to help manage Pipenv Enviroments and corresponding Project Directories.",
+    description="CLI Tool to help manage Pipenv Enviroments "
+                "and corresponding Project Directories.",
     entry_points={
         'console_scripts': [
             'pipes=pipenv_pipes.cli:entry',

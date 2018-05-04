@@ -5,7 +5,7 @@
 import os
 import sys
 import click
-import subprocess
+
 
 from .environment import (
     PIPENV_HOME,
@@ -26,22 +26,25 @@ from .utils import (
 )
 
 if not os.path.exists(PIPENV_HOME):
-    msg = ('Could not find Pipenv Environments location. [{}] \n'
-            'If you are using a non-default location you will need to '
-            'add the path to $WORKON_HOME.'.format(PIPENV_HOME))
+    msg = (
+        'Could not find Pipenv Environments location. [{}] \n'
+        'If you are using a non-default location you will need to '
+        'add the path to $WORKON_HOME.'.format(PIPENV_HOME))
     click.echo(click.style(msg, fg='red'))
     sys.exit(1)
 
 if PIPENV_ACTIVE:
-    msg = ("Pipenv Shell is already active. \n"
-            "Use 'exit' to close the shell before starting a new one.")
+    msg = (
+        "Pipenv Shell is already active. \n"
+        "Use 'exit' to close the shell before starting a new one.")
     click.echo(click.style(msg, fg='red'))
     sys.exit(1)
 
 if VENV_IS_ACTIVE:
-    msg = ("A Virtual Environemnt is already active.\n"
-            "Use 'deactivate' to close disable the enviroment "
-            "before starting a new one.")
+    msg = (
+        "A Virtual Environemnt is already active.\n"
+        "Use 'deactivate' to close disable the enviroment "
+        "before starting a new one.")
     click.echo(click.style(msg, fg='red'))
     sys.exit(1)
 
@@ -200,6 +203,7 @@ def print_project_list(environments, verbose):
                     path,
                     project_dir))
 
+
 def ensure_has_project_dir_file(environment):
     """
     Ensures the enviromend has .project file.
@@ -218,6 +222,7 @@ def ensure_has_project_dir_file(environment):
 
         click.echo(click.style(msg, fg='red'), err=True)
         sys.exit()
+
 
 def ensure_one_match(query, matches):
     """
