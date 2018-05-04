@@ -10,7 +10,6 @@ import subprocess
 from .environment import (
     PIPENV_HOME,
     PIPENV_ACTIVE,
-    PROMPT,
     PIPENV_VENV_IN_PROJECT,
     VENV_IS_ACTIVE,
 )
@@ -23,6 +22,7 @@ from .utils import (
     get_env_path_from_project_dir,
     unset_project_dir,
     set_project_dir_project_file,
+    start_pipenv_shell,
 )
 
 if not os.path.exists(PIPENV_HOME):
@@ -166,17 +166,9 @@ def launch_env(environment):
     click.echo("Project dir is '{}'".format(project_dir))
     click.echo("Environment is '{}'".format(environment.envpath))
 
-
     ensure_project_dir_has_env(project_dir)
-
-    env = os.environ.copy()
-    env['PROMPT'] = '({}){}'.format(environment.envname, PROMPT)
-    os.chdir(project_dir)
-    out = subprocess.call(
-        'cd {dir} & pipenv shell'.format(dir=project_dir),
-        shell=True, env=env)
+    start_pipenv_shell(project_dir=project_dir, envname=environment.envname)
     click.echo('Terminating pipes Shell...')
-
     sys.exit(0)
 
 

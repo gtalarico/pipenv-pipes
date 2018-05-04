@@ -17,6 +17,7 @@ coverage = "*"
 tox = "*"
 pytest-cov = "*"
 sphinx-autobuild = "*"
+"doc8" = "*"
 
 [requires]
 python_version = "3.6"

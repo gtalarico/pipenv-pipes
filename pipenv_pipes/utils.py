@@ -7,6 +7,8 @@ import re
 from collections import namedtuple
 import subprocess
 
+from .environment import PROMPT
+
 Environment = namedtuple('Environment', ['project_name', 'envname', 'envpath'])
 
 
@@ -88,3 +90,8 @@ def get_env_path_from_project_dir(project_dir):
         pass
     else:
         return output.decode().strip()
+
+def start_pipenv_shell(project_dir, envname):
+    env_vars = os.environ.copy()
+    env_vars['PROMPT'] = '({}){}'.format(envname, PROMPT)
+    out = subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=env_vars)
