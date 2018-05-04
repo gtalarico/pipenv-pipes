@@ -39,7 +39,7 @@ setup(
                 "and corresponding Project Directories.",
     entry_points={
         'console_scripts': [
-            'pipes=pipenv_pipes.cli:entry',
+            'pipes=pipenv_pipes.cli:pipes',
         ],
     },
     install_requires=requirements,
