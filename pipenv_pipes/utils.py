@@ -87,6 +87,7 @@ def unset_project_dir(envpath):
     else:
         return project_file
 
+
 def get_env_path_from_project_dir(project_dir):
     # Move to Core
     try:
@@ -96,8 +97,9 @@ def get_env_path_from_project_dir(project_dir):
     else:
         return output.decode().strip()
 
+
 def start_pipenv_shell(project_dir, envname):
     # Move to Core
     env_vars = os.environ.copy()
     env_vars['PROMPT'] = '({}){}'.format(envname, PROMPT)
-    out = subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=env_vars)
+    return subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=env_vars)
