@@ -19,6 +19,7 @@ def get_env_name(folder_name):
 
 
 def get_environments(pipenv_home):
+    # Move to Core
     """Get Projects
 
     Args:
@@ -40,11 +41,11 @@ def get_environments(pipenv_home):
     return environments
 
 
-def get_matches(projects, query):
+def get_matches(environments, query):
     matches = []
-    for project in projects:
-        if query.lower() in project.envname.lower():
-            matches.append(project)
+    for environment in environments:
+        if query.lower() in environment.envname.lower():
+            matches.append(environment)
     return matches
 
 
@@ -53,6 +54,7 @@ def get_project_path_file(envpath):
 
 
 def get_project_dir(project):
+    # Move to Core
     project_file = get_project_path_file(project.envpath)
     try:
         with open(project_file) as fp:
@@ -62,6 +64,7 @@ def get_project_dir(project):
 
 
 def set_project_dir_project_file(envpath, project_dir):
+    # Move to Core
     project_file = get_project_path_file(envpath)
     with open(project_file, 'w') as fp:
         return fp.write(project_dir)
@@ -75,6 +78,7 @@ def get_envname_index(query):
 
 
 def unset_project_dir(envpath):
+    # Move to Core
     project_file = get_project_path_file(envpath)
     try:
         os.remove(project_file)
@@ -84,6 +88,7 @@ def unset_project_dir(envpath):
         return project_file
 
 def get_env_path_from_project_dir(project_dir):
+    # Move to Core
     try:
         output = subprocess.check_output(['pipenv', '--venv'], cwd=project_dir)
     except subprocess.CalledProcessError as exc:
@@ -92,6 +97,7 @@ def get_env_path_from_project_dir(project_dir):
         return output.decode().strip()
 
 def start_pipenv_shell(project_dir, envname):
+    # Move to Core
     env_vars = os.environ.copy()
     env_vars['PROMPT'] = '({}){}'.format(envname, PROMPT)
     out = subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=env_vars)
