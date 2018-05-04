@@ -6,7 +6,6 @@ import os
 import sys
 import click
 
-
 from .environment import (
     PIPENV_HOME,
     PIPENV_ACTIVE,
@@ -15,65 +14,40 @@ from .environment import (
 )
 
 from .utils import (
-    get_environments,
-    get_matches,
-    get_project_dir,
-    get_envname_index,
-    get_env_path_from_project_dir,
-    unset_project_dir,
-    set_project_dir_project_file,
-    start_pipenv_shell,
+    get_query_matches,
+    get_index_from_query,
 )
 
-if not os.path.exists(PIPENV_HOME):
-    msg = (
-        'Could not find Pipenv Environments location. [{}] \n'
-        'If you are using a non-default location you will need to '
-        'add the path to $WORKON_HOME.'.format(PIPENV_HOME))
-    click.echo(click.style(msg, fg='red'))
-    sys.exit(1)
+from .core import (
+    find_environments,
+    read_project_dir_file,
+    call_pipenv_venv,
+    delete_project_dir_file,
+    write_project_dir_project_file,
+    call_pipenv_shell,
+)
 
-if PIPENV_ACTIVE:
-    msg = (
-        "Pipenv Shell is already active. \n"
-        "Use 'exit' to close the shell before starting a new one.")
-    click.echo(click.style(msg, fg='red'))
-    sys.exit(1)
 
-if VENV_IS_ACTIVE:
-    msg = (
-        "A Virtual Environemnt is already active.\n"
-        "Use 'deactivate' to close disable the enviroment "
-        "before starting a new one.")
-    click.echo(click.style(msg, fg='red'))
-    sys.exit(1)
-
-if PIPENV_VENV_IN_PROJECT:
-    msg = 'PIPENV_VENV_IN_PROJECT is not supported at this time'
-    click.echo(click.style(msg, fg='red'))
-    sys.exit(1)
-
-# Set Environments
-ENVIRONMENTS = get_environments(PIPENV_HOME)
-NUM_ENVIRONMENTS = len(ENVIRONMENTS)
+# Find Environments
+ENVIRONMENTS = find_environments(PIPENV_HOME)
 if not ENVIRONMENTS:
     click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
     sys.exit(1)
 
 
-def entry():
-    """ Pipes Entry Point """
-    pipes()
-
-
 @click.command()
 @click.argument('envname', required=False)
-@click.option('--list', '-l', 'list_', is_flag=True,
-              help='List Pipenv Projects')
-@click.option('--link', '-l', 'setlink',
-              help='Crete Environment Link to the Target Project Directory',
-              metavar='<ProjectDir>',
-              required=False, type=click.Path(exists=True, resolve_path=True))
+@click.option(
+    '--list', '-l', 'list_',
+    is_flag=True,
+    help='List Pipenv Projects')
+@click.option(
+    '--link', '-l', 'setlink',
+    help='Crete Environment Link to the Target Project Directory',
+    metavar='<ProjectDir>',
+    required=False,
+    type=click.Path(exists=True, resolve_path=True)
+    )
 @click.option('--unlink', '-u', 'unlink',
               is_flag=True,
               help='Unlink Project Directory from this Environment')
@@ -100,6 +74,7 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose):
         >>> pipes --list --verbose
 
     """
+    ensure_env_vars_are_ok()
 
     if list_ or (not envname and not setlink):
         print_project_list(environments=ENVIRONMENTS, verbose=verbose)
@@ -115,17 +90,18 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose):
         set_env_dir(project_dir=setlink)
 
     # Check if using index and if yes launch
-    project_index = get_envname_index(envname)
-    if project_index:
-        environment = ENVIRONMENTS[project_index]
+    env_index = get_index_from_query(envname)
+    if env_index:
+        ensure_valid_index(env_index)
+        environment = ENVIRONMENTS[env_index]
 
     else:
         # Envname check
-        matches = get_matches(ENVIRONMENTS, envname)
+        matches = get_query_matches(ENVIRONMENTS, envname)
         environment = ensure_one_match(envname, matches)
 
     if unlink:
-        if unset_project_dir(environment.envpath):
+        if delete_project_dir_file(environment.envpath):
             click.echo(
                 'Project directory cleared [{}]'.format(environment.envpath))
         else:
@@ -154,7 +130,7 @@ def set_env_dir(project_dir):
         'Set Project Directory + Environment association?', fg='yellow')
 
     if click.confirm(prompt):
-        set_project_dir_project_file(project_dir_envpath, project_dir)
+        write_project_dir_project_file(project_dir_envpath, project_dir)
         msg = ("\nProject Direectory Set.")
 
         click.echo(click.style(msg, bold=True))
@@ -170,7 +146,7 @@ def launch_env(environment):
     click.echo("Environment is '{}'".format(environment.envpath))
 
     ensure_project_dir_has_env(project_dir)
-    start_pipenv_shell(project_dir=project_dir, envname=environment.envname)
+    call_pipenv_shell(project_dir=project_dir, envname=environment.envname)
     click.echo('Terminating pipes Shell...')
     sys.exit(0)
 
@@ -183,7 +159,7 @@ def print_project_list(environments, verbose):
     click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
-        project_dir = get_project_dir(environment)
+        project_dir = read_project_dir_file(environment)
         has_project_dir = bool(project_dir)
         name = click.style(environment.envname, fg='yellow')
         path = click.style(environment.envpath, fg='blue')
@@ -209,7 +185,7 @@ def ensure_has_project_dir_file(environment):
     Ensures the enviromend has .project file.
     If check failes, error is printed recommending course of action
     """
-    project_dir = get_project_dir(environment)
+    project_dir = read_project_dir_file(environment)
 
     if project_dir:
         return project_dir
@@ -253,7 +229,7 @@ def ensure_one_match(query, matches):
 
 
 def ensure_project_dir_has_env(project_dir):
-    envpath = get_env_path_from_project_dir(project_dir)
+    envpath = call_pipenv_venv(project_dir)
     if envpath:
         return envpath
     else:
@@ -264,5 +240,38 @@ def ensure_project_dir_has_env(project_dir):
         sys.exit(1)
 
 
-if __name__ == "__main__":
-    sys.exit(entry())
+def ensure_valid_index(env_index):
+    if env_index not in range(0, len(ENVIRONMENTS)):
+        raise click.UsageError('Invalid Environment Index')
+
+
+def ensure_env_vars_are_ok():
+
+
+    if not os.path.exists(PIPENV_HOME):
+        msg = (
+            'Could not find Pipenv Environments location. [{}] \n'
+            'If you are using a non-default location you will need to '
+            'add the path to $WORKON_HOME.'.format(PIPENV_HOME))
+        click.echo(click.style(msg, fg='red'))
+        sys.exit(1)
+
+    if PIPENV_ACTIVE:
+        msg = (
+            "Pipenv Shell is already active. \n"
+            "Use 'exit' to close the shell before starting a new one.")
+        click.echo(click.style(msg, fg='red'))
+        sys.exit(1)
+
+    if VENV_IS_ACTIVE:
+        msg = (
+            "A Virtual Environemnt is already active.\n"
+            "Use 'deactivate' to close disable the enviroment "
+            "before starting a new one.")
+        click.echo(click.style(msg, fg='red'))
+        sys.exit(1)
+
+    if PIPENV_VENV_IN_PROJECT:
+        msg = 'PIPENV_VENV_IN_PROJECT is not supported at this time'
+        click.echo(click.style(msg, fg='red'))
+        sys.exit(1)
