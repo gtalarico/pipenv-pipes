@@ -19,6 +19,8 @@ pytest-cov = "*"
 sphinx-autobuild = "*"
 "doc8" = "*"
 pytest-lazy-fixture = "*"
+rope = "*"
+"flake8" = "*"
 
 [requires]
 python_version = "3.6"
