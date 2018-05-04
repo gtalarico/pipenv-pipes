@@ -18,6 +18,7 @@ tox = "*"
 pytest-cov = "*"
 sphinx-autobuild = "*"
 "doc8" = "*"
+pytest-lazy-fixture = "*"
 
 [requires]
 python_version = "3.6"
