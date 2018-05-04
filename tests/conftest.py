@@ -6,7 +6,6 @@ from imp import reload
 
 @pytest.fixture(autouse=True)
 def clean_environment():
-
     BAD_VARS = [
         'PIPENV_ACTIVE',
         'PIPENV_VENV_IN_PROJECT',
@@ -22,6 +21,7 @@ def clean_environment():
 
 @pytest.fixture
 def environments():
+    """ Used by unit.test_utils parametrics tests """
     from pipenv_pipes.core import Environment
     return [
         Environment('proj1', 'proj1-12345678', '~/fakedir/proj1-12345678'),
@@ -31,7 +31,7 @@ def environments():
     ]
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def cli(clean_environment):
     from pipenv_pipes import cli
     yield cli

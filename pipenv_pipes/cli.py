@@ -247,7 +247,6 @@ def ensure_valid_index(env_index):
 
 def ensure_env_vars_are_ok():
 
-
     if not os.path.exists(PIPENV_HOME):
         msg = (
             'Could not find Pipenv Environments location. [{}] \n'
@@ -265,7 +264,7 @@ def ensure_env_vars_are_ok():
 
     if VENV_IS_ACTIVE:
         msg = (
-            "A Virtual Environemnt is already active.\n"
+            "A Virtual environment is already active.\n"
             "Use 'deactivate' to close disable the enviroment "
             "before starting a new one.")
         click.echo(click.style(msg, fg='red'))
