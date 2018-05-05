@@ -30,9 +30,6 @@ from .core import (
 
 # Find Environments
 ENVIRONMENTS = find_environments(PIPENV_HOME)
-if not ENVIRONMENTS:
-    click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
-    sys.exit(1)
 
 
 @click.command()
@@ -246,6 +243,10 @@ def ensure_valid_index(env_index):
 
 
 def ensure_env_vars_are_ok():
+
+    if not ENVIRONMENTS:
+        click.echo('No pipenv environments found in {}'.format(PIPENV_HOME))
+        sys.exit(1)
 
     if not os.path.exists(PIPENV_HOME):
         msg = (

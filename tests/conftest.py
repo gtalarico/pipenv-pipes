@@ -1,7 +1,8 @@
 import pytest
 import os
 from imp import reload
-# from contextlib import contextmanager
+
+from click.testing import CliRunner
 
 
 @pytest.fixture(autouse=True)
@@ -36,3 +37,10 @@ def cli(clean_environment):
     from pipenv_pipes import cli
     yield cli
     reload(cli)
+
+
+@pytest.fixture
+def runner():
+    runner = CliRunner()
+    with runner.isolation():
+        yield runner

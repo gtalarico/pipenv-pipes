@@ -3,37 +3,30 @@
 
 """ Tests for `pipenv_pipes` cli."""
 
-import pytest
-
-from click.testing import CliRunner
+import pytest  # noqa: F401
 
 
-@pytest.fixture
-def runner():
-    runner = CliRunner()
-    with runner.isolation():
-        yield runner
+def test_cli_help(runner, cli):
+    cli.ENVIRONMENTS = None
+    help_result = runner.invoke(cli.pipes, args=['--help'])
+    assert help_result.exit_code == 0
+    assert 'show this message and exit' in help_result.output.lower()
 
 
-class TestRunPipesCli():
-
-    def test_cli_run(self, runner, cli):
-        """Test the CLI."""
-        result = runner.invoke(cli.pipes)
-        assert result.exit_code == 0
-
-    def test_cli_help(self, runner, cli):
-        help_result = runner.invoke(cli.pipes, args=['--help'])
-        assert help_result.exit_code == 0
-        assert 'Show this message and exit.' in help_result.output
-
-    def test_invalid_index(self, runner, cli):
-        result = runner.invoke(cli.pipes, args=['999999999999:'])
-        assert result.exception
-        assert 'invalid' in result.output.lower()
+def test_installed():
+    import subprocess
+    help_output = subprocess.check_output(['pipes', '--help']).decode()
+    assert 'show this message and exit' in help_output.lower()
 
 
 class TestEnsureVars():
+    """ Check for errors raised if Certain conditions are not met """
+
+    def test_not_pipenv_found(self, runner, cli):
+        cli.ENVIRONMENTS = []
+        result = runner.invoke(cli.pipes)
+        assert result.exception
+        assert 'no pipenv environments found' in result.output.lower()
 
     def test_pipenv_home(self, runner, cli):
         cli.PIPENV_HOME = '/fake/dir'
@@ -52,12 +45,6 @@ class TestEnsureVars():
         result = runner.invoke(cli.pipes)
         assert result.exception
         assert 'environment is already active' in result.output.lower()
-
-    def test_pipenv_in_project(self, runner, cli):
-        cli.PIPENV_VENV_IN_PROJECT = '1'
-        result = runner.invoke(cli.pipes)
-        assert result.exception
-        assert 'not supported' in result.output.lower()
 
     def test_pipenv_in_project(self, runner, cli):
         cli.PIPENV_VENV_IN_PROJECT = '1'
