@@ -18,17 +18,27 @@ class TestRunPipesCli():
         result = runner.invoke(cli.pipes)
         assert result.exit_code == 0
 
-    def test_call_pipenv_venv(self, runner, cli):
-        call_pipenv_venv
+    # def test_call_pipenv_venv(self, runner, cli):
+        # with runner.isolated_filesystem():
+            # out = call_pipenv_venv('fakedir', 'CustomPrompt')
+            # import pdb; pdb.set_trace()
 
-    def test_call_pipenv_shell(self, runner, cli):
-        call_pipenv_shell
+    # def test_call_pipenv_shell(self, runner, cli):
+    #     with runner.isolated_filesystem():
+    #         fake_dir = 'fake_dir'
+    #         os.mkdir(fake_dir)
+    #         os.chdir(fake_dir)
+    #         proc = call_pipenv_shell(project_dir=fake_dir, envname='CustomPrompt')
+    #         proc
+    #         import pdb; pdb.set_trace()
 
     def test_find_environments(self, runner, cli):
         find_environments
 
 
 class TestProjectDirFile():
+
+    """ Test functions for managing the .project file, aka project_dir file """
 
     def test_write_project_dir_project_file(self, runner):
         envpath = '.'

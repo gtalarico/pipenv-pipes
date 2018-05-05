@@ -14,18 +14,25 @@ Environment = namedtuple('Environment', ['envpath', 'envname', 'project_name'])
 def call_pipenv_venv(project_dir):
     """ Calls ``pipenv --venv`` from a given project directory """
     try:
-        output = subprocess.check_output(['pipenv', '--venv'], cwd=project_dir)
+        proc = subprocess.Popen(
+            ['pipenv', '--venv'], cwd=project_dir, stdout=subprocess.PIPE)
+        output, err = proc.communicate(timeout=15)
     except subprocess.CalledProcessError as exc:
-        pass
+        raise
     else:
         return output.decode().strip()
+    finally:
+        proc.kill()
 
 
 def call_pipenv_shell(project_dir, envname):
     """ Calls ``pipenv shell``` from a given envname """
     environ = dict(os.environ)
     environ['PROMPT'] = '({}){}'.format(envname, os.getenv('PROMPT', ''))
-    return subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=environ)
+    proc = subprocess.Popen(['pipenv', 'shell'], cwd=project_dir, env=environ)
+    # proc = subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=environ)
+    proc.communicate()
+    return proc
 
 
 def find_environments(pipenv_home):

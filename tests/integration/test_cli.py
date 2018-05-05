@@ -6,6 +6,7 @@
 import pytest  # noqa: F401
 import os
 
+
 def test_cli_help(runner, cli):
     cli.ENVIRONMENTS = None
     help_result = runner.invoke(cli.pipes, args=['--help'])
@@ -17,6 +18,18 @@ def test_installed():
     import subprocess
     help_output = subprocess.check_output(['pipes', '--help']).decode()
     assert 'show this message and exit' in help_output.lower()
+
+
+def test_one_match():
+    pass
+
+
+def test_no_match():
+    pass
+
+
+def test_many_match():
+    pass
 
 
 class TestEnsureVars():
