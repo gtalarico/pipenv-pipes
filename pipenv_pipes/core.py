@@ -3,13 +3,12 @@ import os
 import subprocess
 from collections import namedtuple
 
-from .environment import PROMPT
 from .utils import (
     get_project_name,
     get_project_dir_filepath
 )
 
-Environment = namedtuple('Environment', ['project_name', 'envname', 'envpath'])
+Environment = namedtuple('Environment', ['envpath', 'envname', 'project_name'])
 
 
 def call_pipenv_venv(project_dir):
@@ -24,9 +23,9 @@ def call_pipenv_venv(project_dir):
 
 def call_pipenv_shell(project_dir, envname):
     """ Calls ``pipenv shell``` from a given envname """
-    env_vars = os.environ.copy()
-    env_vars['PROMPT'] = '({}){}'.format(envname, PROMPT)
-    return subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=env_vars)
+    environ = dict(os.environ)
+    environ['PROMPT'] = '({}){}'.format(envname, os.getenv('PROMPT', ''))
+    return subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=environ)
 
 
 def find_environments(pipenv_home):

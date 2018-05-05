@@ -4,7 +4,7 @@
 """ Tests for `pipenv_pipes` cli."""
 
 import pytest  # noqa: F401
-
+import os
 
 def test_cli_help(runner, cli):
     cli.ENVIRONMENTS = None
@@ -22,32 +22,34 @@ def test_installed():
 class TestEnsureVars():
     """ Check for errors raised if Certain conditions are not met """
 
-    def test_not_pipenv_found(self, runner, cli):
-        cli.ENVIRONMENTS = []
-        result = runner.invoke(cli.pipes)
-        assert result.exception
-        assert 'no pipenv environments found' in result.output.lower()
+    def test_pipenv_home_no_envs(self, runner, cli):
+        with runner.isolated_filesystem():
+            os.mkdir('fakedir')
+            env = dict(WORKON_HOME='fakedir')
+            result = runner.invoke(cli.pipes, env=env)
+            assert result.exception
+            assert 'no pipenv environments found' in result.output.lower()
 
     def test_pipenv_home(self, runner, cli):
-        cli.PIPENV_HOME = '/fake/dir'
-        result = runner.invoke(cli.pipes)
+        env = dict(WORKON_HOME='/fake/dir')
+        result = runner.invoke(cli.pipes, env=env)
         assert result.exception
         assert 'could not find' in result.output.lower()
 
     def test_active_venv(self, runner, cli):
-        cli.PIPENV_ACTIVE = '1'
-        result = runner.invoke(cli.pipes)
+        env = dict(PIPENV_ACTIVE='1')
+        result = runner.invoke(cli.pipes, env=env)
         assert result.exception
         assert 'shell is already active' in result.output.lower()
 
-    def test_venv_is_Active(self, runner, cli):
-        cli.VENV_IS_ACTIVE = '1'
-        result = runner.invoke(cli.pipes)
+    def test_venv_is_active(self, runner, cli):
+        env = dict(VENV='1')
+        result = runner.invoke(cli.pipes, env=env)
         assert result.exception
         assert 'environment is already active' in result.output.lower()
 
     def test_pipenv_in_project(self, runner, cli):
-        cli.PIPENV_VENV_IN_PROJECT = '1'
-        result = runner.invoke(cli.pipes)
+        env = dict(PIPENV_VENV_IN_PROJECT='1')
+        result = runner.invoke(cli.pipes, env=env)
         assert result.exception
         assert 'not supported' in result.output.lower()
