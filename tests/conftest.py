@@ -1,23 +1,9 @@
 import pytest
 import os
 from imp import reload
+from contextlib import contextmanager
 
 from click.testing import CliRunner
-
-
-@pytest.fixture(autouse=True)
-def clean_environment():
-    BAD_VARS = [
-        'PIPENV_ACTIVE',
-        'PIPENV_VENV_IN_PROJECT',
-        'VENV',
-        'VIRTUAL_ENV'
-    ]
-    old_environ = dict(os.environ)
-    [os.environ.pop(k, None) for k in BAD_VARS]
-
-    yield dict(os.environ)
-    os.environ.update(old_environ)
 
 
 @pytest.fixture
@@ -32,12 +18,33 @@ def environments():
     ]
 
 
+@contextmanager
+def _temp_environ():
+    RELEVANT_VARS = dict(
+        PIPENV_ACTIVE='',
+        PIPENV_VENV_IN_PROJECT='',
+        VENV='',
+        VIRTUAL_ENV=''
+    )
+    old_environ = dict(os.environ)
+    os.environ.update(RELEVANT_VARS)
+    yield
+    os.environ.clear()
+    os.environ.update(old_environ)
+
+
+@pytest.fixture(autouse=True)
+def temp_environ():
+    return _temp_environ
+
+
 @pytest.fixture()
-def cli(clean_environment):
-    from pipenv_pipes import cli, environment
-    yield cli
-    reload(environment)
-    reload(cli)
+def cli(temp_environ):
+    with temp_environ():
+        from pipenv_pipes import cli, environment
+        yield cli
+        reload(environment)
+        reload(cli)
 
 
 @pytest.fixture
