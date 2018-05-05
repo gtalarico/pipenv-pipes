@@ -220,14 +220,11 @@ def ensure_one_match(query, matches, environments):
 
 
 def ensure_project_dir_has_env(project_dir):
-    envpath = call_pipenv_venv(project_dir)
-    if envpath:
+    envpath, error = call_pipenv_venv(project_dir)
+    if envpath and not error:
         return envpath
     else:
-        msg = (
-            "\nThe target Project Directory is not "
-            "associated with any Pipenv Environments.")
-        click.echo(click.style(msg, fg='red'))
+        click.echo(click.style(error, fg='red'), err=True)
         sys.exit(1)
 
 

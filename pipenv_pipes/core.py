@@ -15,14 +15,16 @@ def call_pipenv_venv(project_dir):
     """ Calls ``pipenv --venv`` from a given project directory """
     try:
         proc = subprocess.Popen(
-            ['pipenv', '--venv'], cwd=project_dir, stdout=subprocess.PIPE)
-        output, err = proc.communicate(timeout=15)
-    except subprocess.CalledProcessError as exc:
+            ['pipenv', '--venv'],
+            cwd=project_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+        output, error = proc.communicate(timeout=15)
+    except FileNotFoundError as exc:
+        # Should Never reach here, since click validates project_dir
         raise
     else:
-        return output.decode().strip()
-    finally:
-        proc.kill()
+        return output.decode().strip(), error.decode().strip()
 
 
 def call_pipenv_shell(project_dir, envname):

@@ -18,10 +18,15 @@ class TestRunPipesCli():
         result = runner.invoke(cli.pipes)
         assert result.exit_code == 0
 
-    # def test_call_pipenv_venv(self, runner, cli):
-        # with runner.isolated_filesystem():
-            # out = call_pipenv_venv('fakedir', 'CustomPrompt')
-            # import pdb; pdb.set_trace()
+    def test_call_pipenv_venv_file_not(self, runner, cli):
+        with pytest.raises(FileNotFoundError):
+            call_pipenv_venv('fakedir')
+
+    def test_call_pipenv_venv_not_a_venv(self, runner, cli):
+        """ No virtual path has been created """
+        path, error = call_pipenv_venv('/')
+        assert not path
+        assert error
 
     # def test_call_pipenv_shell(self, runner, cli):
     #     with runner.isolated_filesystem():
