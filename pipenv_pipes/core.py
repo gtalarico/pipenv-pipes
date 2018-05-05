@@ -51,9 +51,8 @@ def find_environments(pipenv_home):
 # Project Dir File (.project) #
 ###############################
 
-def read_project_dir_file(project):
-    # Move to Core
-    project_file = get_project_dir_filepath(project.envpath)
+def read_project_dir_file(envpath):
+    project_file = get_project_dir_filepath(envpath)
     try:
         with open(project_file) as fp:
             return fp.read().strip()
@@ -62,14 +61,12 @@ def read_project_dir_file(project):
 
 
 def write_project_dir_project_file(envpath, project_dir):
-    # Move to Core
     project_file = get_project_dir_filepath(envpath)
     with open(project_file, 'w') as fp:
         return fp.write(project_dir)
 
 
 def delete_project_dir_file(envpath):
-    # Move to Core
     project_file = get_project_dir_filepath(envpath)
     try:
         os.remove(project_file)
@@ -77,4 +74,3 @@ def delete_project_dir_file(envpath):
         pass
     else:
         return project_file
-

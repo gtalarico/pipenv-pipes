@@ -34,8 +34,9 @@ def environments():
 
 @pytest.fixture()
 def cli(clean_environment):
-    from pipenv_pipes import cli
+    from pipenv_pipes import cli, environment
     yield cli
+    reload(environment)
     reload(cli)
 
 

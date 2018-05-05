@@ -156,7 +156,7 @@ def print_project_list(environments, verbose):
     click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
-        project_dir = read_project_dir_file(environment)
+        project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
         name = click.style(environment.envname, fg='yellow')
         path = click.style(environment.envpath, fg='blue')
@@ -182,7 +182,7 @@ def ensure_has_project_dir_file(environment):
     Ensures the enviromend has .project file.
     If check failes, error is printed recommending course of action
     """
-    project_dir = read_project_dir_file(environment)
+    project_dir = read_project_dir_file(environment.envpath)
 
     if project_dir:
         return project_dir
