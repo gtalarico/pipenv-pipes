@@ -1,6 +1,5 @@
 import pytest
 import os
-from imp import reload
 from contextlib import contextmanager
 
 from click.testing import CliRunner
@@ -41,10 +40,8 @@ def temp_environ():
 @pytest.fixture()
 def cli(temp_environ):
     with temp_environ():
-        from pipenv_pipes import cli, environment
+        from pipenv_pipes import cli
         yield cli
-        reload(environment)
-        reload(cli)
 
 
 @pytest.fixture
