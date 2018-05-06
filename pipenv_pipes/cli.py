@@ -118,17 +118,15 @@ def set_env_dir(project_dir):
     # Associated with the env, otherwise activation will not work
     project_dir_envpath = ensure_project_dir_has_env(project_dir)
 
-    click.echo("Environment is: ", nl=False)
+    click.echo("Found Environment: ", nl=False)
     click.echo(click.style(project_dir_envpath, fg='blue'))
 
     prompt = click.style(
         'Set Project Directory + Environment association?', fg='yellow')
 
-    if click.confirm(prompt):
-        write_project_dir_project_file(project_dir_envpath, project_dir)
-        msg = ("\nProject Direectory Set.")
-
-        click.echo(click.style(msg, bold=True))
+    write_project_dir_project_file(project_dir_envpath, project_dir)
+    msg = ("\nProject Direectory Set.")
+    click.echo(click.style(msg, fg='yellow'))
 
     sys.exit(0)
 
@@ -223,11 +221,12 @@ def ensure_one_match(query, matches, environments):
 
 
 def ensure_project_dir_has_env(project_dir):
-    envpath, error = call_pipenv_venv(project_dir)
-    if envpath and not error:
+    output, code = call_pipenv_venv(project_dir)
+    if code == 0:
+        envpath = output
         return envpath
     else:
-        click.echo(click.style(error, fg='red'), err=True)
+        click.echo(click.style(output, fg='red'), err=True)
         sys.exit(1)
 
 

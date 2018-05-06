@@ -38,7 +38,6 @@ def temp_fake_projects_dir():
         yield path
 
 
-
 @pytest.fixture
 def temp_fake_venvs_home():
     with TemporaryDirectory(prefix='testenvs') as path:

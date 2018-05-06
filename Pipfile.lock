@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "df2edabf94a61b688c852522fab299deea99644a7c873acabb08191f8cb26500"
+            "sha256": "36e2c0b8821b38de431256a884d50f0b1a7e5333893b32a45196ade5ab2aaa5e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,6 +33,21 @@
         "e1839a8": {
             "editable": true,
             "path": "."
+        },
+        "pexpect": {
+            "hashes": [
+                "sha256:9783f4644a3ef8528a6f20374eeb434431a650c797ca6d8df0d81e30fffdfa24",
+                "sha256:9f8eb3277716a01faafaba553d629d3d60a1a624c7cf45daa600d2148c30020c"
+            ],
+            "index": "pypi",
+            "version": "==4.5.0"
+        },
+        "ptyprocess": {
+            "hashes": [
+                "sha256:e64193f0047ad603b71f202332ab5527c5e52aa7c8b609704fc28c0dc20c4365",
+                "sha256:e8c43b5eee76b2083a9badde89fd1bbce6c8942d1045146e100b7b5e014f4f1a"
+            ],
+            "version": "==0.5.2"
         }
     },
     "develop": {
@@ -269,8 +284,6 @@
         },
         "pycodestyle": {
             "hashes": [
-                "sha256:1ec08a51c901dfe44921576ed6e4c1f5b7ecbad403f871397feedb5eb8e4fa14",
-                "sha256:5ff2fbcbab997895ba9ead77e1b38b3ebc2e5c3b8a6194ef918666e4c790a00e",
                 "sha256:682256a5b318149ca0d2a9185d365d8864a768a28db66a84a2ea946bcc426766",
                 "sha256:6c4245ade1edfad79c3446fadfc96b0de2759662dc29d07d80a6f27ad1ca6ba9"
             ],

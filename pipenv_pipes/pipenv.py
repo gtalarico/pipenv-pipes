@@ -1,13 +1,12 @@
 import os
+import sys
+
 import subprocess
+from pexpect.popen_spawn import PopenSpawn
 
 
 def call_pipenv(*args, pipe=False, timeout=30, **kwargs):
-    if pipe:
-        kwargs.update(dict(
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        ))
+
     proc = subprocess.Popen(
         ['pipenv'] + list(args),   # *args fails on <= 3.4
         universal_newlines=True,  # Returns String instead of bytes
@@ -25,23 +24,32 @@ def call_pipenv(*args, pipe=False, timeout=30, **kwargs):
 
 def call_pipenv_venv(project_dir, timeout=10):
     """ Calls ``pipenv --venv`` from a given project directory """
-    proc, output, err = call_pipenv(
-        '--venv',
-        pipe=True,
+    proc = PopenSpawn(
+        'pipenv --venv',
         cwd=project_dir,
-        timeout=timeout
-    )
-    return output.strip(), err.strip()
+        timeout=timeout)
+    code = proc.wait()
+    output = proc.readline().decode().strip()
+    return output, code
 
 
-def call_pipenv_shell(cwd, envname='pipenv-shell', timeout=None, pipe=False):
+def call_pipenv_shell(cwd, envname='pipenv-shell'):
     """ Calls ``pipenv shell``` from a given envname """
     environ = dict(os.environ)
     environ['PROMPT'] = '({}){}'.format(envname, os.getenv('PROMPT', ''))
-    proc, output, err = call_pipenv(
-        'shell',
+
+    is_test = 'PYTEST_CURRENT_TEST' in os.environ
+    timeout = 5 if is_test else None
+    stdout = subprocess.PIPE if is_test else sys.stdout
+
+    proc = subprocess.Popen(
+        ['pipenv', 'shell'],
         cwd=cwd,
-        timeout=timeout,
-        pipe=pipe,  # True For test only
+        shell=False,
+        stdout=stdout,
         )
-    return proc, output, err
+
+    out, err = proc.communicate(timeout=timeout)
+    output = out or err
+    code = proc.returncode
+    return output, code, proc
