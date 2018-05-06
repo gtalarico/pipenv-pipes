@@ -8,13 +8,15 @@ import click
 
 from .environment import EnvVars
 from .utils import get_query_matches, get_index_from_query
+from .pipenv import (
+    call_pipenv_venv,
+    call_pipenv_shell,
+)
 from .core import (
     find_environments,
     read_project_dir_file,
-    call_pipenv_venv,
     delete_project_dir_file,
     write_project_dir_project_file,
-    call_pipenv_shell,
 )
 
 
