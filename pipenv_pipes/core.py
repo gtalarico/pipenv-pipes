@@ -18,7 +18,7 @@ def call_pipenv(*args, pipe=False, timeout=30, **kwargs):
             stderr=subprocess.PIPE,
         ))
     proc = subprocess.Popen(
-        ['pipenv', *args],
+        ['pipenv'] + list(args),   # *args fails on <= 3.4
         universal_newlines=True,  # Returns String instead of bytes
         **kwargs)
     try:
