@@ -42,6 +42,7 @@ class TestRunPipesCli():
         with runner.isolated_filesystem():
             os.makedirs('proj1-12345678')
             os.makedirs('proj2-12345678')
+            os.makedirs('nonenvfolder')
             environments = find_environments('.')
         assert len(environments) == 2
         assert 'proj1' in [e.project_name for e in environments]

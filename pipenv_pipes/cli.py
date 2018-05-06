@@ -203,18 +203,18 @@ def ensure_one_match(query, matches, environments):
     # No Matches
     if not matches:
         err_msg = click.style(
-            "No projec matches for query '{}'\n".format(query), fg='red')
+            "No matches for query '{}'\n".format(query), fg='red')
         click.echo(err_msg)
         print_project_list(environments=environments, verbose=False)
-        sys.exit(1)
+        sys.exit(0)
 
     # 2+ Matches
     elif len(matches) > 1:
-        msg = ("Query '{}' matches more than one project (shown below)."
+        msg = ("Query '{}' matches more than one environment (shown below)."
                "Try using a more sepecific query term.\n".format(query))
         click.echo(click.style(msg, fg='red'), err=True)
         print_project_list(environments=matches, verbose=False)
-        sys.exit(1)
+        sys.exit(0)
 
     else:
         return matches[0]
