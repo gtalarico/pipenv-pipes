@@ -4,8 +4,6 @@
 """ Tests for `pipenv_pipes` cli."""
 
 import pytest  # noqa: F401
-import os
-
 from pipenv_pipes.cli import pipes
 
 
@@ -15,30 +13,51 @@ def test_cli_help(runner):
     assert 'show this message and exit' in help_result.output.lower()
 
 
-def test_installed():
+def test_cli_from_shell():
     import subprocess
-    help_output = subprocess.check_output(['pipes', '--help']).decode()
-    assert 'show this message and exit' in help_output.lower()
+    result = subprocess.check_output(['pipes', '--help']).decode()
+    assert 'show this message and exit' in result.lower()
 
 
-@pytest.mark.skip
-def test_no_args(runner):
+def test_cli_no_args(runner):
+    result = runner.invoke(pipes)
+    assert result.exit_code == 0
+
+
+def test_cli_no_args_verbose(runner):
+    result = runner.invoke(pipes, ['--verbose'])
+    assert result.exit_code == 0
+    assert 'PIPENV_HOME' in result.output
+
+
+def test_cli_list(runner):
+    result = runner.invoke(pipes, args=['--list'])
+    assert result.exit_code == 0
+    assert 'proj1' in result.output
+
+
+def test_cli_list_verbose(runner):
+    result = runner.invoke(pipes, args=['--list', '--verbose'])
+    assert result.exit_code == 0
+    assert 'PIPENV_HOME' in result.output
+
+
+def test_no_match(runner):
+    result = runner.invoke(pipes, args=['projxxx'])
+    assert result.exit_code == 0
+    assert 'no matches' in result.output.lower()
+
+
+@pytest.mark.skip(reason='Need better process handling for shell tests')
+def test_one_match(runner):
+    # result = runner.invoke(pipes, args=['proj1'])
     pass
 
 
-@pytest.mark.skip
-def test_one_match():
-    pass
-
-
-@pytest.mark.skip
-def test_no_match():
-    pass
-
-
-@pytest.mark.skip
-def test_many_match():
-    pass
+def test_many_match(runner):
+    result = runner.invoke(pipes, args=['proj'])
+    assert result.exit_code == 0
+    assert 'more than one' in result.output.lower()
 
 
 class TestEnsureVars():

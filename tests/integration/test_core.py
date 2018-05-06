@@ -2,10 +2,7 @@ import pytest  # noqa: F401
 import os
 from os.path import join
 
-from pipenv_pipes.cli import pipes
 from pipenv_pipes.core import (
-    call_pipenv_venv,
-    call_pipenv_shell,
     find_environments,
     read_project_dir_file,
     write_project_dir_project_file,
@@ -13,35 +10,13 @@ from pipenv_pipes.core import (
 )
 
 
-class TestRunPipesCli():
-
-    def test_cli_run(self, runner):
-        """Test the CLI."""
-        result = runner.invoke(pipes)
-        assert result.exit_code == 0
-
-    def test_call_pipenv_venv_not_a_venv(self, temp_empty):
-        """ call venv on orphan folder: No virtual path has been created """
-        path, error = call_pipenv_venv(temp_empty)
-        assert not path
-        assert error
-
-    @pytest.mark.skip(reason='Need better popen control')
-    def test_call_pipenv_shell(self, temp_empty):
-        proc, out, err = call_pipenv_shell(
-            cwd=temp_empty,
-            timeout=15,
-            pipe=True)
-        # This passes with pytest -s
-        # but fails without since pytest interferes with the stdout/stferr
-        # Capturing
-        # assert proc.returncode == -9
-        assert "Use 'exit' to leave" in err
+class TestFindEnvironments():
 
     def test_find_environments(self, runner):
         with runner.isolated_filesystem():
             os.makedirs('proj1-12345678')
             os.makedirs('proj2-12345678')
+            os.makedirs('nonenvfolder')
             environments = find_environments('.')
         assert len(environments) == 2
         assert 'proj1' in [e.project_name for e in environments]
