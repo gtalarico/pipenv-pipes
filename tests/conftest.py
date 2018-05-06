@@ -1,7 +1,7 @@
 import pytest
 import os
 from contextlib import contextmanager
-
+from tempfile import TemporaryDirectory
 from click.testing import CliRunner
 
 
@@ -27,17 +27,18 @@ def _temp_environ():
     )
     old_environ = dict(os.environ)
     os.environ.update(RELEVANT_VARS)
+    os.environ.pop('PIPENV_ACTIVE')
     yield
     os.environ.clear()
     os.environ.update(old_environ)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def temp_environ():
     return _temp_environ
 
 
-@pytest.fixture()
+@pytest.fixture(autouse=True)
 def cli(temp_environ):
     with temp_environ():
         from pipenv_pipes import cli
@@ -49,3 +50,10 @@ def runner():
     runner = CliRunner()
     with runner.isolation():
         yield runner
+
+
+@pytest.fixture
+def test_dir():
+    with TemporaryDirectory() as directory:
+        os.environ['WORKON_HOME'] = directory
+        yield directory

@@ -11,35 +11,54 @@ from .utils import (
 Environment = namedtuple('Environment', ['envpath', 'envname', 'project_name'])
 
 
-def call_pipenv_venv(project_dir):
-    """ Calls ``pipenv --venv`` from a given project directory """
-    try:
-        proc = subprocess.Popen(
-            ['pipenv', '--venv'],
-            cwd=project_dir,
+def call_pipenv(*args, pipe=False, timeout=30, **kwargs):
+    if pipe:
+        kwargs.update(dict(
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
-        output, error = proc.communicate(timeout=15)
-    except FileNotFoundError as exc:
-        # Should Never reach here, since click validates project_dir
-        raise
+            stderr=subprocess.PIPE,
+        ))
+    proc = subprocess.Popen(
+        ['pipenv', *args],
+        universal_newlines=True,  # Returns String instead of bytes
+        **kwargs)
+    try:
+        output, err = proc.communicate(timeout=timeout)
+    except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
+        proc.kill()
+        output, err = proc.communicate()
     else:
-        return output.decode().strip(), error.decode().strip()
+        pass
+    finally:
+        return proc, output, err
 
 
-def call_pipenv_shell(project_dir, envname):
+def call_pipenv_venv(project_dir, timeout=10):
+    """ Calls ``pipenv --venv`` from a given project directory """
+    proc, output, err = call_pipenv(
+        '--venv',
+        pipe=True,
+        cwd=project_dir,
+        timeout=timeout
+    )
+    return output.strip(), err.strip()
+
+
+def call_pipenv_shell(cwd, envname='pipenv-shell', timeout=None, pipe=False):
     """ Calls ``pipenv shell``` from a given envname """
     environ = dict(os.environ)
     environ['PROMPT'] = '({}){}'.format(envname, os.getenv('PROMPT', ''))
-    proc = subprocess.Popen(['pipenv', 'shell'], cwd=project_dir, env=environ)
-    # proc = subprocess.call(['pipenv', 'shell'], cwd=project_dir, env=environ)
-    proc.communicate()
-    return proc
+    proc, output, err = call_pipenv(
+        'shell',
+        cwd=cwd,
+        timeout=timeout,
+        pipe=pipe,  # True For test only
+        )
+    return proc, output, err
 
 
 def find_environments(pipenv_home):
     """
-    Returns Environment Objects created from list of folders found in the
+    Returns Environment NamedTuple created from list of folders found in the
     Pipenv Environment location
     """
     environments = []

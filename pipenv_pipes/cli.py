@@ -139,8 +139,9 @@ def launch_env(environment):
     click.echo("Environment is '{}'".format(environment.envpath))
 
     ensure_project_dir_has_env(project_dir)
-    call_pipenv_shell(project_dir=project_dir, envname=environment.envname)
-    click.echo('Terminating pipes Shell...')
+    call_pipenv_shell(cwd=project_dir, envname=environment.envname)
+    msg = 'Terminating Pipes Shell...'
+    click.echo(click.style(msg, fg='red'))
     sys.exit(0)
 
 

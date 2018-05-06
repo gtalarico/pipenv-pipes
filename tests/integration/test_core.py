@@ -1,5 +1,6 @@
 import pytest  # noqa: F401
 import os
+import time
 
 from pipenv_pipes.core import (
     call_pipenv_venv,
@@ -18,27 +19,41 @@ class TestRunPipesCli():
         result = runner.invoke(cli.pipes)
         assert result.exit_code == 0
 
-    def test_call_pipenv_venv_file_not(self, runner, cli):
-        with pytest.raises(FileNotFoundError):
-            call_pipenv_venv('fakedir')
-
-    def test_call_pipenv_venv_not_a_venv(self, runner, cli):
+    def test_call_pipenv_venv_not_a_venv(self, test_dir):
         """ No virtual path has been created """
-        path, error = call_pipenv_venv('/')
+        path, error = call_pipenv_venv(test_dir)
         assert not path
         assert error
 
-    # def test_call_pipenv_shell(self, runner, cli):
-    #     with runner.isolated_filesystem():
-    #         fake_dir = 'fake_dir'
-    #         os.mkdir(fake_dir)
-    #         os.chdir(fake_dir)
-    #         proc = call_pipenv_shell(project_dir=fake_dir, envname='CustomPrompt')
-    #         proc
-    #         import pdb; pdb.set_trace()
+    def test_call_pipenv_shell(self, test_dir):
+        proc, out, err = call_pipenv_shell(
+            cwd=test_dir,
+            timeout=15,
+            pipe=True)
+        # This passes with pytest -s
+        # but fails without since pytest interferes with the stdout/stferr
+        # Capturing
+        # assert proc.returncode == -9
+        assert "Use 'exit' to leave" in err
 
-    def test_find_environments(self, runner, cli):
-        find_environments
+    def test_find_environments(self, runner):
+        with runner.isolated_filesystem():
+            os.makedirs('proj1-12345678')
+            os.makedirs('proj2-12345678')
+            environments = find_environments('.')
+        assert len(environments) == 2
+        assert 'proj1' in [e.project_name for e in environments]
+
+    def test_find_environments_empty(self, test_dir):
+        """ Environment could be empty """
+        environments = find_environments(test_dir)
+        assert len(environments) == 0
+
+
+    def test_find_environments_does_not_exit(self):
+        """ Invalid Folder. CLI Entry should catch, core func should fail """
+        with pytest.raises(IOError):
+            find_environments('/fakedir/')
 
 
 class TestProjectDirFile():
