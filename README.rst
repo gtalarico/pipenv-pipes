@@ -127,7 +127,7 @@ If query term (eg. ``project1``) returns two or more matches, Pipes will tell yo
 
 For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
 If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants 
-(```project1`` or ``project2``).
+(``project1`` or ``project2``).
 
 
 Go To a Project by Index
@@ -164,21 +164,27 @@ Known Issues
 * `PIPENV_VENV_IN_PROJECT` is not currently supported
 
 
+License
+-------
+
+`MIT License <https://github.com/gtalarico/pipenv-pipes/blob/master/LICENSE>`_
+
+
 Credits
 -------
 
 Inpired by `virtualenvwrapper`_
 
-Package created with Cookiecutter_ + `audreyr/cookiecutter-pypackage`_ template
+Package created with `Cookiecutter`_ + `cookiecutter-pypackage`_
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
+.. _`cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`virtualenvwrapper`: https://virtualenvwrapper.readthedocs.io/en/latest/
 
 
 Author
 ------
 
-Send me a message on twitter_
-.. _twitter: https://twitter.com/gtalarico
+Send me a message on `twitter`_
 
+.. _`twitter`: https://twitter.com/gtalarico
