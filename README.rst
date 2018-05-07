@@ -3,7 +3,7 @@ Pipes
 ===================================
 
 
-A friendly Pipenv Environment Switcher for your shell
+A friendly Pipenv Environment Switcher
 
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
@@ -28,10 +28,13 @@ Overview
 
 Pipes is a Pipenv companion CLI tool that provides a quick way to jump between your pipenv powered projects.
 
-
-* Documentation: https://pipenv-pipes.readthedocs.io.
-
 .. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
+
+Documentation
+-------------
+
+https://pipenv-pipes.readthedocs.io
+
 
 Install
 --------
@@ -44,8 +47,8 @@ Install
 Usage
 --------
 
-List available Pipenv Environments
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+List Pipenv Environments
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: bash
 
@@ -60,10 +63,15 @@ List available Pipenv Environments
     1: project2-R1v7_ynT *
 
 
-\* Indicates the Environment already has a Project Directory associated.
+The `*` indicates the Environment has a project directory associated.
 
+*The lack of a* `*`, indicates the Environment has not yet been associated with a project directory.
+If you try switching into an environment without the `*`, Pipes will tell you need to *link* the environment
+with a project directory first.
 
-To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
+To understand how Pipes links Project Directories with corresponding virtualenvs see `Link Environment to Project Directory`_.
+
+To see a detail output of the detected pipenv enviroments and the maped project directories use the ``--verbose`` option:
 
 .. code:: bash
 
@@ -71,45 +79,43 @@ To see a detail output of the enviroments and the corresponding paths use the ``
 
 .. code:: bash
 
-    [ Pipenv Environments ]  /Users/gtalarico/.local/share/virtualenvs
+
+    PIPENV_HOME: /Users/username/.local/share/virtualenvs
+    
+    [ Pipenv Environments ]
     
       0: project1-LwEMcb8W
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project1-LwEMcb8W
-         Project Dir: /Users/gtalarico/dev/flask-vue
+         Environment: /Users/username/.local/share/virtualenvs/project1-LwEMcb8W
+         Project Dir: /Users/username/dev/project1
          
       1: project2-R1v7_ynT
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project2-R1v7_ynT
-         Project Dir: /Users/gtalarico/dev/genome
-         
-*Project Dir* for unlinked Environments will show as `Not Set`.
+         Environment: /Users/username/.local/share/virtualenvs/project2-R1v7_ynT
+         Project Dir: /Users/username/dev/project2
+    
+
+*Project Dir* will show as `Not Set` if the Environment has not been associated with a Project directory.
 
 
-To understand how Pipes links a Procject Directory with its corresponding VirtualEnv see `Link Pipenv Environment to a Project Directory`_.
-
-
-Link Pipenv Environment to a Project Directory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Link Environment to Project Directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Before you can switch into a project using Pipes, the selected environment must have a project directory associated with it.
 
-To link a project directory with its environment run:
+To link a project directory with its environment use the ``--link`` flag:
 
 .. code:: bash
 
     $ pipes --link /path/to/project1
 
 Pipes will find the associated Pipenv Environmnet by running ``pipenv --venv`` from from the target directory.
-Once detected, the project directory path is stored within the environment inside a ``.project`` file.
-
-This pattern is the same used by virtualenvwrapper.
+Once detected, the project directory path is stored in the pipenv environemnt in a ``.project`` file.
 
 
 Go To a Project by Name
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Once you the Virtual Enviromnents are asscociated with Project Directories we can use the commands below to navigate our projects.
-
-To go to a project run `pipes` followed by the name of a project:
+Once our Pipenv Enviromnents are asscociated with Project Directories,
+we can use pipes to navigate our projects:
 
 .. code:: bash
 
@@ -117,10 +123,9 @@ To go to a project run `pipes` followed by the name of a project:
 
 This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
 
-If query term (eg. ``project1``) returns two or more matches, a more specific query term needs to be used.
+If query term (eg. ``project1``) returns two or more matches, Pipes will tell you that a more specific query term needs to be used.
 
 For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
-
 If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants 
 (```project1`` or ``project2``).
 
@@ -128,8 +133,8 @@ If query argument was ``project`` activation would fail since Pipes cannot guess
 Go To a Project by Index
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The environment index can also be used. 
-To active the enviroment ``1: project2-R1v7_ynT``:
+The environment index can also be used to switch into a project.
+To active the enviroment ``1: project2-R1v7_ynT`` run:
 
 .. code:: bash
 
@@ -140,28 +145,40 @@ To active the enviroment ``1: project2-R1v7_ynT``:
 Unlink a Project
 ^^^^^^^^^^^^^^^^^
 
-To unlink a project1 directory from its Pipenv Enviroment run:
+To unlink ``project1`` directory from its Pipenv Enviroment run:
 
 .. code:: bash
 
     $ pipes --unlink project1
 
 
-Other Commands
-^^^^^^^^^^^^^^
+Command Help
+^^^^^^^^^^^^
 
 For more details check ``pipes --help``
+
+
+Known Issues
+------------
+
+* `PIPENV_VENV_IN_PROJECT` is not currently supported
 
 
 Credits
 -------
 
-Send me a message on twitter_
+Inpired by `virtualenvwrapper`_
 
-.. _twitter: https://twitter.com/gtalarico
-
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+Package created with Cookiecutter_ + `audreyr/cookiecutter-pypackage`_ template
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`virtualenvwrapper`: https://virtualenvwrapper.readthedocs.io/en/latest/
+
+
+Author
+------
+
+Send me a message on twitter_
+.. _twitter: https://twitter.com/gtalarico
+
