@@ -5,6 +5,7 @@
 import os
 import sys
 import click
+import curses
 
 from . import __version__
 from .environment import EnvVars
@@ -22,7 +23,7 @@ from .core import (
 
 
 @click.command()
-@click.argument('envname', required=False)
+@click.argument('envname', default='', required=False)
 @click.option(
     '--list', '-l', 'list_',
     is_flag=True,
@@ -73,32 +74,23 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
             'No pipenv environments found in {}'.format(env_vars.PIPENV_HOME))
         sys.exit(1)
 
-    if list_ or (not envname and not setlink):
-        if verbose:
-            click.echo('PIPENV_HOME: {}'.format(env_vars.PIPENV_HOME))
+    if verbose:
+        click.echo('PIPENV_HOME: {}'.format(env_vars.PIPENV_HOME))
 
+    if list_:
         print_project_list(environments=environments, verbose=verbose)
         msg = "\nCheck 'pipes --help' for usage"
         click.echo(msg)
         sys.exit(0)
 
-    if setlink and envname:
-        msg = ("--link cannot be user with envname query")
-        raise click.UsageError(msg)
-
     if setlink:
+        if setlink and envname:
+            msg = ("--link cannot be user with envname query")
+            raise click.UsageError(msg)
         set_env_dir(project_dir=setlink)
 
-    # Check if using index and if yes launch
-    env_index = get_index_from_query(query=envname)
-    if env_index:
-        ensure_valid_index(env_index=env_index, environments=environments)
-        environment = environments[env_index]
-
-    else:
-        # Envname check
-        matches = get_query_matches(environments, envname)
-        environment = ensure_one_match(envname, matches, environments)
+    matches = get_query_matches(environments, envname)
+    environment = ensure_one_match(envname, matches, environments)
 
     if unlink:
         if delete_project_dir_file(environment.envpath):
@@ -147,24 +139,48 @@ def launch_env(environment):
     sys.exit(0)
 
 
+def do_pick(environments, note='', default=0):
+    title = '[ Pipenv Environments ]'
+    title = title if not note else '{}\n  {}'.format(title, note)
+    options = []
+    from pick import pick
+    for index, environment in enumerate(environments):
+        project_dir = read_project_dir_file(environment.envpath)
+        has_project_dir = bool(project_dir)
+        name = environment.envname
+        # path = environment.envpath
+        # entry = ' {} ({}'.format(name, path)
+
+        entry = name if not has_project_dir else name + ' *'
+        options.append(entry)
+
+    options.append('Exit')
+    option, index = pick(
+        options,
+        title,
+        indicator='>',
+        default_index=default,
+        multi_select=False)
+
+    if option == 'Exit':
+        sys.exit(0)
+    return option, index
+
+
 def print_project_list(environments, verbose):
     """ Prints Environments List """
-    header = '[ Pipenv Environments ] '
-    click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
         name = click.style(environment.envname, fg='yellow')
         path = click.style(environment.envpath, fg='blue')
-        index = click.style(str(index), fg='red')
 
-        entry = ' {}: {}'.format(index, name)
-
+        entry = name if not has_project_dir else name + ' *'
         if not verbose:
-            entry = entry if not has_project_dir else entry + ' *'
             click.echo(entry)
         else:
+            entry = '\n' + entry
             empty = click.style('NOT SET', fg='red')
             project_dir = project_dir if has_project_dir else empty
             click.echo(
@@ -202,25 +218,23 @@ def ensure_one_match(query, matches, environments):
     In both cases, program exists if validation fails.
     """
 
+    query = query if query else '*'
+    note = 'Query: {} (showing {} of {})'.format(
+        query, len(matches), len(environments))
+
     # No Matches
     if not matches:
-        err_msg = click.style(
-            "No matches for query '{}'\n".format(query), fg='red')
-        click.echo(err_msg)
-        print_project_list(environments=environments, verbose=False)
-        sys.exit(0)
-
+        note = 'Query: {} (0 matches - Showing All)'.format(query)
+        match, index = do_pick(environments=environments, note=note)
+        match = environments[index]
     # 2+ Matches
     elif len(matches) > 1:
-        msg = ("Query '{}' matches more than one environment (shown below)."
-               "Try using a more sepecific query term.\n".format(query))
-        click.echo(click.style(msg, fg='red'), err=True)
-        print_project_list(environments=matches, verbose=False)
-        sys.exit(0)
-
+        match, index = do_pick(environments=matches, note=note)
+        match = matches[index]
     else:
-        return matches[0]
+        match = matches[0]
 
+    return match
 
 def ensure_project_dir_has_env(project_dir):
     output, code = call_pipenv_venv(project_dir)

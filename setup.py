@@ -15,6 +15,7 @@ requirements = [
     'Click>=6.0',
     'colorama>=0.3',
     'pexpect>=4.5',
+    'pick>=0.6.4',  #TODO: Port As Module
 ]
 
 setup_requirements = ['pytest-runner', ]
