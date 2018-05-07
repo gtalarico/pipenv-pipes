@@ -7,6 +7,7 @@ History
 ------------------
 
 * Full Test Suite
+* Fixed Envname character bug
 
 
 0.4.1 (2018-05-02)

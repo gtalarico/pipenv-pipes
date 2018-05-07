@@ -73,6 +73,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
             # TODO: Replace this with an actual pipenv fake env
             # that returns valid --venv so we can reduce usage
             # of mock_slow
+            # https://github.com/pypa/pipenv/blob/master/pipenv/project.py#L223
             for project_name in os.listdir(mock_projects_dir):
                 envname = '{}-12345678'.format(project_name)
                 os.makedirs(os.path.join(pipenv_home, envname))

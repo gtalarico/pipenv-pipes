@@ -21,7 +21,7 @@ def fake_environments():
     return [
         Environment(
             project_name='proj1',
-            envname='proj1-12345678',
+            envname='proj1-1C_-wqgW',
             envpath='~/fakedir/proj1-12345678'
             ),
         Environment(
@@ -45,7 +45,7 @@ def fake_environments():
 @pytest.mark.utils
 @pytest.mark.parametrize("folder_name,expected", [
     ("nonpipenvproject", None),
-    ("project1-12345678", 'project1'),
+    ("project1-1C_-wqgW", 'project1'),
     ("something-with-dash-awrasdQW", 'something-with-dash'),
 ])
 def test_get_project_name(folder_name, expected):

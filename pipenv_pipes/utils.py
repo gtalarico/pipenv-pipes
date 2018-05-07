@@ -8,7 +8,7 @@ import re
 
 def get_project_name(folder_name):
     """ Returns name of a project given a Pipenv Environment folder """
-    PIPENV_FOLDER_PAT = r'^(.+)-\w{8}$'
+    PIPENV_FOLDER_PAT = r'^(.+)-[\w_-]{8}$'
     match = re.search(PIPENV_FOLDER_PAT, folder_name)
     return None if not match else match.group(1)
 
