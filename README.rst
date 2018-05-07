@@ -10,8 +10,8 @@ A friendly Pipenv Environment Switcher for your shell
         :target: https://pypi.python.org/pypi/pipenv_pipes
         :alt: Pypi Badge
 
-.. image:: https://img.shields.io/travis/gtalarico/pipenv_pipes.svg
-        :target: https://travis-ci.org/gtalarico/pipenv_pipes
+.. image:: https://img.shields.io/travis/gtalarico/pipenv-pipes/master.svg
+        :target: https://travis-ci.org/gtalarico/pipenv-pipes
         :alt: Traves CI Badge
 
 .. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg
