@@ -1,6 +1,5 @@
 import pytest  # noqa: F401
-from pexpect.popen_spawn import PopenSpawn
-import subprocess
+import os
 
 from pipenv_pipes.pipenv import (
     call_pipenv_venv,
@@ -8,24 +7,23 @@ from pipenv_pipes.pipenv import (
 )
 
 
-def test_call_pipenv_venv_not_a_venv(temp_empty):
+def test_call_pipenv_venv_not_a_venv(temp_folder):
     """ call venv on orphan folder: No virtual path has been created """
-    output, code = call_pipenv_venv(temp_empty)
+    output, code = call_pipenv_venv(temp_folder)
     assert code != 0
     assert 'no virtualenv has been create' in output.lower()
 
 
-@pytest.mark.skip(reason='Need mock pipenv')
-def test_call_pipenv_venv(project_dir):
-    pass  # Test when it works, needs mock pipenv
+@pytest.mark.slow
+def test_call_pipenv_venv(mock_env_home_slow):
+    pipenv_home, mock_projects_dir = mock_env_home_slow
+    for project_name in os.listdir(mock_projects_dir):
+        project_dir = os.path.join(mock_projects_dir, project_name)
+        output, code = call_pipenv_venv(project_dir=project_dir)
+        assert code == 0
+        assert pipenv_home in output
 
 
-# Test Shell as Integration Only
-@pytest.mark.skip(reason='Need mock pipenv')
-def test_call_pipenv_shell(runner, temp_empty):
-    output, code, proc = call_pipenv_shell(cwd=temp_empty)
-    # assert code == 0
-    # assert output == 'x'
-    # proc = PopenSpawn('pipes proj', cwd=temp_empty)
-    # proc.sendline('exit')
-    # output = proc.
+@pytest.mark.skip(reason='Not Sure how to mock this. Tested in test_cli')
+def test_call_pipenv_shell(temp_folder):
+    output, code, proc = call_pipenv_shell(cwd=temp_folder)

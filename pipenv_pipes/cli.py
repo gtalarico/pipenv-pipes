@@ -59,7 +59,6 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose):
         >>> pipes --list --verbose
 
     """
-    # import pdb; pdb.set_trace()
     env_vars = EnvVars()
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
@@ -121,11 +120,8 @@ def set_env_dir(project_dir):
     click.echo("Found Environment: ", nl=False)
     click.echo(click.style(project_dir_envpath, fg='blue'))
 
-    prompt = click.style(
-        'Set Project Directory + Environment association?', fg='yellow')
-
     write_project_dir_project_file(project_dir_envpath, project_dir)
-    msg = ("\nProject Direectory Set.")
+    msg = ("\nProject Directory Set.")
     click.echo(click.style(msg, fg='yellow'))
 
     sys.exit(0)
@@ -185,11 +181,11 @@ def ensure_has_project_dir_file(environment):
     else:
         msg = (
             "Pipenv enviroment '{env}' does not have project directory.\n"
-            "Use 'pipes --link <project-dir>' to link a project directory"
+            "Use 'pipes --link <project-dir>' to link a project directory\n"
             "with this enviroment".format(env=environment.envname))
 
         click.echo(click.style(msg, fg='red'), err=True)
-        sys.exit()
+        sys.exit(0)
 
 
 def ensure_one_match(query, matches, environments):

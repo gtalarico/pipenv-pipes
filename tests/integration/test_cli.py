@@ -48,24 +48,63 @@ def test_no_match(runner):
     assert 'no matches' in result.output.lower()
 
 
-@pytest.mark.skip(reason='Need better process handling for shell tests')
-def test_one_match(runner):
-    # result = runner.invoke(pipes, args=['proj1'])
-    pass
-
-
 def test_many_match(runner):
     result = runner.invoke(pipes, args=['proj'])
     assert result.exit_code == 0
     assert 'more than one' in result.output.lower()
 
 
+@pytest.mark.slow
+def test_one_match_do_shell(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1'], input='exit')
+    assert result.exit_code == 0
+    assert 'terminating pipes shell' in result.output.lower()
+
+
+@pytest.mark.slow
+def test_one_match_unlink(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+    assert result.exit_code == 0
+    assert 'project directory cleared' in result.output.lower()
+
+
+@pytest.mark.slow
+def test_one_match_no_link(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+    assert result.exit_code == 0
+    assert 'project directory cleared' in result.output.lower()
+
+    result = runner_slow.invoke(pipes, args=['proj1'])
+    assert result.exit_code == 0
+    # Message telling use he needs to create link
+    assert 'pipes --link' in result.output
+
+
+@pytest.mark.slow
+def test_do_link(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+    assert result.exit_code == 0
+    assert 'project directory cleared' in result.output.lower()
+
+    result = runner_slow.invoke(pipes, args=['--link', 'proj1'])
+    assert result.exit_code == 0
+    assert 'proj1' in result.output.lower()
+    assert 'project directory set' in result.output.lower()
+
+
+def test_do_link_no_assoc_env(runner, temp_folder):
+    result = runner.invoke(pipes, args=['--link', temp_folder])
+    assert result.exception
+    assert 'looking for associated' in result.output.lower()
+    assert 'no virtualenv has been created' in result.output.lower()
+
+
 class TestEnsureVars():
     """ Check for errors raised if Certain conditions are not met """
 
-    def test_pipenv_home_no_envs(self, runner, temp_empty):
+    def test_pipenv_home_no_envs(self, runner, temp_folder):
         """ WORKON_HOME exists but does not have any pipenv envs """
-        env = dict(WORKON_HOME=temp_empty)
+        env = dict(WORKON_HOME=temp_folder)
         result = runner.invoke(pipes, env=env)
         assert result.exception
         assert 'no pipenv environments found' in result.output.lower()
