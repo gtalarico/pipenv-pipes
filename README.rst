@@ -10,16 +10,16 @@ A friendly Pipenv Environment Switcher
         :target: https://pypi.python.org/pypi/pipenv_pipes
         :alt: Pypi Badge
 
-.. image:: https://img.shields.io/travis/gtalarico/pipenv-pipes/master.svg
+.. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=master
         :target: https://travis-ci.org/gtalarico/pipenv-pipes
         :alt: Traves CI Badge
 
-.. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg
+.. image:: https://codecov.io/gh/gtalarico/pipenv-pipes/branch/master/graph/badge.svg
         :target: https://codecov.io/gh/gtalarico/pipenv-pipes
         :alt: Codecov Badge
 
-.. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=latest
-        :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=master
+        :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=master
         :alt: Documentation Status
 
 
