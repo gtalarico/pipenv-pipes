@@ -36,9 +36,10 @@ Pipes is a Pipenv companion CLI tool that provides a quick way to jump between y
 Install
 --------
 
-.. code:: python
+.. code:: bash
 
-    >>> pip install pipenv-pipes
+    $ pip install pipenv-pipes
+
 
 Usage
 --------
@@ -46,9 +47,11 @@ Usage
 List available Pipenv Environments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code:: bash
 
-  >>> pipes
+  $ pipes
+  or
+  $ pipes --list
 
 .. code:: bash
 
@@ -60,24 +63,28 @@ List available Pipenv Environments
 \* Indicates the Environment already has a Project Directory associated.
 
 
-Activate Pipenv Enviroment Shell
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
 
 .. code:: bash
 
-    $ pipes project1
-
-This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
-
-If query term (``project1``) returns 2 or more matches, a more specific query term needs to be used.
-For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` or ``Lw` to get a single match.
-If ``envname`` argument was ``project``, activation would fail since Pipes cannot guess which enviroment users wants (```project1`` or ``project2``).
-
-The environment index can also be used. To active the enviroment ``1: project2-R1v7_ynT`` user would run:
+    $ pipes --list -verbose
 
 .. code:: bash
 
-    $ pipes 1:
+    [ Pipenv Environments ]  /Users/gtalarico/.local/share/virtualenvs
+    
+      0: project1-LwEMcb8W
+         Environment: /Users/gtalarico/.local/share/virtualenvs/project1-LwEMcb8W
+         Project Dir: /Users/gtalarico/dev/flask-vue
+         
+      1: project2-R1v7_ynT
+         Environment: /Users/gtalarico/.local/share/virtualenvs/project2-R1v7_ynT
+         Project Dir: /Users/gtalarico/dev/genome
+         
+*Project Dir* for unlinked Environments will show as `Not Set`.
+
+
+To understand how Pipes links a Procject Directory with its corresponding VirtualEnv see `Link Pipenv Environment to a Project Directory`_.
 
 
 Link Pipenv Environment to a Project Directory
@@ -91,58 +98,59 @@ To link a project directory with its environment run:
 
     $ pipes --link /path/to/project1
 
-Pipes will find the associated Pipenv Environmnet by using ``pipenv --venv`` from that location,
-and then store the project directory path within the environment (``.project`` file)
+Pipes will find the associated Pipenv Environmnet by running ``pipenv --venv`` from from the target directory.
+Once detected, the project directory path is stored within the environment inside a ``.project`` file.
 
-This pattern is similar to what virtualenvwrapper's ``workon`` uses to link a VirtualEnviroment folder to
-the corresponding project.
-
-Environments that have associated project folders are shown with an asterisk `*` on the Pipenv Environment.
-To see the Environment list use:
-
-.. code:: bash
-
-    $ pipes --list
-    
-.. code:: bash
-
-  [ Pipenv Environments ]
-    0: project1-LwEMcb8W *
-    1: project2-R1v7_ynT *
+This pattern is the same used by virtualenvwrapper.
 
 
+Go To a Project by Name
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
+Once you the Virtual Enviromnents are asscociated with Project Directories we can use the commands below to navigate our projects.
+
+To go to a project run `pipes` followed by the name of a project:
 
 .. code:: bash
 
-    $ pipes --list -verbose
+    $ pipes project1
+
+This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
+
+If query term (eg. ``project1``) returns two or more matches, a more specific query term needs to be used.
+
+For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
+
+If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants 
+(```project1`` or ``project2``).
+
+
+Go To a Project by Index
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The environment index can also be used. 
+To active the enviroment ``1: project2-R1v7_ynT``:
 
 .. code:: bash
 
-    [ Pipenv Environments ]  /Users/gtalarico/.local/share/virtualenvs
-      0: project1-LwEMcb8W
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project1-LwEMcb8W
-         Project Dir: /Users/gtalarico/dev/flask-vue
-      1: project2-R1v7_ynT
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project2-R1v7_ynT
-         Project Dir: /Users/gtalarico/dev/genome
+    $ pipes 1:
 
+
+
+Unlink a Project
+^^^^^^^^^^^^^^^^^
+
+To unlink a project1 directory from its Pipenv Enviroment run:
+
+.. code:: bash
+
+    $ pipes --unlink project1
 
 
 Other Commands
 ^^^^^^^^^^^^^^
 
 For more details check ``pipes --help``
-
-
-Todo
--------
-
-* Add Documentation
-* Add tests + Contributing
-* Setup Travis CI
-* Add cd-only flag (don't activate shell)
 
 
 Credits
