@@ -70,6 +70,9 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
     """
     with TemporaryDirectory(prefix='testenvs') as pipenv_home:
         with TempEnviron(WORKON_HOME=pipenv_home):
+            # TODO: Replace this with an actual pipenv fake env
+            # that returns valid --venv so we can reduce usage
+            # of mock_slow
             for project_name in os.listdir(mock_projects_dir):
                 envname = '{}-12345678'.format(project_name)
                 os.makedirs(os.path.join(pipenv_home, envname))
@@ -124,6 +127,3 @@ def runner_slow(mock_env_home_slow):
     with runner.isolation():
         yield runner
     os.chdir(cwd)
-
-
-
