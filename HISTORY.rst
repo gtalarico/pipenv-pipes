@@ -8,6 +8,7 @@ History
 
 * Full Test Suite
 * Fixed Envname character bug
+* Added --version
 
 
 0.4.1 (2018-05-02)

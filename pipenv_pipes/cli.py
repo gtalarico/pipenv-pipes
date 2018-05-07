@@ -6,6 +6,7 @@ import os
 import sys
 import click
 
+from . import __version__
 from .environment import EnvVars
 from .utils import get_query_matches, get_index_from_query
 from .pipenv import (
@@ -37,8 +38,9 @@ from .core import (
               is_flag=True,
               help='Unlink Project Directory from this Environment')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
+@click.option('--version', is_flag=True, help='Show Version')
 @click.pass_context
-def pipes(ctx, envname, list_, setlink, unlink, verbose):
+def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
     """
 
     Pipes - PipEnv Environment Switcher
@@ -59,6 +61,10 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose):
         >>> pipes --list --verbose
 
     """
+    if version:
+        click.echo(__version__)
+        return
+
     env_vars = EnvVars()
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)

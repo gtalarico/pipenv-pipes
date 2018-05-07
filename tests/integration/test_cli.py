@@ -13,6 +13,13 @@ def test_cli_help(runner):
     assert 'show this message and exit' in help_result.output.lower()
 
 
+def test_cli_version(runner):
+    from pipenv_pipes import __version__
+    result = runner.invoke(pipes, args=['--version'])
+    assert result.exit_code == 0
+    assert __version__ in result.output
+
+
 def test_cli_from_shell():
     import subprocess
     result = subprocess.check_output(['pipes', '--help']).decode()
