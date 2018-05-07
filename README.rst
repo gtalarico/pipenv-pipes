@@ -8,19 +8,19 @@ A friendly Pipenv Environment Switcher
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
         :target: https://pypi.python.org/pypi/pipenv_pipes
-        :alt: Pypi Badge
+        :alt: Pypi
 
 .. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=master
         :target: https://travis-ci.org/gtalarico/pipenv-pipes
-        :alt: Traves CI Badge
+        :alt: Traves CI
 
 .. image:: https://codecov.io/gh/gtalarico/pipenv-pipes/branch/master/graph/badge.svg
         :target: https://codecov.io/gh/gtalarico/pipenv-pipes
-        :alt: Codecov Badge
+        :alt: Codecov
 
-.. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=master
-        :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=master
-        :alt: Documentation Status
+.. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=latest
+        :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation
 
 
 Overview
