@@ -161,7 +161,7 @@ For more details check ``pipes --help``
 Known Issues
 ------------
 
-* `PIPENV_VENV_IN_PROJECT` is not currently supported
+* ``PIPENV_VENV_IN_PROJECT`` is not currently supported
 
 
 License
