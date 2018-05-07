@@ -3,12 +3,17 @@ History
 =======
 
 
+0.4.2 (2018-05-06)
+------------------
+
+* Full Test Suite
 
 
 0.4.1 (2018-05-02)
 ------------------
 
-* Allow New Line on Read
+* Allow New Line on Read (PR #3)
+* Typo PR #2
 
 
 0.4.0 (2018-05-02)
