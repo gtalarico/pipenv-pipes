@@ -3,24 +3,24 @@ Pipes
 ===================================
 
 
-A friendly Pipenv Environment Switcher for your shell
+Pipenv Environment Switcher ⚡
 
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
         :target: https://pypi.python.org/pypi/pipenv_pipes
-        :alt: Pypi Badge
+        :alt: Pypi
 
-.. image:: https://img.shields.io/travis/gtalarico/pipenv_pipes.svg
-        :target: https://travis-ci.org/gtalarico/pipenv_pipes
-        :alt: Traves CI Badge
+.. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=master
+        :target: https://travis-ci.org/gtalarico/pipenv-pipes
+        :alt: Traves CI
 
-.. image:: https://img.shields.io/codecov/c/github/gtalarico/pipenv-pipes.svg
+.. image:: https://codecov.io/gh/gtalarico/pipenv-pipes/branch/master/graph/badge.svg
         :target: https://codecov.io/gh/gtalarico/pipenv-pipes
-        :alt: Codecov Badge
+        :alt: Codecov
 
 .. image:: https://readthedocs.org/projects/pipenv-pipes/badge/?version=latest
         :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+        :alt: Documentation
 
 
 Overview
@@ -28,27 +28,39 @@ Overview
 
 Pipes is a Pipenv companion CLI tool that provides a quick way to jump between your pipenv powered projects.
 
-
-* Documentation: https://pipenv-pipes.readthedocs.io.
-
 .. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
+
+Documentation
+-------------
+
+https://pipenv-pipes.readthedocs.io
+
 
 Install
 --------
 
-.. code:: python
+.. code:: bash
 
-    >>> pip install pipenv-pipes
+    $ pip install pipenv-pipes
+
+Compatibility
+^^^^^^^^^^^^
+
+* Python 3.4+ (PRs for 2.7 welcome)
+* Unix + Windows Support 💖
+
 
 Usage
 --------
 
-List available Pipenv Environments
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+List Pipenv Environments
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code:: bash
 
-  >>> pipes
+  $ pipes
+  or
+  $ pipes --list
 
 .. code:: bash
 
@@ -57,62 +69,15 @@ List available Pipenv Environments
     1: project2-R1v7_ynT *
 
 
-\* Indicates the Environment already has a Project Directory associated.
+The `*` indicates the Environment has a project directory associated.
 
+*The lack of a* `*`, indicates the Environment has not yet been associated with a project directory.
+If you try switching into an environment without the `*`, Pipes will tell you need to *link* the environment
+with a project directory first.
 
-Activate Pipenv Enviroment Shell
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To understand how Pipes links Project Directories with corresponding virtualenvs see `Link Environment to Project Directory`_.
 
-.. code:: bash
-
-    $ pipes project1
-
-This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
-
-If query term (``project1``) returns 2 or more matches, a more specific query term needs to be used.
-For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` or ``Lw` to get a single match.
-If ``envname`` argument was ``project``, activation would fail since Pipes cannot guess which enviroment users wants (```project1`` or ``project2``).
-
-The environment index can also be used. To active the enviroment ``1: project2-R1v7_ynT`` user would run:
-
-.. code:: bash
-
-    $ pipes 1:
-
-
-Link Pipenv Environment to a Project Directory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before you can switch into a project using Pipes, the selected environment must have a project directory associated with it.
-
-To link a project directory with its environment run:
-
-.. code:: bash
-
-    $ pipes --link /path/to/project1
-
-Pipes will find the associated Pipenv Environmnet by using ``pipenv --venv`` from that location,
-and then store the project directory path within the environment (``.project`` file)
-
-This pattern is similar to what virtualenvwrapper's ``workon`` uses to link a VirtualEnviroment folder to
-the corresponding project.
-
-Environments that have associated project folders are shown with an asterisk `*` on the Pipenv Environment.
-To see the Environment list use:
-
-.. code:: bash
-
-    $ pipes --list
-    
-.. code:: bash
-
-  [ Pipenv Environments ]
-    0: project1-LwEMcb8W *
-    1: project2-R1v7_ynT *
-
-
-
-To see a detail output of the enviroments and the corresponding paths use the ``--verbose`` option:
+To see a detail output of the detected pipenv enviroments and the maped project directories use the ``--verbose`` option:
 
 .. code:: bash
 
@@ -120,40 +85,112 @@ To see a detail output of the enviroments and the corresponding paths use the ``
 
 .. code:: bash
 
-    [ Pipenv Environments ]  /Users/gtalarico/.local/share/virtualenvs
+
+    PIPENV_HOME: /Users/username/.local/share/virtualenvs
+    
+    [ Pipenv Environments ]
+    
       0: project1-LwEMcb8W
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project1-LwEMcb8W
-         Project Dir: /Users/gtalarico/dev/flask-vue
+         Environment: /Users/username/.local/share/virtualenvs/project1-LwEMcb8W
+         Project Dir: /Users/username/dev/project1
+         
       1: project2-R1v7_ynT
-         Environment: /Users/gtalarico/.local/share/virtualenvs/project2-R1v7_ynT
-         Project Dir: /Users/gtalarico/dev/genome
+         Environment: /Users/username/.local/share/virtualenvs/project2-R1v7_ynT
+         Project Dir: /Users/username/dev/project2
+    
+
+*Project Dir* will show as `Not Set` if the Environment has not been associated with a Project directory.
+
+
+Link Environment to Project Directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before you can switch into a project using Pipes, the selected environment must have a project directory associated with it.
+
+To link a project directory with its environment use the ``--link`` flag:
+
+.. code:: bash
+
+    $ pipes --link /path/to/project1
+
+Pipes will find the associated Pipenv Environmnet by running ``pipenv --venv`` from from the target directory.
+Once detected, the project directory path is stored in the pipenv environemnt in a ``.project`` file.
+
+
+Go To a Project by Name
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Once our Pipenv Enviromnents are asscociated with Project Directories,
+we can use pipes to navigate our projects:
+
+.. code:: bash
+
+    $ pipes project1
+
+This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
+
+If query term (eg. ``project1``) returns two or more matches, Pipes will tell you that a more specific query term needs to be used.
+
+For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
+If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants 
+(``project1`` or ``project2``).
+
+
+Go To a Project by Index
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The environment index can also be used to switch into a project.
+To active the enviroment ``1: project2-R1v7_ynT`` run:
+
+.. code:: bash
+
+    $ pipes 1:
 
 
 
-Other Commands
-^^^^^^^^^^^^^^
+Unlink a Project
+^^^^^^^^^^^^^^^^^
+
+To unlink ``project1`` directory from its Pipenv Enviroment run:
+
+.. code:: bash
+
+    $ pipes --unlink project1
+
+
+Command Help
+^^^^^^^^^^^^
 
 For more details check ``pipes --help``
 
 
-Todo
+Known Issues
+------------
+
+* ``PIPENV_VENV_IN_PROJECT`` is not currently supported
+
+
+License
 -------
 
-* Add Documentation
-* Add tests + Contributing
-* Setup Travis CI
-* Add cd-only flag (don't activate shell)
+`MIT License <https://github.com/gtalarico/pipenv-pipes/blob/master/LICENSE>`_
 
 
 Credits
 -------
 
-Send me a message on twitter_
+Inpired by `virtualenvwrapper`_
 
-.. _twitter: https://twitter.com/gtalarico
+Package created with `Cookiecutter`_ + `cookiecutter-pypackage`_
+
+.. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
+.. _`cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`virtualenvwrapper`: https://virtualenvwrapper.readthedocs.io/en/latest/
 
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+Author
+------
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+Send me a message on `twitter`_
+
+.. _`twitter`: https://twitter.com/gtalarico

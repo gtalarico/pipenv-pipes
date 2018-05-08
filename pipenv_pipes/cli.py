@@ -24,7 +24,7 @@ from .core import (
 @click.command()
 @click.argument('envname', required=False)
 @click.option(
-    '--list', '-l', 'list_',
+    '--list', 'list_',
     is_flag=True,
     help='List Pipenv Projects')
 @click.option(
@@ -149,6 +149,7 @@ def launch_env(environment):
 
 def print_project_list(environments, verbose):
     """ Prints Environments List """
+    # import os; os.system('clear')
     header = '[ Pipenv Environments ] '
     click.echo(click.style(header, bold=True))
 
