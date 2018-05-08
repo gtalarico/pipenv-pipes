@@ -26,3 +26,6 @@ script: tox
 #     tags: true
 #     repo: gtalarico/pipenv-pipes
 #     python: 3.6
+# TODO: Integrate Deployment
+# https://docs.travis-ci.com/user/encryption-keys/
+# https://docs.travis-ci.com/user/languages/python/#Using-Tox-as-the-Build-Script
