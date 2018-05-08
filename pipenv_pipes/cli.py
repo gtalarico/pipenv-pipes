@@ -238,31 +238,7 @@ def ensure_valid_index(env_index, environments):
 
 
 def ensure_env_vars_are_ok(env_vars):
-    e = env_vars
-    if not os.path.exists(e.PIPENV_HOME):
-        msg = (
-            'Could not find Pipenv Environments location. [{}] \n'
-            'If you are using a non-default location you will need to '
-            'add the path to $WORKON_HOME.'.format(e.PIPENV_HOME))
-        click.echo(click.style(msg, fg='red'))
-        sys.exit(1)
-
-    if e.PIPENV_IS_ACTIVE:
-        msg = (
-            "Pipenv Shell is already active. \n"
-            "Use 'exit' to close the shell before starting a new one.")
-        click.echo(click.style(msg, fg='red'))
-        sys.exit(1)
-
-    if e.VENV_IS_ACTIVE:
-        msg = (
-            "A Virtual environment is already active.\n"
-            "Use 'deactivate' to close disable the enviroment "
-            "before starting a new one.")
-        click.echo(click.style(msg, fg='red'))
-        sys.exit(1)
-
-    if e.PIPENV_VENV_IN_PROJECT:
-        msg = 'PIPENV_VENV_IN_PROJECT is not supported at this time'
-        click.echo(click.style(msg, fg='red'))
+    error_msg = env_vars.validate_environment()
+    if error_msg:
+        click.echo(click.style(error_msg, fg='red'))
         sys.exit(1)
