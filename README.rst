@@ -3,7 +3,7 @@ Pipes
 ===================================
 
 
-A friendly Pipenv Environment Switcher
+Pipenv Environment Switcher ⚡
 
 
 .. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
@@ -42,6 +42,12 @@ Install
 .. code:: bash
 
     $ pip install pipenv-pipes
+
+Compatibility
+^^^^^^^^^^^^
+
+* Python 3.4+ (PRs for 2.7 welcome)
+* Unix + Windows Support 💖
 
 
 Usage
