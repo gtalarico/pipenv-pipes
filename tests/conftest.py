@@ -89,7 +89,10 @@ def mock_env_home_slow(TempEnviron, mock_projects_dir):
                 proc = PopenSpawn(['pipenv', 'install'], cwd=proj_dir)
                 code = proc.wait()
                 output = proc.readline().decode().strip()
-                assert code == 0
+                try:
+                    assert code == 0
+                except AssertionError:
+                    raise Exception(output)
                 # This fail on windows
                 # assert 'To activate this project' in output
                 # assert pipenv_home in output
