@@ -143,7 +143,7 @@ def do_pick(environments, note='', default=0):
     title = '[ Pipenv Environments ]'
     title = title if not note else '{}\n  {}'.format(title, note)
     options = []
-    from pick import pick
+    from .picker import pick
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
