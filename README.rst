@@ -87,17 +87,17 @@ To see a detail output of the detected pipenv enviroments and the maped project 
 
 
     PIPENV_HOME: /Users/username/.local/share/virtualenvs
-    
+
     [ Pipenv Environments ]
-    
+
       0: project1-LwEMcb8W
          Environment: /Users/username/.local/share/virtualenvs/project1-LwEMcb8W
          Project Dir: /Users/username/dev/project1
-         
+
       1: project2-R1v7_ynT
          Environment: /Users/username/.local/share/virtualenvs/project2-R1v7_ynT
          Project Dir: /Users/username/dev/project2
-    
+
 
 *Project Dir* will show as `Not Set` if the Environment has not been associated with a Project directory.
 
@@ -132,7 +132,7 @@ This would cd into directory ``/path/to/project1`` and the corresponding Pipenv 
 If query term (eg. ``project1``) returns two or more matches, Pipes will tell you that a more specific query term needs to be used.
 
 For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
-If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants 
+If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants
 (``project1`` or ``project2``).
 
 
@@ -168,6 +168,20 @@ Known Issues
 ------------
 
 * ``PIPENV_VENV_IN_PROJECT`` is not currently supported
+
+Curses on Windows
+-----------------
+
+Curses are not natively supported on windows.
+To enable curses on windows you must get Windows binaries from `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#curses>`_
+
+First download the appropriate wheel from the link above, then use pip to install it:
+```
+pip install C:\..packetPath..\curses-2.2-cp35-none-win_amd64.whl
+```
+
+The windows support issue is discussed in detail here:
+https://bugs.python.org/issue2889
 
 
 License
