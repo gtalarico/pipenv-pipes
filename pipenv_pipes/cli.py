@@ -159,8 +159,7 @@ def do_pick(environments, note='', default=0):
         options,
         title,
         indicator='>',
-        default_index=default,
-        multi_select=False)
+        default_index=default)
 
     if option == 'Exit':
         sys.exit(0)
@@ -219,7 +218,7 @@ def ensure_one_match(query, matches, environments):
     """
 
     query = query if query else '*'
-    note = 'Query: {} (showing {} of {})'.format(
+    note = "Query: '{}' (showing {} of {})".format(
         query, len(matches), len(environments))
 
     # No Matches
