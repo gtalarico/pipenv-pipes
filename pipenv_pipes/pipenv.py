@@ -5,23 +5,6 @@ import subprocess
 from pexpect.popen_spawn import PopenSpawn
 
 
-def call_pipenv(*args, pipe=False, timeout=30, **kwargs):
-    pass
-    # proc = subprocess.Popen(
-    #     ['pipenv'] + list(args),   # *args fails on <= 3.4
-    #     universal_newlines=True,  # Returns String instead of bytes
-    #     **kwargs)
-    # try:
-    #     output, err = proc.communicate(timeout=timeout)
-    # except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
-    #     proc.kill()
-    #     output, err = proc.communicate()
-    # else:
-    #     pass
-    # finally:
-    #     return proc, output, err
-
-
 def call_pipenv_venv(project_dir, timeout=10):
     """ Calls ``pipenv --venv`` from a given project directory """
     proc = PopenSpawn(

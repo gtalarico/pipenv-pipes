@@ -6,12 +6,10 @@ Pick - create curses based interactive selection list in the terminal
 LICENSE MIT
 """
 
-
+import sys
 import curses
 
 __all__ = ['Picker', 'pick']
-
-
 
 
 # COLOR
@@ -152,9 +150,6 @@ class Picker(object):
 
         lines_to_draw = lines[scroll_top:scroll_top + max_rows]
 
-        # filter
-        # lines = [line for line in lines if ''.join(self.query) in str(line)]
-
         for n, line in enumerate(lines_to_draw):
             if type(line) is tuple:
                 self.screen.addnstr(y, x, line[0], max_x-2, line[1])
@@ -166,23 +161,42 @@ class Picker(object):
             if n == len(lines_to_draw) - 2:
                 y += 1
 
-        query = 'Query: {}'.format(''.join(self.query))
+        query = '$ {}'.format(''.join(self.query))
         self.screen.addnstr(y + 2, x + 2, query, max_x-2, curses.color_pair(2))
-
         self.screen.refresh()
 
     def run_loop(self):
-        KEYS_ENTER = (curses.KEY_ENTER, ord('\n'), ord('\r'))
+        from curses import ascii
         KEYS_UP = (curses.KEY_UP, )
         KEYS_DOWN = (curses.KEY_DOWN, )
-        KEYS_SELECT = (curses.KEY_RIGHT, ord(' '))
+        KEYS_ENTER = (
+            curses.KEY_ENTER,
+            curses.KEY_RIGHT,
+            ord('\n'),             # MacOs Enter
+            ord('\r'),
+            32,                     # Space
+            )
+        KEYS_CLEAR = (
+            curses.KEY_DC,         # MacOs Delete
+            ascii.DEL,             # MacOs Backpace
+            curses.KEY_BACKSPACE,  # MacOs fn + del
+            )
+        KEYS_ESCAPE = (
+            21,                    # MacOs Escape
+            5
+            )
 
         while True:
             self.draw()
             c = self.screen.getch()
+            # Key Debug
+            # self.options[0] = str(chr(c) + '|' + str(c))
+            # self.draw()
             if c in KEYS_UP:
+                self.query = []
                 self.move_up()
             elif c in KEYS_DOWN:
+                self.query = []
                 self.move_down()
             elif c in KEYS_ENTER:
                 return self.get_selected()
@@ -191,11 +205,18 @@ class Picker(object):
                 if ret:
                     return ret
             elif c == curses.KEY_HOME:
+                self.query = []
                 self.index = 0
             elif c == curses.KEY_END:
-                self.index = len(self.options) - 2
-            elif c == curses.KEY_DC:
                 self.query = []
+                self.index = len(self.options) - 2
+            elif c in KEYS_CLEAR:
+                self.query = []
+            elif c in KEYS_ESCAPE:
+                sys.exit(0)
             else:
                 self.query.append(chr(c))
+                for n, option in enumerate(self.options):
+                    if option.startswith(''.join(self.query)):
+                        self.index = n
 

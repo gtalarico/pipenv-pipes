@@ -9,6 +9,7 @@ import curses
 
 from . import __version__
 from .environment import EnvVars
+from .picker import Picker
 from .utils import get_query_matches, get_index_from_query
 from .pipenv import (
     call_pipenv_venv,
@@ -141,7 +142,6 @@ def launch_env(environment):
 
 def do_pick(environments, note='', default=0):
     options = []
-    from .picker import Picker
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
