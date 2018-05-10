@@ -8,7 +8,7 @@ import click
 
 from . import __version__
 from .environment import EnvVars
-from .utils import get_query_matches, get_index_from_query
+from .utils import get_query_matches, get_index_from_query, collapse_path
 from .pipenv import (
     call_pipenv_venv,
     call_pipenv_shell,
@@ -178,9 +178,9 @@ def print_project_list(environments, verbose):
                 '    Project Dir: \t {project_dir}\n'\
                 .format(
                     entry=entry,
-                    envpath=envpath,
-                    project_dir=project_dir,
-                    binpath=binpath
+                    envpath=collapse_path(envpath),
+                    project_dir=collapse_path(project_dir),
+                    binpath=collapse_path(binpath),
                     ))
 
 

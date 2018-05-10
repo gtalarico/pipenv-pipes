@@ -43,6 +43,6 @@ def collapse_path(path):
         home = os.environ['HOME']
     else:
         home = os.environ['USERPROFILE']
-    path = path.replace(workon, 'PIPENV_HOME')
+    path = path.replace(workon, '$PIPENV_HOME')
     path = path.replace(home, '~')
     return path

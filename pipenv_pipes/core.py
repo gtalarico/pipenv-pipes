@@ -2,11 +2,9 @@
 import os
 from collections import namedtuple
 
-from .environment import EnvVars
 from .utils import (
     get_project_name,
     get_project_dir_filepath,
-    collapse_path,
 )
 
 Environment = namedtuple('Environment', [
@@ -14,7 +12,6 @@ Environment = namedtuple('Environment', [
     'envname',
     'project_name',
     'binpath',
-    'short_envpath',
     ])
 
 
@@ -34,7 +31,6 @@ def find_environments(pipenv_home):
                                   envpath=envpath,
                                   envname=folder_name,
                                   binpath=binpath,
-                                  short_envpath=collapse_path(envpath),
                                   )
         environments.append(environment)
     return environments
