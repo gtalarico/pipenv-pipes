@@ -150,14 +150,14 @@ def do_pick(environments):
         entry = name if not has_project_dir else name + ' *'
         options.append(entry)
 
-    options.append('Exit')
-    picker = Picker(options, debug_mode=True)
-    option, index = picker.start()
+    environments = environments * 30
+    picker = Picker(environments, debug_mode=True)
+    selected, index = picker.start()
 
-    if option == 'exit':
+    if selected == 'exit':
         sys.exit(0)
 
-    return option, index
+    return selected, index
 
 
 def print_project_list(environments, verbose):

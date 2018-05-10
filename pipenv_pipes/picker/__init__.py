@@ -12,7 +12,7 @@ import curses
 import string
 
 from .colors import get_colors
-from .elements import Line
+from .elements import Line, EnvLine
 from .keys import (
     KEYS_UP,
     KEYS_DOWN,
@@ -30,23 +30,20 @@ __all__ = ['Picker']
 
 class Picker(object):
 
-    def __init__(self, options, debug_mode=False):
+    def __init__(self, environments, debug_mode=False):
 
-        if not options:
-            raise ValueError('Invalid Options')
+        if not environments:
+            raise ValueError('invalid environments value')
 
-        self.options = options
+        self.options = environments
         self.query = []
         self.index = 0
         self.debug_mode = debug_mode
 
     def config_curses(self):
-        # use the default colors of the terminal
-        curses.use_default_colors()
-        # hide the cursor
-        curses.curs_set(0)
-        # setup colors
-        self.colors = get_colors()
+        curses.use_default_colors()  # use the default colors of the terminal
+        curses.curs_set(0)           # hide the cursor
+        self.colors = get_colors()   # initialize temrinal colors
 
     def _start(self, screen):
         self.screen = screen
@@ -56,14 +53,14 @@ class Picker(object):
     def start(self):
         return curses.wrapper(self._start)
 
-    def move_up(self, positions=1):
-        self.index -= positions
+    def move_up(self, pos=1):
+        self.index -= pos
         if self.index < 0:
             self.index = len(self.options) - 1
         self.clear_query()
 
-    def move_down(self, positions=1):
-        self.index += positions
+    def move_down(self, pos=1):
+        self.index += pos
         if self.index >= len(self.options):
             self.index = 0
         self.clear_query()
@@ -85,65 +82,55 @@ class Picker(object):
     def get_option_lines(self):
         lines = []
         for index, option in enumerate(self.options):
-
             is_selected = index == self.index
-
             if is_selected:
                 color = self.colors['RED']
             else:
                 color = self.colors['WHITE']
-
-            line = Line(text=option, color=color, selected=is_selected)
+            line = EnvLine(env=option, color=color, selected=is_selected)
             lines.append(line)
-
         return lines
 
-    def get_lines(self):
-        title_color = self.colors['GREEN']
-        title_lines = [
-            Line('===================', color=title_color),
-            Line('Pipenv Environments', color=title_color),
-            Line('===================', color=title_color),
-            Line('\n', color=title_color),
-        ]
-        # exit_line = [Line('Exit', color=self.colors['BLUE'])]
+    def get_title_lines(self):
+        color = self.colors['GREEN']
+        title = 'Pipenv Environments'
+        title_line = Line(title, color=color, pad=2)
+        bar_line = Line('=' * len(title), color=color, pad=2)
+        blank_line = Line('', color=None)
+        return [bar_line, title_line, bar_line, blank_line]
 
+    def get_lines(self):
+        title_lines = self.get_title_lines()
         option_lines = self.get_option_lines()
         lines = title_lines + option_lines
         current_line = self.index + len(title_lines) + 1
         return lines, current_line
 
     def draw(self, debug_info=None):
-        """draw the curses ui on the screen, handle scroll if needed"""
         self.screen.clear()
 
-        x, y = 1, 0  # start point
+        pad_top = 0
+        pad_left = 1
+        pad_bottom = 4
+        x, y = pad_left, pad_top
+
         max_y, max_x = self.screen.getmaxyx()
-        max_rows = max_y - y  # the max rows we can draw
+        max_rows = max_y - pad_top - pad_bottom
 
         lines, current_line = self.get_lines()
+        if current_line <= max_rows:
+            visible_lines = lines[:max_rows]
+        else:
+            delta = current_line - max_rows
+            visible_lines = lines[delta:][:max_rows]
 
-        # calculate how many lines we should scroll, relative to the top
-        scroll_top = getattr(self, 'scroll_top', 0)
-        if current_line <= scroll_top:
-            scroll_top = 0
-        elif current_line - scroll_top > max_rows:
-            scroll_top = current_line - max_rows
-        self.scroll_top = scroll_top
-
-        bottom_scroll = scroll_top + max_rows
-        lines_to_draw = lines[scroll_top: bottom_scroll]
-
-        for n, line in enumerate(lines_to_draw):
+        for n, line in enumerate(visible_lines):
             line.render(self.screen, x=x, y=y)
             y += 1
 
-        # THESE BREAK SCROLLING:
-        #   # Adde space before Exit
-        #   # if n == len(lines_to_draw) - 2:
-        #       # y += 1
+        last_line = max_rows + 1
         query = '$ {}'.format(''.join(self.query))
-        self.screen.addnstr(y + 2, x + 2, query, max_x-2, curses.color_pair(2))
+        self.screen.addnstr(last_line, pad_left, query, max_x-2, curses.color_pair(2))
 
         if debug_info:
             self.print_debug_info(debug_info)
