@@ -10,7 +10,7 @@ import curses
 from . import __version__
 from .environment import EnvVars
 from .picker import Picker
-from .utils import get_query_matches, get_index_from_query
+from .utils import get_query_matches, get_index_from_query, collapse_path
 from .pipenv import (
     call_pipenv_venv,
     call_pipenv_shell,
@@ -150,7 +150,7 @@ def do_pick(environments):
         entry = name if not has_project_dir else name + ' *'
         options.append(entry)
 
-    environments = environments * 30
+    # environments = environments * 30
     picker = Picker(environments, debug_mode=True)
     selected, index = picker.start()
 
@@ -189,9 +189,9 @@ def print_project_list(environments, verbose):
                 '    Project Dir: \t {project_dir}\n'\
                 .format(
                     entry=entry,
-                    envpath=envpath,
-                    project_dir=project_dir,
-                    binpath=binpath
+                    envpath=collapse_path(envpath),
+                    project_dir=collapse_path(project_dir),
+                    binpath=collapse_path(binpath),
                     ))
 
 

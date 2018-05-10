@@ -2,10 +2,9 @@
 import os
 from collections import namedtuple
 
-from .environment import EnvVars
 from .utils import (
     get_project_name,
-    get_project_dir_filepath
+    get_project_dir_filepath,
 )
 
 Environment = namedtuple('Environment', [

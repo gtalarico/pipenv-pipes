@@ -1,4 +1,4 @@
-
+from ..utils import collapse_path
 
 MARGIN = 2
 
@@ -34,7 +34,8 @@ class EnvLine(Line):
     @property
     def text(self):
         envname = self.env.envname
-        expanded_envname = '{e.envname} ({e.envpath})'.format(e=self.env)
+        envpath = collapse_path(self.env.envpath)
+        expanded_envname = '{0}'.format(envpath)
         prefix = self.MARKER if self.selected else ' ' * len(self.MARKER)
         text = envname if not self.expanded else expanded_envname
         return '{prefix} {text}'.format(prefix=prefix, text=text)
