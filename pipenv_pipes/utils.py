@@ -5,6 +5,8 @@
 import os
 import re
 
+from .environment import EnvVars
+
 
 def get_project_name(folder_name):
     """ Returns name of a project given a Pipenv Environment folder """
@@ -32,3 +34,15 @@ def get_index_from_query(query):
     pat = r'(\d+):$'
     match = re.match(pat, query)
     return None if not match else int(match.group(1))
+
+
+def collapse_path(path):
+    envvars = EnvVars()
+    workon = envvars.PIPENV_HOME
+    if not envvars.IS_WINDOWS:
+        home = os.environ['HOME']
+    else:
+        home = os.environ['USERPROFILE']
+    path = path.replace(workon, 'PIPENV_HOME')
+    path = path.replace(home, '~')
+    return path
