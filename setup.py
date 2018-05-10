@@ -12,12 +12,15 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.0',    # Required
-    'colorama>=0.3', # Optional but nice
-    'pexpect>=4.5',  # Nice but can be removed
+    'Click>=6.0',        # Required
+    'colorama>=0.3',     # Optional but nice
+    'pexpect>=4.5',      # Nice but can be removed
+    'curses==2.2.0',
 ]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = [
+    'pytest-runner'
+    ]
 
 test_requirements = [
     'click',
@@ -46,6 +49,9 @@ setup(
             'pipes=pipenv_pipes.cli:pipes',
         ],
     },
+    dependency_links=[
+        'https://github.com/gtalarico/curses-win/releases/tag/2.2.0'
+    ],
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
