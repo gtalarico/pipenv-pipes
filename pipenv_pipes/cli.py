@@ -162,9 +162,6 @@ def do_pick(environments):
 
 def print_project_list(environments, verbose):
     """ Prints Environments List """
-    # import os; os.system('clear')
-    header = '\n [   Pipenv Environments  ] \n'
-    click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
