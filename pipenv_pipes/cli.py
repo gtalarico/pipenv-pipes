@@ -162,25 +162,40 @@ def do_pick(environments):
 
 def print_project_list(environments, verbose):
     """ Prints Environments List """
+    # import os; os.system('clear')
+    header = '\n [   Pipenv Environments  ] \n'
+    click.echo(click.style(header, bold=True))
 
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
         name = click.style(environment.envname, fg='yellow')
-        path = click.style(environment.envpath, fg='blue')
+        envpath = click.style(environment.envpath, fg='blue')
+        binpath = click.style(environment.binpath, fg='blue')
+        index = click.style(str(index), fg='red')
+
+        entry = ' {}: {}'.format(index, name)
+        if has_project_dir:
+            entry += ' *'
+            project_dir = click.style(project_dir, fg='blue')
+        else:
+            project_dir = click.style('[ NOT SET ]', fg='red')
 
         entry = name if not has_project_dir else name + ' *'
         if not verbose:
             click.echo(entry)
         else:
-            entry = '\n' + entry
-            empty = click.style('NOT SET', fg='red')
-            project_dir = project_dir if has_project_dir else empty
             click.echo(
-                '{} \n    Environment: {}\n    Project Dir: {}'.format(
-                    entry,
-                    path,
-                    project_dir))
+                '{entry}\n'
+                '    Environment: \t {envpath}\n'
+                '    Binary: \t\t {binpath}\n'
+                '    Project Dir: \t {project_dir}\n'\
+                .format(
+                    entry=entry,
+                    envpath=envpath,
+                    project_dir=project_dir,
+                    binpath=binpath
+                    ))
 
 
 def ensure_has_project_dir_file(environment):

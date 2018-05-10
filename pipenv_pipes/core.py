@@ -2,12 +2,18 @@
 import os
 from collections import namedtuple
 
+from .environment import EnvVars
 from .utils import (
     get_project_name,
     get_project_dir_filepath
 )
 
-Environment = namedtuple('Environment', ['envpath', 'envname', 'project_name'])
+Environment = namedtuple('Environment', [
+    'envpath',
+    'envname',
+    'project_name',
+    'binpath',
+    ])
 
 
 def find_environments(pipenv_home):
@@ -17,15 +23,31 @@ def find_environments(pipenv_home):
     """
     environments = []
     for folder_name in sorted(os.listdir(pipenv_home)):
-        folder_path = os.path.join(pipenv_home, folder_name)
-        project_name = get_project_name(folder_name)
+        envpath = os.path.join(pipenv_home, folder_name)
+        project_name = get_project_name(envpath)
         if not project_name:
             continue
+        binpath = find_binary(envpath)
         environment = Environment(project_name=project_name,
-                                  envpath=folder_path,
-                                  envname=folder_name)
+                                  envpath=envpath,
+                                  envname=folder_name,
+                                  binpath=binpath,
+                                  )
         environments.append(environment)
     return environments
+
+
+def find_binary(envpath):
+    env_ls = os.listdir(envpath)
+    if 'bin' in env_ls:
+        path = os.path.join(envpath, 'bin')
+    elif 'Scripts' in env_ls:
+        path = os.path.join(envpath, 'Scripts')
+    binpath = os.path.join(path, 'python')
+    if os.path.exists(binpath):
+        return binpath
+    else:
+        raise Environment('could not find python binary: {}'.format(envpath))
 
 
 ###############################
