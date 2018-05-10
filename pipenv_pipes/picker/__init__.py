@@ -9,7 +9,6 @@ LICENSE MIT
 import re
 import sys
 import curses
-import string
 
 from .colors import get_colors
 from .elements import Line, EnvLine
@@ -22,6 +21,7 @@ from .keys import (
     KEYS_ESCAPE,
     KEYS_HOME,
     KEYS_END,
+    KEYS_SPACE,
 )
 
 
@@ -35,9 +35,10 @@ class Picker(object):
         if not environments:
             raise ValueError('invalid environments value')
 
-        self.options = environments
-        self.query = []
+        self.environments = environments
+        self.query = ''
         self.index = 0
+        self.expanded = False
         self.debug_mode = debug_mode
 
     def config_curses(self):
@@ -56,12 +57,12 @@ class Picker(object):
     def move_up(self, pos=1):
         self.index -= pos
         if self.index < 0:
-            self.index = len(self.options) - 1
+            self.index = len(self.environments) - 1
         self.clear_query()
 
     def move_down(self, pos=1):
         self.index += pos
-        if self.index >= len(self.options):
+        if self.index >= len(self.environments):
             self.index = 0
         self.clear_query()
 
@@ -70,24 +71,28 @@ class Picker(object):
         self.clear_query()
 
     def move_bottom(self):
-        self.index = len(self.options) - 1
+        self.index = len(self.environments) - 1
         self.clear_query()
 
     def clear_query(self):
-        self.query = []
+        self.query = ''
 
     def get_selected(self):
-        return self.options[self.index], self.index
+        return self.environments[self.index], self.index
 
-    def get_option_lines(self):
+    def get_env_lines(self):
         lines = []
-        for index, option in enumerate(self.options):
+        for index, environment in enumerate(self.environments):
             is_selected = index == self.index
             if is_selected:
                 color = self.colors['RED']
             else:
                 color = self.colors['WHITE']
-            line = EnvLine(env=option, color=color, selected=is_selected)
+            line = EnvLine(
+                env=environment,
+                color=color,
+                selected=is_selected,
+                expanded=self.expanded)
             lines.append(line)
         return lines
 
@@ -101,8 +106,8 @@ class Picker(object):
 
     def get_lines(self):
         title_lines = self.get_title_lines()
-        option_lines = self.get_option_lines()
-        lines = title_lines + option_lines
+        environment_lines = self.get_env_lines()
+        lines = title_lines + environment_lines
         current_line = self.index + len(title_lines) + 1
         return lines, current_line
 
@@ -112,10 +117,15 @@ class Picker(object):
         pad_top = 0
         pad_left = 1
         pad_bottom = 4
+        pad_right = 1
         x, y = pad_left, pad_top
 
         max_y, max_x = self.screen.getmaxyx()
         max_rows = max_y - pad_top - pad_bottom
+        max_cols = max_x - pad_right
+        if max_y < 4 or max_x < 10:
+            self.screen.addnstr(0, 0, 'Help!', max_cols)
+            return
 
         lines, current_line = self.get_lines()
         if current_line <= max_rows:
@@ -128,9 +138,9 @@ class Picker(object):
             line.render(self.screen, x=x, y=y)
             y += 1
 
-        last_line = max_rows + 1
+        last_line = len(visible_lines) + 1
         query = '$ {}'.format(''.join(self.query))
-        self.screen.addnstr(last_line, pad_left, query, max_x-2, curses.color_pair(2))
+        self.screen.addnstr(last_line, pad_left, query, max_cols, curses.color_pair(2))
 
         if debug_info:
             self.print_debug_info(debug_info)
@@ -163,10 +173,11 @@ class Picker(object):
                 continue
 
             if re.search(r'[A-Za-z0-9\s\-_]', key_string):
-                self.query.append(key_string)
-                for n, option in enumerate(self.options):
-                    if option.startswith(''.join(self.query)):
+                self.query += key_string
+                for n, environment in enumerate(self.environments):
+                    if environment.envname.startswith(self.query):
                         self.index = n
+                        break
 
             if key == curses.KEY_PPAGE:
                 self.move_up(5)
@@ -191,6 +202,9 @@ class Picker(object):
 
             elif key in KEYS_CLEAR:
                 self.clear_query()
+
+            elif key in KEYS_SPACE:
+                self.expanded = bool(not self.expanded)
 
             elif key in KEYS_BACKSPACE:
                 self.query = self.query[:-1]

@@ -28,13 +28,13 @@ class EnvLine(Line):
     def __init__(self, env=None, **kwargs):
         self.env = env
         self.selected = kwargs.pop('selected')
+        self.expanded = kwargs.pop('expanded')
         super().__init__(env.envname, **kwargs)
 
     @property
     def text(self):
         envname = self.env.envname
-        if self.selected:
-            return '{} {}'.format(self.MARKER, envname)
-        else:
-            space = ' ' * len(self.MARKER)
-            return '{} {}'.format(space, envname)
+        expanded_envname = '{e.envname} ({e.envpath})'.format(e=self.env)
+        prefix = self.MARKER if self.selected else ' ' * len(self.MARKER)
+        text = envname if not self.expanded else expanded_envname
+        return '{prefix} {text}'.format(prefix=prefix, text=text)
