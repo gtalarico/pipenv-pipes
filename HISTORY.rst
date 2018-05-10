@@ -5,10 +5,12 @@ History
 0.4.2 (2018-05-06)
 ------------------
 
-* Full Test Suite
 * Fixed Envname character bug
 * Added --version
-* Added default windows path
+* AddedFull Test Suite
+* Adde Windows Default Path support
+* Cleanned up dependencies
+* Cleanned up env validation
 
 
 0.4.1 (2018-05-02)

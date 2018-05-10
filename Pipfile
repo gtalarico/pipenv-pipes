@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"e1839a8" = {path = ".", editable = true}
 
 [dev-packages]
 "bump2version" = "*"
@@ -13,11 +12,9 @@ twine = "*"
 coverage = "*"
 pytest = "*"
 pytest-cov = "*"
-pytest-lazy-fixture = "*"
-tox = "*"
-sphinx = "*"
 sphinx-autobuild = "*"
-rope = "*"
+pytest-lazy-fixture = "*"
+"flake8" = "*"
 
 [requires]
 python_version = "3.6"

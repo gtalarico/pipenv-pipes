@@ -70,5 +70,10 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
+<<<<<<< HEAD
+=======
+    url='https://github.com/gtalarico/pipenv-pipes',
+    version='0.4.2-rc3',
+>>>>>>> master
     zip_safe=False,
 )

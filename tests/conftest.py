@@ -2,10 +2,10 @@ import pytest
 import os
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
+
 from click.testing import CliRunner
-from pexpect.popen_spawn import PopenSpawn
 
-
+from pipenv_pipes.pipenv import PipedPopen
 from pipenv_pipes.core import (
     find_environments,
     write_project_dir_project_file
@@ -72,7 +72,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
         with TempEnviron(WORKON_HOME=pipenv_home):
             # TODO: Replace this with an actual pipenv fake env
             # that returns valid --venv so we can reduce usage
-            # of mock_slow
+            # of mock_slow and run most tests witout an actual pipen install
             # https://github.com/pypa/pipenv/blob/master/pipenv/project.py#L223
             for project_name in os.listdir(mock_projects_dir):
                 envname = '{}-12345678'.format(project_name)
@@ -86,17 +86,10 @@ def mock_env_home_slow(TempEnviron, mock_projects_dir):
         with TempEnviron(WORKON_HOME=pipenv_home):
             for project_name in os.listdir(mock_projects_dir):
                 proj_dir = os.path.join(mock_projects_dir, project_name)
-                proc = PopenSpawn(['pipenv', 'install'], cwd=proj_dir)
-                code = proc.wait()
-                output = proc.readline().decode().strip()
-                try:
-                    assert code == 0
-                except AssertionError:
-                    raise Exception(output)
+                output, code = PipedPopen(['pipenv', 'install'], cwd=proj_dir)
+                assert code == 0
                 # This fail on windows
-                # assert 'To activate this project' in output
-                # assert pipenv_home in output
-                print('CREATED: {}'.format(output))
+                assert 'pipenv shell' in output
 
             # Make Project Links
             envs = find_environments(pipenv_home)
