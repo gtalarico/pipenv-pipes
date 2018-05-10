@@ -17,7 +17,6 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'Click>=6.0',        # Required
     'colorama>=0.3',     # Optional but nice
-    'pexpect>=4.5',      # Nice but can be removed
 ]
 
 depenency_links = []
