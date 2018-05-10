@@ -5,24 +5,19 @@ name = "pypi"
 
 [packages]
 "e1839a8" = {path = ".", editable = true}
-pexpect = "*"
-asciimatics = "*"
 
 [dev-packages]
-twine = "*"
-pytest = "*"
 "bump2version" = "*"
-click = "*"
-"e1839a8" = {path = ".", editable = true}
-sphinx = "*"
-coverage = "*"
-tox = "*"
-pytest-cov = "*"
-sphinx-autobuild = "*"
-"doc8" = "*"
-pytest-lazy-fixture = "*"
-rope = "*"
 "flake8" = "*"
+twine = "*"
+coverage = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-lazy-fixture = "*"
+tox = "*"
+sphinx = "*"
+sphinx-autobuild = "*"
+rope = "*"
 
 [requires]
 python_version = "3.6"
