@@ -140,7 +140,7 @@ def launch_env(environment):
     sys.exit(0)
 
 
-def do_pick(environments, note='', default=0):
+def do_pick(environments):
     options = []
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
@@ -151,7 +151,7 @@ def do_pick(environments, note='', default=0):
         options.append(entry)
 
     options.append('Exit')
-    picker = Picker(options, default_index=default)
+    picker = Picker(options)
     option, index = picker.start()
 
     if option == 'Exit':
@@ -218,11 +218,11 @@ def ensure_one_match(query, matches, environments):
     # No Matches
     if not matches:
         note = 'Query: {} (0 matches - Showing All)'.format(query)
-        match, index = do_pick(environments=environments, note=note)
+        match, index = do_pick(environments=environments)
         match = environments[index]
     # 2+ Matches
     elif len(matches) > 1:
-        match, index = do_pick(environments=matches, note=note)
+        match, index = do_pick(environments=matches)
         match = matches[index]
     else:
         match = matches[0]
