@@ -18,6 +18,7 @@ from .core import (
     read_project_dir_file,
     delete_project_dir_file,
     write_project_dir_project_file,
+    get_binary_version,
 )
 
 
@@ -158,7 +159,8 @@ def print_project_list(environments, verbose):
         has_project_dir = bool(project_dir)
         name = click.style(environment.envname, fg='yellow')
         envpath = click.style(environment.envpath, fg='blue')
-        binpath = click.style(environment.binpath, fg='blue')
+        binversion = get_binary_version(environment.envpath)
+        # binpath = click.style(environment.binpath, fg='blue')
         index = click.style(str(index), fg='red')
 
         entry = ' {}: {}'.format(index, name)
@@ -174,13 +176,13 @@ def print_project_list(environments, verbose):
             click.echo(
                 '{entry}\n'
                 '    Environment: \t {envpath}\n'
-                '    Binary: \t\t {binpath}\n'
+                '    Binary: \t\t {binversion}\n'
                 '    Project Dir: \t {project_dir}\n'\
                 .format(
                     entry=entry,
                     envpath=collapse_path(envpath),
                     project_dir=collapse_path(project_dir),
-                    binpath=collapse_path(binpath),
+                    binversion=binversion,
                     ))
 
 
