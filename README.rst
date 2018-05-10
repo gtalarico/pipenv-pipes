@@ -41,7 +41,11 @@ Install
 
 .. code:: bash
 
-    $ pip install pipenv-pipes
+    # MacOs + Ubuntu
+    $ pip install pipenv-pipes --user
+
+    # Windows
+    $ pip install pipenv-pipes --find-links https://github.com/gtalarico/curses-win/releases/tag/2.2.0
 
 Compatibility
 ^^^^^^^^^^^^

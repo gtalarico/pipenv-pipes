@@ -140,29 +140,23 @@ def launch_env(environment):
 
 
 def do_pick(environments, note='', default=0):
-    title = '[ Pipenv Environments ]'
-    title = title if not note else '{}\n  {}'.format(title, note)
     options = []
-    from .picker import pick
+    from .picker import Picker
     for index, environment in enumerate(environments):
         project_dir = read_project_dir_file(environment.envpath)
         has_project_dir = bool(project_dir)
         name = environment.envname
-        # path = environment.envpath
-        # entry = ' {} ({}'.format(name, path)
 
         entry = name if not has_project_dir else name + ' *'
         options.append(entry)
 
     options.append('Exit')
-    option, index = pick(
-        options,
-        title,
-        indicator='>',
-        default_index=default)
+    picker = Picker(options, default_index=default)
+    option, index = picker.start()
 
     if option == 'Exit':
         sys.exit(0)
+
     return option, index
 
 

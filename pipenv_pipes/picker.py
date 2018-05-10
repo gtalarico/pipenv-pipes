@@ -12,43 +12,74 @@ import curses
 __all__ = ['Picker', 'pick']
 
 
-KEYS_ENTER = (curses.KEY_ENTER, ord('\n'), ord('\r'))
-KEYS_UP = (curses.KEY_UP, ord('k'))
-KEYS_DOWN = (curses.KEY_DOWN, ord('j'))
-KEYS_SELECT = (curses.KEY_RIGHT, ord(' '))
+
+
+# COLOR
+TRANSPARENT = -1
+BLACK = 0
+RED = 1
+GREEN = 2
+YELLOW = 3
+BLUE = 4
+MAGENTA = 5
+CYAN = 6
+WHITE = 7
 
 class Picker(object):
     """The :class:`Picker <Picker>` object
 
     :param options: a list of options to choose from
-    :param title: (optional) a title above options list
-    :param indicator: (optional) custom the selection indicator
     :param default_index: (optional) set this if the default selected option is not the first one
     :param options_map_func: (optional) a mapping function to pass each option through before displaying
     """
 
-    def __init__(self, options, title=None, indicator='*', default_index=0, options_map_func=None):
+    def __init__(self, options, default_index=0, options_map_func=None):
 
         if len(options) == 0:
             raise ValueError('options should not be an empty list')
 
-        self.options = options
-        self.title = title
-        self.indicator = indicator
-        self.options_map_func = options_map_func
-        self.all_selected = []
-
         if default_index >= len(options):
-            raise ValueError('default_index should be less than the length of options')
+            raise ValueError('default_index should be smaller than options')
 
-        if options_map_func is not None and not callable(options_map_func):
+        if options_map_func and not callable(options_map_func):
             raise ValueError('options_map_func must be a callable function')
+
+
+        self.options = options
+        self.options_map_func = options_map_func
+
+        self.query = []
+        self.indicator = '●'
+        self.all_selected = []
 
         self.index = default_index
         self.custom_handlers = {}
 
     def register_custom_handler(self, key, func):
         self.custom_handlers[key] = func
+
+    def config_curses(self):
+        # use the default colors of the terminal
+        curses.use_default_colors()
+        # hide the cursor
+
+        curses.curs_set(0)
+        curses.init_pair(1, RED, TRANSPARENT)
+        curses.init_pair(2, GREEN, TRANSPARENT)
+        curses.init_pair(3, YELLOW, TRANSPARENT)
+        curses.init_pair(4, BLUE, TRANSPARENT)
+        curses.init_pair(5, MAGENTA, TRANSPARENT)
+        curses.init_pair(6, CYAN, TRANSPARENT)
+        curses.init_pair(7, WHITE, TRANSPARENT)
+
+
+    def _start(self, screen):
+        self.screen = screen
+        self.config_curses()
+        return self.run_loop()
+
+    def start(self):
+        return curses.wrapper(self._start)
 
     def move_up(self):
         self.index -= 1
@@ -66,11 +97,6 @@ class Picker(object):
         """
         return self.options[self.index], self.index
 
-    def get_title_lines(self):
-        if self.title:
-            return self.title.split('\n') + ['']
-        return []
-
     def get_option_lines(self):
         lines = []
         for index, option in enumerate(self.options):
@@ -83,18 +109,28 @@ class Picker(object):
             else:
                 prefix = len(self.indicator) * ' '
 
-            format = curses.color_pair(1)
-            line = ('{0} {1}'.format(prefix, option), format)
+            if index == self.index:
+                color = curses.color_pair(3)
+            else:
+                color = curses.color_pair(7)
+            text = '{0} {1}'.format(prefix, option)
+            line = (text, color)
             lines.append(line)
 
         return lines
 
     def get_lines(self):
-        title_lines = self.get_title_lines()
+        title_lines = [
+            ('  ===================', curses.color_pair(2)),
+            ('  Pipenv Environments', curses.color_pair(2)),
+            ('  ===================', curses.color_pair(2)),
+            ('\n', 0)
+        ]
         option_lines = self.get_option_lines()
         lines = title_lines + option_lines
         current_line = self.index + len(title_lines) + 1
         return lines, current_line
+
 
     def draw(self):
         """draw the curses ui on the screen, handle scroll if needed"""
@@ -114,18 +150,33 @@ class Picker(object):
             scroll_top = current_line - max_rows
         self.scroll_top = scroll_top
 
-        lines_to_draw = lines[scroll_top:scroll_top+max_rows]
+        lines_to_draw = lines[scroll_top:scroll_top + max_rows]
 
-        for line in lines_to_draw:
+        # filter
+        # lines = [line for line in lines if ''.join(self.query) in str(line)]
+
+        for n, line in enumerate(lines_to_draw):
             if type(line) is tuple:
                 self.screen.addnstr(y, x, line[0], max_x-2, line[1])
             else:
                 self.screen.addnstr(y, x, line, max_x-2)
             y += 1
 
+            # Adde space before Exit
+            if n == len(lines_to_draw) - 2:
+                y += 1
+
+        query = 'Query: {}'.format(''.join(self.query))
+        self.screen.addnstr(y + 2, x + 2, query, max_x-2, curses.color_pair(2))
+
         self.screen.refresh()
 
     def run_loop(self):
+        KEYS_ENTER = (curses.KEY_ENTER, ord('\n'), ord('\r'))
+        KEYS_UP = (curses.KEY_UP, )
+        KEYS_DOWN = (curses.KEY_DOWN, )
+        KEYS_SELECT = (curses.KEY_RIGHT, ord(' '))
+
         while True:
             self.draw()
             c = self.screen.getch()
@@ -139,35 +190,12 @@ class Picker(object):
                 ret = self.custom_handlers[c](self)
                 if ret:
                     return ret
+            elif c == curses.KEY_HOME:
+                self.index = 0
+            elif c == curses.KEY_END:
+                self.index = len(self.options) - 2
+            elif c == curses.KEY_DC:
+                self.query = []
+            else:
+                self.query.append(chr(c))
 
-    def config_curses(self):
-        # use the default colors of the terminal
-        curses.use_default_colors()
-        # hide the cursor
-        curses.curs_set(0)
-        #add some color for multi_select
-        #@todo make colors configurable
-        curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-        curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
-
-    def _start(self, screen):
-        self.screen = screen
-        self.config_curses()
-        return self.run_loop()
-
-    def start(self):
-        return curses.wrapper(self._start)
-
-
-def pick(options, title=None, indicator='*', default_index=0, options_map_func=None):
-    """Construct and start a :class:`Picker <Picker>`.
-
-    Usage::
-
-      >>> from pick import pick
-      >>> title = 'Please choose an option: '
-      >>> options = ['option1', 'option2', 'option3']
-      >>> option, index = pick(options, title)
-    """
-    picker = Picker(options, title, indicator, default_index, options_map_func)
-    return picker.start()
