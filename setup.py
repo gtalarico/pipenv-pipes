@@ -4,6 +4,9 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import os
+
+is_windows = os.name == 'nt'
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -15,8 +18,14 @@ requirements = [
     'Click>=6.0',        # Required
     'colorama>=0.3',     # Optional but nice
     'pexpect>=4.5',      # Nice but can be removed
-    'curses==2.2.0',
 ]
+
+depenency_links = []
+if is_windows:
+    requirements.append('curses==2.2.0')
+    depenency_links.append(
+        'https://github.com/gtalarico/curses-win/releases/tag/2.2.0'
+    )
 
 setup_requirements = [
     'pytest-runner'
@@ -30,8 +39,16 @@ test_requirements = [
     ]
 
 setup(
+    name='pipenv_pipes',
+    license="MIT license",
+    keywords='pipenv_pipes',
+    url='https://github.com/gtalarico/pipenv-pipes',
+    version='0.4.2',
     author="Gui Talarico",
     author_email='gui.talarico+pip@gmail.com',
+    long_description=readme + '\n\n' + history,
+    description="CLI Tool to help manage Pipenv Enviroments "
+                "and corresponding Project Directories.",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -42,27 +59,17 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    description="CLI Tool to help manage Pipenv Enviroments "
-                "and corresponding Project Directories.",
     entry_points={
         'console_scripts': [
             'pipes=pipenv_pipes.cli:pipes',
         ],
     },
-    dependency_links=[
-        'https://github.com/gtalarico/curses-win/releases/tag/2.2.0'
-    ],
+    dependency_links=depenency_links,
     install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords='pipenv_pipes',
-    name='pipenv_pipes',
     packages=find_packages(include=['pipenv_pipes']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/gtalarico/pipenv-pipes',
-    version='0.4.2',
     zip_safe=False,
 )
