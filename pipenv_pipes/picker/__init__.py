@@ -6,6 +6,7 @@ Pick - create curses based interactive selection list in the terminal
 LICENSE MIT
 """
 
+import re
 import sys
 import curses
 import string
@@ -17,6 +18,7 @@ from .keys import (
     KEYS_DOWN,
     KEYS_ENTER,
     KEYS_CLEAR,
+    KEYS_BACKSPACE,
     KEYS_ESCAPE,
     KEYS_HOME,
     KEYS_END,
@@ -28,7 +30,7 @@ __all__ = ['Picker']
 
 class Picker(object):
 
-    def __init__(self, options,):
+    def __init__(self, options, debug_mode=False):
 
         if not options:
             raise ValueError('Invalid Options')
@@ -36,6 +38,7 @@ class Picker(object):
         self.options = options
         self.query = []
         self.index = 0
+        self.debug_mode = debug_mode
 
     def config_curses(self):
         # use the default colors of the terminal
@@ -57,11 +60,24 @@ class Picker(object):
         self.index -= positions
         if self.index < 0:
             self.index = len(self.options) - 1
+        self.clear_query()
 
     def move_down(self, positions=1):
         self.index += positions
         if self.index >= len(self.options):
             self.index = 0
+        self.clear_query()
+
+    def move_top(self):
+        self.index = 0
+        self.clear_query()
+
+    def move_bottom(self):
+        self.index = len(self.options) - 1
+        self.clear_query()
+
+    def clear_query(self):
+        self.query = []
 
     def get_selected(self):
         return self.options[self.index], self.index
@@ -73,7 +89,7 @@ class Picker(object):
             is_selected = index == self.index
 
             if is_selected:
-                color = self.colors['YELLOW']
+                color = self.colors['RED']
             else:
                 color = self.colors['WHITE']
 
@@ -101,7 +117,7 @@ class Picker(object):
         """draw the curses ui on the screen, handle scroll if needed"""
         self.screen.clear()
 
-        x, y = 1, 1  # start point
+        x, y = 1, 0  # start point
         max_y, max_x = self.screen.getmaxyx()
         max_rows = max_y - y  # the max rows we can draw
 
@@ -126,15 +142,19 @@ class Picker(object):
         #   # Adde space before Exit
         #   # if n == len(lines_to_draw) - 2:
         #       # y += 1
-        # query = '$ {}'.format(''.join(self.query))
-        # self.screen.addnstr(y + 2, x + 2, query, max_x-2, curses.color_pair(2))
+        query = '$ {}'.format(''.join(self.query))
+        self.screen.addnstr(y + 2, x + 2, query, max_x-2, curses.color_pair(2))
 
         if debug_info:
-            self.add_debug_info(debug_info)
+            self.print_debug_info(debug_info)
+
         self.screen.refresh()
 
-    def add_debug_info(self, debug_info):
-        self.screen.addnstr(60, 1, debug_info, 30)
+    def print_debug_info(self, debug_info):
+        max_y, max_x = self.screen.getmaxyx()
+        pos_y = max_y - 1
+        pos_x = max_x - len(debug_info) - 2
+        self.screen.addnstr(pos_y, pos_x, debug_info, 30)
 
     def run_loop(self):
         debug_info = None
@@ -142,46 +162,48 @@ class Picker(object):
         while True:
             self.draw(debug_info=debug_info)
             key = self.screen.getch()
-            # Uncomment to disable debug. add cli > kwargs
-            debug_info = '{} | {}'.format(str(key), chr(key))
+
+            if self.debug_mode and key > 0:
+                # when stretching windows, key = -1
+                debug_info = '{} | {}'.format(str(key), chr(key))
 
             if key in KEYS_ESCAPE:
                 sys.exit(0)
 
-            elif key == curses.KEY_PPAGE:
+            try:
+                key_string = chr(key)
+            except ValueError:
+                continue
+
+            if re.search(r'[A-Za-z0-9\s\-_]', key_string):
+                self.query.append(key_string)
+                for n, option in enumerate(self.options):
+                    if option.startswith(''.join(self.query)):
+                        self.index = n
+
+            if key == curses.KEY_PPAGE:
                 self.move_up(5)
 
             elif key == curses.KEY_NPAGE:
                 self.move_down(5)
 
             elif key in KEYS_UP:
-                self.query = []
                 self.move_up(1)
 
             elif key in KEYS_DOWN:
-                self.query = []
                 self.move_down(1)
 
             elif key in KEYS_ENTER:
                 return self.get_selected()
 
             elif key in KEYS_HOME:
-                self.query = []
-                self.index = 0
+                self.move_top()
 
             elif key in KEYS_END:
-                self.query = []
-                self.index = len(self.options) - 2
+                self.move_bottom()
 
             elif key in KEYS_CLEAR:
-                self.query = []
+                self.clear_query()
 
-            else:
-                # Only Query Alphanim ascii characters
-                if 32 <= key >= 126:
-                    continue
-                self.query.append(chr(key))
-                for n, option in enumerate(self.options):
-                    if option.startswith(''.join(self.query)):
-                        self.index = n
-
+            elif key in KEYS_BACKSPACE:
+                self.query = self.query[:-1]

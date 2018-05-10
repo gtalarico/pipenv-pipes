@@ -14,12 +14,15 @@ KEYS_ENTER = (
     curses.KEY_RIGHT,
     ord('\n'),             # MacOs Enter
     ord('\r'),
-    # 32,                    # Space
+    # 32,                  # Space
+)
+
+KEYS_BACKSPACE = (
+    curses.ascii.DEL,      # MacOs Backpace
 )
 
 KEYS_CLEAR = (
     curses.KEY_DC,         # MacOs Delete
-    curses.ascii.DEL,             # MacOs Backpace
     curses.KEY_BACKSPACE,  # MacOs fn + del
 )
 

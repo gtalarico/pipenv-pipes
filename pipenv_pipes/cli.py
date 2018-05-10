@@ -151,10 +151,10 @@ def do_pick(environments):
         options.append(entry)
 
     options.append('Exit')
-    picker = Picker(options)
+    picker = Picker(options, debug_mode=True)
     option, index = picker.start()
 
-    if option == 'Exit':
+    if option == 'exit':
         sys.exit(0)
 
     return option, index
