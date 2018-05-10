@@ -4,8 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"e1839a8" = {path = ".", editable = true}
-pexpect = "*"
 
 [dev-packages]
 twine = "*"
@@ -18,9 +16,7 @@ coverage = "*"
 tox = "*"
 pytest-cov = "*"
 sphinx-autobuild = "*"
-"doc8" = "*"
 pytest-lazy-fixture = "*"
-rope = "*"
 "flake8" = "*"
 
 [requires]
