@@ -14,12 +14,14 @@ def test_call_pipenv_venv_not_a_venv(temp_folder):
     assert 'no virtualenv has been create' in output.lower()
 
 
-@pytest.mark.slow
-def test_call_pipenv_venv(mock_env_home_slow):
-    pipenv_home, mock_projects_dir = mock_env_home_slow
+# @pytest.mark.slow
+# def test_call_pipenv_venv(mock_env_home_slow):
+def test_call_pipenv_venv(mock_env_home_empty):
+    pipenv_home, mock_projects_dir = mock_env_home_empty
     for project_name in os.listdir(mock_projects_dir):
         project_dir = os.path.join(mock_projects_dir, project_name)
         output, code = call_pipenv_venv(project_dir=project_dir)
+        assert project_name in output
         assert code == 0
         assert pipenv_home in output
 

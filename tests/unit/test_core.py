@@ -3,12 +3,14 @@
 import pytest  # noqa: F401
 import os
 from os.path import join
+import pathlib
 
 from pipenv_pipes.core import (
     find_environments,
     read_project_dir_file,
     write_project_dir_project_file,
     delete_project_dir_file,
+    resolve_envname_hash,
 )
 
 
@@ -60,3 +62,14 @@ class TestProjectDirFile():
             fp.write('fakePath')
         delete_project_dir_file(temp_folder)
         assert not os.path.exists(project_file)
+
+
+def test_resolve_env_name_from_path():
+    expected = 'IVPAilJp'
+    path = 'D:\\Dropbox\\shared\\dev\\repos\\pipenv_pipes'
+    assert resolve_envname_hash(path) == expected
+    path = r'D:\Dropbox\shared\dev\repos\pipenv_pipes'
+    assert resolve_envname_hash(path) == expected
+    path = r'D:/Dropbox/shared/dev/repos/pipenv_pipes'
+    assert resolve_envname_hash(path) == expected
+    path = pathlib.PureWindowsPath(path)

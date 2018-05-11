@@ -4,9 +4,6 @@
 
 import os
 import re
-import pathlib
-import hashlib
-import base64
 
 from .environment import EnvVars
 
@@ -50,17 +47,3 @@ def collapse_path(path):
     path = path.replace(workon, '$PIPENV_HOME')
     path = path.replace(home, '~')
     return path
-
-
-def resolve_envname(project_dir):
-    """
-    Attempts to resolve envname.
-    Although this might not be reliable, currently the only alternative
-    is to from project_dir run `pipenv --venv`. This is slow for use
-    and testing. Initially this is intended to be used for testing only,
-    however if it remains stable it could replace the call_pipenv_venv calls
-    """
-    pipfile = pathlib.PurePath(project_dir) / 'Pipfile'
-    hash = hashlib.sha256(str(pipfile).encode()).digest()[:6]
-    encoded_hash = base64.urlsafe_b64encode(hash).decode()
-    return encoded_hash[:8]

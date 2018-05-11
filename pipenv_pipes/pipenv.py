@@ -6,6 +6,7 @@ from subprocess import Popen, PIPE
 def PipedPopen(*args, **kwargs):
     """ Helper Piped Process for drier code"""
     timeout = kwargs.pop('timeout', None)
+    kwargs['env'] = dict(os.environ)
     proc = Popen(*args, **kwargs,
                  stdout=PIPE,
                  stderr=PIPE,

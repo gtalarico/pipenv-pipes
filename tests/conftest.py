@@ -11,8 +11,27 @@ from click.testing import CliRunner
 from pipenv_pipes.pipenv import PipedPopen
 from pipenv_pipes.core import (
     find_environments,
-    write_project_dir_project_file
+    write_project_dir_project_file,
+    resolve_envname_hash,
 )
+
+
+def touch(filename):
+    try:
+        os.utime(filename, None)
+    except OSError:
+        open(filename, 'a').close()
+
+
+@pytest.fixture
+def win_tempdir():
+    # Default Temp dirs use windows short path:
+    # 'C:\\Users\\GTALAR~1\\AppData'
+    # The ~1 breaks --venv hash resolution,
+    # so to ensure consitency will build the path manually
+    path = os.path.join(os.environ['USERPROFILE'], 'AppData', 'Local', 'Temp')
+    assert '~' not in path
+    return path
 
 
 @contextmanager
@@ -57,9 +76,11 @@ def TempEnviron():
 
 
 @pytest.fixture
-def mock_projects_dir(project_names):
+def mock_projects_dir(project_names, win_tempdir):
     """ A folderpath with 2 sample project folders """
-    with TemporaryDirectory(prefix='testprojects') as projects_dir:
+    if 'nt' not in os.name:
+        win_tempdir = None
+    with TemporaryDirectory(prefix='projects', dir=win_tempdir) as projects_dir:
         for project_name in project_names:
             os.makedirs(os.path.join(projects_dir, project_name))
         yield projects_dir
@@ -71,23 +92,37 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
     A folderpath with 2 sample env folders (empty).
     Helful for fast tests that don't require an actual environment
     """
-    with TemporaryDirectory(prefix='testenvs') as pipenv_home:
+    with TemporaryDirectory(prefix='pipenv_home_fake') as pipenv_home:
         with TempEnviron(WORKON_HOME=pipenv_home):
             # TODO: Replace this with an actual pipenv fake env
             # that returns valid --venv so we can reduce usage
             # of mock_slow and run most tests witout an actual pipen install
             # https://github.com/pypa/pipenv/blob/master/pipenv/project.py#L223
             for project_name in os.listdir(mock_projects_dir):
-                envname = '{}-12345678'.format(project_name)
+
+                # Create Pipfile in Project File --venv checks for it
+                project_dir = os.path.join(mock_projects_dir, project_name)
+                pipfile = os.path.join(project_dir, 'Pipfile')
+                with open(pipfile, 'w') as fp:
+                    fp.write('')
+
+                # Create a Fake Env folder
+                hash_ = resolve_envname_hash(project_dir=project_dir)
+                envname = '{}-{}'.format(project_name, hash_)
                 envpath = os.path.join(pipenv_home, envname)
                 python_fp = sys.executable
                 if python_fp.endswith('exe'):
                     bin_path = os.path.join(envpath, 'Scripts')
+                    activate = os.path.join(bin_path, 'activate.bat')
                 else:
                     bin_path = os.path.join(envpath, 'bin')
+                    activate = os.path.join(bin_path, 'activate')
+
                 os.makedirs(envpath)
                 os.makedirs(bin_path)
+                touch(activate)
                 copy(python_fp, bin_path, follow_symlinks=True)
+
             yield pipenv_home, mock_projects_dir
             # Sometimes python.exe is still budy, this give time to unlock
             time.sleep(0.1)
@@ -95,7 +130,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
 
 @pytest.fixture
 def mock_env_home_slow(TempEnviron, mock_projects_dir):
-    with TemporaryDirectory(prefix='envs') as pipenv_home:
+    with TemporaryDirectory(prefix='pipenv_home_real') as pipenv_home:
         with TempEnviron(WORKON_HOME=pipenv_home):
             for project_name in os.listdir(mock_projects_dir):
                 proj_dir = os.path.join(mock_projects_dir, project_name)
