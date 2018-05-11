@@ -181,15 +181,15 @@ class Picker(object):
 
     def print_debug_info(self, debug_info):
         key = debug_info.get('key')
-        char = '' if not key else chr(key)
-        query = self.query
+        char = '' if not key else repr(chr(key))
+        query = repr(self.query)
         index = self.index
-        text = 'key: {} | char: {} | index: {} | query: {}'.format(
+        text = "key: '{}' | char: '{}' | index: '{}' | query: '{}'".format(
             key, char, index, query)
         max_y, max_x = self.screen.getmaxyx()
         pos_y = max_y - 1
         pos_x = 0
-        self.screen.addnstr(pos_y, pos_x, text, max_y)
+        self.screen.addnstr(pos_y, pos_x, text, max_y, 0)
 
     def run_loop(self):
         debug_info = None
@@ -210,6 +210,8 @@ class Picker(object):
                 sys.exit(0)
 
             if key in KEYS_ENTER:
+                if not self.environments:
+                    continue
                 return self.get_selected()
 
             if re.search(r'[A-Za-z0-9\s\-_]', key_string):
