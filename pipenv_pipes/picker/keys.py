@@ -21,11 +21,11 @@ KEYS_ENTER = (
     curses.KEY_ENTER,
     ord('\n'),             # MacOs Enter
     ord('\r'),
-    # 32,                  # Space
 )
 
 KEYS_BACKSPACE = (
     curses.ascii.DEL,      # MacOs Backpace
+    8,                     # Windows Backspace
 )
 
 KEYS_CLEAR = (
