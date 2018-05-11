@@ -17,7 +17,8 @@ class Color():
 
 
 color_constants = OrderedDict(
-    BLACK=0,
+    # Index Zero causes exception on windows
+    # BLACK=0,
     RED=1,
     GREEN=2,
     YELLOW=3,
