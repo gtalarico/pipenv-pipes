@@ -49,7 +49,8 @@ def find_binary(envpath):
     elif 'Scripts' in env_ls:
         binpath = os.path.join(envpath, 'Scripts', 'python.exe')
     else:
-        return
+        raise EnvironmentError(
+            'could not find python binary path: {}'.format(envpath))
     if os.path.exists(binpath):
         return binpath
     else:
