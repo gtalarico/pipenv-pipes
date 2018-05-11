@@ -5,7 +5,6 @@
 import os
 import sys
 import click
-import curses
 
 from . import __version__
 from .environment import EnvVars
@@ -69,6 +68,10 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
         return
 
     env_vars = EnvVars()
+
+    if env_vars.HAS_CURSES:
+        import curses
+
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
     if not environments:

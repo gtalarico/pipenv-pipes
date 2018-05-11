@@ -24,6 +24,13 @@ class EnvVars():
         self.PIPENV_VENV_IN_PROJECT = os.getenv('PIPENV_VENV_IN_PROJECT', '')
         self.VENV_IS_ACTIVE = os.getenv('VENV', '')
 
+        try:
+            import curses
+        except ImportError:
+            self.HAS_CURSES = False
+        else:
+            self.HAS_CURSES = True
+
     def validate_environment(self):
 
         if not os.path.exists(self.PIPENV_HOME):

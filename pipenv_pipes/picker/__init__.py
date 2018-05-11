@@ -32,6 +32,7 @@ __all__ = ['Picker']
 OPTION_COLOR = 'WHITE'
 SELECTED_OPTION = 'YELLOW'
 TITLE_COLOR = 'BLUE'
+IS_TESTING = 'pytest' in sys.modules
 
 
 class Picker(object):
@@ -91,7 +92,7 @@ class Picker(object):
     def get_selected(self):
         return self.environments[self.index], self.index
 
-    def get_env_lines(self):
+    def get_option_lines(self):
         lines = []
         for index, environment in enumerate(self.environments):
             is_selected = index == self.index
@@ -117,7 +118,7 @@ class Picker(object):
 
     def get_lines(self):
         title_lines = self.get_title_lines()
-        environment_lines = self.get_env_lines()
+        environment_lines = self.get_option_lines()
         lines = title_lines + environment_lines
         current_line = self.index + len(title_lines) + 1
         return lines, current_line

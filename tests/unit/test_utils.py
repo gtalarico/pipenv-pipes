@@ -14,38 +14,6 @@ from pipenv_pipes.utils import (
 )
 
 
-@pytest.fixture
-def fake_environments():
-    """ Used by unit.test_utils parametrics tests """
-    from pipenv_pipes.core import Environment
-    return [
-        Environment(
-            project_name='proj1',
-            envname='proj1-1C_-wqgW',
-            envpath='~/fakedir/proj1-12345678',
-            binpath='~/fakedir/proj1-12345678/bin/python'
-            ),
-        Environment(
-            project_name='proj2',
-            envname='proj2-12345678',
-            envpath='~/fakedir/proj2-12345678',
-            binpath='~/fakedir/proj2-12345678/bin/python'
-            ),
-        Environment(
-            project_name='abc-o',
-            envname='abc-o-12345678',
-            envpath='~/fakedir/abc-o-12345678',
-            binpath='~/fakedir/abc-o-12345678/bin/python'
-            ),
-        Environment(
-            project_name='notpipenv',
-            envname='notpipenv',
-            envpath='~/fakedir/notpipenv',
-            binpath='~/fakedir/notpipenv/bin/python'
-            ),
-    ]
-
-
 @pytest.mark.utils
 @pytest.mark.parametrize("folder_name,expected", [
     ("nonpipenvproject", None),
@@ -58,10 +26,10 @@ def test_get_project_name(folder_name, expected):
 
 @pytest.mark.utils
 @pytest.mark.parametrize("query,num_results,envs", [
-    ("proj", 2, pytest.lazy_fixture('fake_environments')),
-    ("proj1", 1, pytest.lazy_fixture('fake_environments')),
-    ("o", 4, pytest.lazy_fixture('fake_environments')),
-    ("zzz", 0, pytest.lazy_fixture('fake_environments')),
+    ("proj", 2, pytest.lazy_fixture('environments')),
+    ("proj1", 1, pytest.lazy_fixture('environments')),
+    ("o", 4, pytest.lazy_fixture('environments')),
+    ("zzz", 0, pytest.lazy_fixture('environments')),
 ])
 def test_get_query_matches(query, num_results, envs):
     rv = get_query_matches(envs, query)
