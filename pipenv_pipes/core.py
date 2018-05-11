@@ -49,7 +49,6 @@ def find_binary(envpath):
     if os.path.exists(binpath):
         return binpath
     else:
-        import pdb; pdb.set_trace()
         raise EnvironmentError('could not find python binary: {}'.format(envpath))
 
 
