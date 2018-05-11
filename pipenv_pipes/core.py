@@ -39,6 +39,7 @@ def find_environments(pipenv_home):
 
 
 def find_binary(envpath):
+    """ Finds the python binary in a given environment path """
     env_ls = os.listdir(envpath)
     if 'bin' in env_ls:
         binpath = os.path.join(envpath, 'bin', 'python')

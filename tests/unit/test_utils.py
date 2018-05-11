@@ -5,12 +5,14 @@
 
 import pytest
 import os
+import pathlib
 
 from pipenv_pipes.utils import (
     get_project_name,
     get_query_matches,
     get_project_dir_filepath,
     get_index_from_query,
+    resolve_envname,
 )
 
 
@@ -52,3 +54,14 @@ def test_get_project_dir_filepath():
 ])
 def test_get_index_from_query(query, expected_index):
     assert get_index_from_query(query) == expected_index
+
+
+def test_resolve_env_name_from_path():
+    expected = 'IVPAilJp'
+    path = 'D:\\Dropbox\\shared\\dev\\repos\\pipenv_pipes'
+    assert resolve_envname(path) == expected
+    path = r'D:\Dropbox\shared\dev\repos\pipenv_pipes'
+    assert resolve_envname(path) == expected
+    path = r'D:/Dropbox/shared/dev/repos/pipenv_pipes'
+    assert resolve_envname(path) == expected
+    path = pathlib.PureWindowsPath(path)
