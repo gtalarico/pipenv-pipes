@@ -93,8 +93,13 @@ class Picker(object):
         return self.environments[self.index], self.index
 
     def get_option_lines(self):
+        if self.query:
+            envs = [e for e in self.environments if self.query in e.envname.lower()]
+            self.index = 0
+        else:
+            envs = self.environments
         lines = []
-        for index, environment in enumerate(self.environments):
+        for index, environment in enumerate(envs):
             is_selected = index == self.index
             if is_selected:
                 color = self.colors[SELECTED_OPTION]
