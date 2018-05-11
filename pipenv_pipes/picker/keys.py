@@ -34,8 +34,8 @@ KEYS_CLEAR = (
 )
 
 KEYS_ESCAPE = (
-    21,                    # MacOs Escape
-    5
+    27,                    # MacOs terminal ESC
+    21,                    # MacOs iterm 2 Fish
 )
 
 KEYS_HOME = (
