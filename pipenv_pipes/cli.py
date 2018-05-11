@@ -146,10 +146,8 @@ def launch_env(environment):
 
 def do_pick(environments, query=None):
     picker = Picker(environments, query=query, debug_mode=True)
-    selected, index = picker.start()
-    if selected == 'exit':
-        sys.exit(0)
-    return selected, index
+    selected = picker.start()
+    return selected
 
 
 def print_project_list(environments, verbose):
@@ -216,10 +214,6 @@ def ensure_one_match(query, matches, environments):
     In both cases, program exists if validation fails.
     """
 
-    query = query if query else '*'
-    note = "Query: '{}' (showing {} of {})".format(
-        query, len(matches), len(environments))
-
     # No Matches
     if not matches:
         msg = (
@@ -231,8 +225,7 @@ def ensure_one_match(query, matches, environments):
 
     # 2+ Matches
     elif len(matches) > 1:
-        match, index = do_pick(environments=environments, query=query)
-        match = matches[index]
+        match = do_pick(environments=environments, query=query)
     # 1 Exact Match: Launch
     else:
         match = matches[0]

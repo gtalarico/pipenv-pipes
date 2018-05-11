@@ -37,9 +37,13 @@ class EnvLine(Line):
         prefix = self.MARKER if self.selected else ' ' * len(self.MARKER)
         project_dir = read_project_dir_file(self.env.envpath)
         has_project_dir = bool(project_dir)
+        if not has_project_dir:
+            project_dir = '-- Not Set --'
+
 
         if self.expanded == 0:
             text = self.env.envname
+            text = text if not has_project_dir else text + ' *'
         if self.expanded == 1:
             text = '{} ({})'.format(
                 self.env.envname,

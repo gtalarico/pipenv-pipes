@@ -42,10 +42,12 @@ class Picker(object):
         if not environments:
             raise ValueError('invalid environments value')
 
-        self.environments = environments
+        self._environments = environments
         self.query = query
         self.index = 0
         self.debug_mode = debug_mode
+
+        self.CYCLES = range(4)
         self.expand_next()
 
     def config_curses(self):
@@ -65,39 +67,43 @@ class Picker(object):
         self.index -= pos
         if self.index < 0:
             self.index = len(self.environments) - 1
-        self.clear_query()
+        # self.clear_query()
 
     def move_down(self, pos=1):
         self.index += pos
         if self.index >= len(self.environments):
             self.index = 0
-        self.clear_query()
+        # self.clear_query()
 
     def move_top(self):
         self.index = 0
-        self.clear_query()
+        # self.clear_query()
 
     def move_bottom(self):
         self.index = len(self.environments) - 1
-        self.clear_query()
+        # self.clear_query()
 
     def clear_query(self):
         self.query = ''
 
     def expand_next(self, negative=False):
         if not hasattr(self, '_cycle'):
-            self._cycle = cycle([0, 1, 2])
+            self._cycle = cycle(self.CYCLES)
         self.expanded = next(self._cycle)
 
     def get_selected(self):
-        return self.environments[self.index], self.index
+        return self.environments[self.index]
+
+    @property
+    def environments(self):
+        if self.query:
+            return [e for e in self._environments
+                    if self.query in e.envname.lower()]
+        else:
+            return self._environments
 
     def get_option_lines(self):
-        if self.query:
-            envs = [e for e in self.environments if self.query in e.envname.lower()]
-            self.index = 0
-        else:
-            envs = self.environments
+        envs = self.environments
         lines = []
         for index, environment in enumerate(envs):
             is_selected = index == self.index
@@ -167,10 +173,16 @@ class Picker(object):
         self.screen.refresh()
 
     def print_debug_info(self, debug_info):
+        key = debug_info.get('key')
+        char = '' if not key else chr(key)
+        query = self.query
+        index = self.index
+        text = 'key: {} | char: {} | index: {} | query: {}'.format(
+            key, char, index, query)
         max_y, max_x = self.screen.getmaxyx()
         pos_y = max_y - 1
-        pos_x = max_x - len(debug_info) - 2
-        self.screen.addnstr(pos_y, pos_x, debug_info, 30)
+        pos_x = 0
+        self.screen.addnstr(pos_y, pos_x, text, max_y)
 
     def run_loop(self):
         debug_info = None
@@ -178,17 +190,20 @@ class Picker(object):
             self.draw(debug_info=debug_info)
             key = self.screen.getch()
 
-            if self.debug_mode and key > 0:
-                # when stretching windows, key = -1
-                debug_info = '{} | {}'.format(str(key), chr(key))
-
-            if key in KEYS_ESCAPE:
-                sys.exit(0)
-
             try:
                 key_string = chr(key)
             except ValueError:
                 continue
+
+            if self.debug_mode and key > 0:
+                # when stretching windows, key = -1
+                debug_info = {'key': key}
+
+            if key in KEYS_ESCAPE:
+                sys.exit(0)
+
+            if key in KEYS_ENTER:
+                return self.get_selected()
 
             if re.search(r'[A-Za-z0-9\s\-_]', key_string):
                 self.query += key_string
@@ -197,7 +212,7 @@ class Picker(object):
                         self.index = n
                         break
 
-            if key == curses.KEY_PPAGE:
+            elif key == curses.KEY_PPAGE:
                 self.move_up(5)
 
             elif key == curses.KEY_NPAGE:
@@ -208,9 +223,6 @@ class Picker(object):
 
             elif key in KEYS_DOWN:
                 self.move_down(1)
-
-            elif key in KEYS_ENTER:
-                return self.get_selected()
 
             elif key in KEYS_HOME:
                 self.move_top()
@@ -229,3 +241,6 @@ class Picker(object):
 
             elif key in KEYS_BACKSPACE:
                 self.query = self.query[:-1]
+
+            if IS_TESTING:
+                curses.endwin()
