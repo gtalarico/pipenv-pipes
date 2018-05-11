@@ -24,9 +24,10 @@ def find_environments(pipenv_home):
     environments = []
     for folder_name in sorted(os.listdir(pipenv_home)):
         envpath = os.path.join(pipenv_home, folder_name)
-        project_name = get_project_name(envpath)
+        project_name = get_project_name(folder_name)
         if not project_name:
             continue
+
         binpath = find_binary(envpath)
         environment = Environment(project_name=project_name,
                                   envpath=envpath,
@@ -43,6 +44,8 @@ def find_binary(envpath):
         path = os.path.join(envpath, 'bin')
     elif 'Scripts' in env_ls:
         path = os.path.join(envpath, 'Scripts')
+    else:
+        return
     binpath = os.path.join(path, 'python')
     if os.path.exists(binpath):
         return binpath
