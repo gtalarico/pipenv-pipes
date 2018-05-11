@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ..utils import collapse_path
 from ..core import get_binary_version
 
