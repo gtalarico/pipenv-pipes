@@ -29,8 +29,11 @@ def win_tempdir():
     # 'C:\\Users\\GTALAR~1\\AppData'
     # The ~1 breaks --venv hash resolution,
     # so to ensure consitency will build the path manually
+    if 'nt' not in os.name:
+        return None
     path = os.path.join(os.environ['USERPROFILE'], 'AppData', 'Local', 'Temp')
     assert '~' not in path
+    assert os.path.exists(path)
     return path
 
 
@@ -78,8 +81,6 @@ def TempEnviron():
 @pytest.fixture
 def mock_projects_dir(project_names, win_tempdir):
     """ A folderpath with 2 sample project folders """
-    if 'nt' not in os.name:
-        win_tempdir = None
     with TemporaryDirectory(prefix='projects', dir=win_tempdir) as projects_dir:
         for project_name in project_names:
             os.makedirs(os.path.join(projects_dir, project_name))
