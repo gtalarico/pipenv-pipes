@@ -132,7 +132,8 @@ class Picker(object):
         title_line = Line(title, color=color, pad=2)
         bar_line = Line('=' * len(title), color=color, pad=2)
         blank_line = Line('', color=None)
-        return [bar_line, title_line, bar_line, blank_line]
+        return [
+            bar_line, title_line, bar_line, blank_line]
 
     def get_lines(self):
         title_lines = self.get_title_lines()
@@ -169,8 +170,9 @@ class Picker(object):
             y += 1
 
         last_line = len(visible_lines) + 1
-
-        color = color = self.colors[SELECTED_OPTION]
+        # header = len(self.get_title_lines())
+        # height = header - 2
+        color = self.colors[SELECTED_OPTION]
         query = Line('$ {}'.format(self.query), color=color)
         query.render(self.screen, x=pad_left, y=last_line)
 
