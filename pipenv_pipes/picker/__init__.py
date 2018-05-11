@@ -243,4 +243,6 @@ class Picker(object):
                 self.query = self.query[:-1]
 
             if IS_TESTING:
-                curses.endwin()
+                raise Exception('Testing')
+                # curses.endwin()
+                # import pdb; pdb.set_trace()

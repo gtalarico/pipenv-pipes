@@ -221,7 +221,7 @@ def ensure_one_match(query, matches, environments):
             "User 'pipes --list' to see a list of available environments."
             "".format(query))
         click.echo(click.style(msg, fg='red'))
-        sys.exit()
+        sys.exit(0)
 
     # 2+ Matches
     elif len(matches) > 1:
