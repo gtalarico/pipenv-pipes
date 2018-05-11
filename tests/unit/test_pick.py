@@ -24,21 +24,24 @@ class TestPick():
 
     def test_move_up_down(self, picker, environments):
         envs = environments
-        first = envs[0]
-        second = envs[1]
-        third = envs[2]
-        last = envs[-1]
         picker = Picker(envs)
-        assert picker.get_selected() == (first, 0)
+        assert picker.get_selected() == envs[0]
         picker.move_down()
-        assert picker.get_selected() == (second, 1)
+        assert picker.get_selected() == envs[1]
         picker.move_down()
-        assert picker.get_selected() == (third, 2)
+        assert picker.get_selected() == envs[2]
         picker.move_up()
-        assert picker.get_selected() == (second, 1)
+        assert picker.get_selected() == envs[1]
         picker.move_up()
         picker.move_up()
-        assert picker.get_selected() == (last, len(envs) - 1)
+        assert picker.get_selected() == envs[-1]
+
+    def test_query_filter(self, environments):
+        picker = Picker(environments, query=environments[2].envname)
+        assert len(picker.environments) == 1
+        assert picker.get_selected() == environments[2]
+        picker.move_up()
+        assert picker.get_selected() == environments[2]
 
     def test_get_lines(self, picker, environments):
         rv = picker.get_option_lines()
@@ -58,5 +61,8 @@ class TestPick():
         picker.expand_next()
         assert picker.expanded == 2
         picker.expand_next()
+        assert picker.expanded == 3
+        picker.expand_next()
         assert picker.expanded == 0
-
+        picker.expand_next()
+        assert picker.expanded == 1
