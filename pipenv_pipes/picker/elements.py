@@ -1,4 +1,5 @@
 from ..utils import collapse_path
+from ..core import get_binary_version
 
 MARGIN = 2
 
@@ -33,9 +34,16 @@ class EnvLine(Line):
 
     @property
     def text(self):
-        envname = self.env.envname
-        envpath = collapse_path(self.env.envpath)
-        expanded_envname = '{0}'.format(envpath)
         prefix = self.MARKER if self.selected else ' ' * len(self.MARKER)
-        text = envname if not self.expanded else expanded_envname
+
+        if self.expanded == 0:
+            text = self.env.envname
+        if self.expanded == 1:
+            text = '{} ({})'.format(
+                self.env.envname,
+                get_binary_version(self.env.envpath
+                ))
+        if self.expanded == 2:
+            text = collapse_path(self.env.envpath)
+
         return '{prefix} {text}'.format(prefix=prefix, text=text)

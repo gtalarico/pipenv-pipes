@@ -9,6 +9,7 @@ LICENSE MIT
 import re
 import sys
 import curses
+from itertools import cycle
 
 from .colors import get_colors
 from .elements import Line, EnvLine
@@ -21,11 +22,16 @@ from .keys import (
     KEYS_ESCAPE,
     KEYS_HOME,
     KEYS_END,
-    KEYS_SPACE,
+    KEYS_RIGHT,
+    KEYS_LEFT,
 )
 
 
 __all__ = ['Picker']
+
+OPTION_COLOR = 'WHITE'
+SELECTED_OPTION = 'RED'
+TITLE_COLOR = 'GREEN'
 
 
 class Picker(object):
@@ -38,8 +44,8 @@ class Picker(object):
         self.environments = environments
         self.query = ''
         self.index = 0
-        self.expanded = False
         self.debug_mode = debug_mode
+        self.expand_next()
 
     def config_curses(self):
         curses.use_default_colors()  # use the default colors of the terminal
@@ -77,6 +83,11 @@ class Picker(object):
     def clear_query(self):
         self.query = ''
 
+    def expand_next(self, negative=False):
+        if not hasattr(self, '_cycle'):
+            self._cycle = cycle([0, 1, 2])
+        self.expanded = next(self._cycle)
+
     def get_selected(self):
         return self.environments[self.index], self.index
 
@@ -85,9 +96,9 @@ class Picker(object):
         for index, environment in enumerate(self.environments):
             is_selected = index == self.index
             if is_selected:
-                color = self.colors['RED']
+                color = self.colors[SELECTED_OPTION]
             else:
-                color = self.colors['WHITE']
+                color = self.colors[OPTION_COLOR]
             line = EnvLine(
                 env=environment,
                 color=color,
@@ -97,7 +108,7 @@ class Picker(object):
         return lines
 
     def get_title_lines(self):
-        color = self.colors['GREEN']
+        color = self.colors[TITLE_COLOR]
         title = 'Pipenv Environments'
         title_line = Line(title, color=color, pad=2)
         bar_line = Line('=' * len(title), color=color, pad=2)
@@ -203,8 +214,11 @@ class Picker(object):
             elif key in KEYS_CLEAR:
                 self.clear_query()
 
-            elif key in KEYS_SPACE:
-                self.expanded = bool(not self.expanded)
+            elif key in KEYS_RIGHT:
+                self.expand_next()
+
+            elif key in KEYS_LEFT:
+                self.expand_next(False)
 
             elif key in KEYS_BACKSPACE:
                 self.query = self.query[:-1]

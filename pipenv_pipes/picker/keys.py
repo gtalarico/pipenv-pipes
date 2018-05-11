@@ -9,15 +9,19 @@ KEYS_DOWN = (
     curses.KEY_DOWN,
 )
 
-KEYS_SPACE = (
-    32,                  # Space
+KEYS_RIGHT = (
+    curses.KEY_RIGHT,
+)
+
+KEYS_LEFT = (
+    curses.KEY_LEFT,
 )
 
 KEYS_ENTER = (
     curses.KEY_ENTER,
-    curses.KEY_RIGHT,
     ord('\n'),             # MacOs Enter
     ord('\r'),
+    # 32,                  # Space
 )
 
 KEYS_BACKSPACE = (

@@ -2,7 +2,7 @@
 import os
 from collections import namedtuple
 
-from .pipenv import get_python_version
+from .pipenv import call_python_version
 from .utils import (
     get_project_name,
     get_project_dir_filepath,
@@ -52,7 +52,7 @@ def find_binary(envpath):
 
 def get_binary_version(envpath):
     binpath = find_binary(envpath)
-    version, code = get_python_version(binpath)
+    version, code = call_python_version(binpath)
     if not code:
         return version
     else:

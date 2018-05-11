@@ -45,7 +45,7 @@ def call_pipenv_shell(cwd, envname='pipenv-shell'):
     return output, code, proc
 
 
-def get_python_version(binpath):
+def call_python_version(binpath):
     # TODO Rename this module
     output, code = PipedPopen([binpath, '-V'])
     return output, code
