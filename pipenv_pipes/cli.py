@@ -144,23 +144,11 @@ def launch_env(environment):
     sys.exit(0)
 
 
-def do_pick(environments):
-    options = []
-    for index, environment in enumerate(environments):
-        project_dir = read_project_dir_file(environment.envpath)
-        has_project_dir = bool(project_dir)
-        name = environment.envname
-
-        entry = name if not has_project_dir else name + ' *'
-        options.append(entry)
-
-    # environments = environments * 30
-    picker = Picker(environments, debug_mode=True)
+def do_pick(environments, query=None):
+    picker = Picker(environments, query=query, debug_mode=True)
     selected, index = picker.start()
-
     if selected == 'exit':
         sys.exit(0)
-
     return selected, index
 
 
@@ -234,17 +222,23 @@ def ensure_one_match(query, matches, environments):
 
     # No Matches
     if not matches:
-        note = 'Query: {} (0 matches - Showing All)'.format(query)
-        match, index = do_pick(environments=environments)
-        match = environments[index]
+        msg = (
+            "No matches for '{}'.\n"
+            "User 'pipes --list' to see a list of available environments."
+            "".format(query))
+        click.echo(click.style(msg, fg='red'))
+        sys.exit()
+
     # 2+ Matches
     elif len(matches) > 1:
-        match, index = do_pick(environments=matches)
+        match, index = do_pick(environments=environments, query=query)
         match = matches[index]
+    # 1 Exact Match: Launch
     else:
         match = matches[0]
 
     return match
+
 
 def ensure_project_dir_has_env(project_dir):
     output, code = call_pipenv_venv(project_dir)

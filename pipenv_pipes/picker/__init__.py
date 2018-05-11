@@ -37,13 +37,13 @@ IS_TESTING = 'pytest' in sys.modules
 
 class Picker(object):
 
-    def __init__(self, environments, debug_mode=False):
+    def __init__(self, environments, query='', debug_mode=False):
 
         if not environments:
             raise ValueError('invalid environments value')
 
         self.environments = environments
-        self.query = ''
+        self.query = query
         self.index = 0
         self.debug_mode = debug_mode
         self.expand_next()

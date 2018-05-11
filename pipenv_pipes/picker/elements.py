@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..utils import collapse_path
-from ..core import get_binary_version
-
+from ..core import get_binary_version, read_project_dir_file
 
 
 class Line():
@@ -36,6 +35,8 @@ class EnvLine(Line):
     @property
     def text(self):
         prefix = self.MARKER if self.selected else ' ' * len(self.MARKER)
+        project_dir = read_project_dir_file(self.env.envpath)
+        has_project_dir = bool(project_dir)
 
         if self.expanded == 0:
             text = self.env.envname
@@ -46,5 +47,7 @@ class EnvLine(Line):
                 ))
         if self.expanded == 2:
             text = collapse_path(self.env.envpath)
+        if self.expanded == 3:
+            text = project_dir
 
         return '{prefix} {text}'.format(prefix=prefix, text=text)

@@ -26,6 +26,7 @@ def test_cli_from_shell():
     assert 'show this message and exit' in result.lower()
 
 
+@pytest.mark.xfail
 def test_cli_no_args(runner):
     result = runner.invoke(pipes)
     assert result.exit_code == 0
@@ -47,6 +48,7 @@ def test_cli_list_verbose(runner):
     result = runner.invoke(pipes, args=['--list', '--verbose'])
     assert result.exit_code == 0
     assert 'PIPENV_HOME' in result.output
+    assert 'Python' in result.output
 
 
 def test_no_match(runner):
