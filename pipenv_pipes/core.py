@@ -41,15 +41,15 @@ def find_environments(pipenv_home):
 def find_binary(envpath):
     env_ls = os.listdir(envpath)
     if 'bin' in env_ls:
-        path = os.path.join(envpath, 'bin')
+        binpath = os.path.join(envpath, 'bin', 'python')
     elif 'Scripts' in env_ls:
-        path = os.path.join(envpath, 'Scripts')
+        binpath = os.path.join(envpath, 'Scripts', 'python.exe')
     else:
         return
-    binpath = os.path.join(path, 'python')
     if os.path.exists(binpath):
         return binpath
     else:
+        import pdb; pdb.set_trace()
         raise EnvironmentError('could not find python binary: {}'.format(envpath))
 
 

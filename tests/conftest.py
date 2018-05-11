@@ -1,7 +1,10 @@
 import pytest
 import os
+import sys
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
+from shutil import copy
+import time
 
 from click.testing import CliRunner
 
@@ -76,8 +79,18 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
             # https://github.com/pypa/pipenv/blob/master/pipenv/project.py#L223
             for project_name in os.listdir(mock_projects_dir):
                 envname = '{}-12345678'.format(project_name)
-                os.makedirs(os.path.join(pipenv_home, envname))
+                envpath = os.path.join(pipenv_home, envname)
+                python_fp = sys.executable
+                if python_fp.endswith('exe'):
+                    bin_path = os.path.join(envpath, 'Scripts')
+                else:
+                    bin_path = os.path.join(envpath, 'bin')
+                os.makedirs(envpath)
+                os.makedirs(bin_path)
+                copy(python_fp, bin_path, follow_symlinks=True)
             yield pipenv_home, mock_projects_dir
+            # Sometimes python.exe is still budy, this give time to unlock
+            time.sleep(0.1)
 
 
 @pytest.fixture
