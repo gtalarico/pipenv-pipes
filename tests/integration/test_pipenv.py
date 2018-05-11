@@ -14,8 +14,6 @@ def test_call_pipenv_venv_not_a_venv(temp_folder):
     assert 'no virtualenv has been create' in output.lower()
 
 
-# @pytest.mark.slow
-# def test_call_pipenv_venv(mock_env_home_slow):
 def test_call_pipenv_venv(mock_env_home_empty):
     pipenv_home, mock_projects_dir = mock_env_home_empty
     for project_name in os.listdir(mock_projects_dir):

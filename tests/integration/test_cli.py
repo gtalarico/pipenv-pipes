@@ -26,17 +26,28 @@ def test_cli_from_shell():
     assert 'show this message and exit' in result.lower()
 
 
-@pytest.mark.skip
+@pytest.mark.curses
 def test_cli_no_args(runner):
     result = runner.invoke(pipes)
-    assert result.exit_code == 0
+    assert result.exit_code == 1
+    data = '{"query": "", "envs": 2}'
+    assert data in result.output
 
 
-@pytest.mark.skip
+@pytest.mark.skip('Not needed')
+@pytest.mark.curses
 def test_cli_no_args_verbose(runner):
     result = runner.invoke(pipes, ['--verbose'])
     assert result.exit_code == 0
     assert 'PIPENV_HOME' in result.output
+
+
+@pytest.mark.curses
+def test_many_match(runner):
+    result = runner.invoke(pipes, args=['proj'])
+    assert result.exit_code == 1
+    data = '{"query": "proj", "envs": 2}'
+    assert data in result.output
 
 
 def test_cli_list(runner):
@@ -58,14 +69,6 @@ def test_no_match(runner):
     assert 'no matches' in result.output.lower()
 
 
-@pytest.mark.skip
-def test_many_match(runner):
-    result = runner.invoke(pipes, args=['proj'])
-    assert result.exit_code == 0
-    assert 'more than one' in result.output.lower()
-
-
-@pytest.mark.skip
 @pytest.mark.slow
 def test_one_match_do_shell(runner_slow):
     result = runner_slow.invoke(pipes, args=['proj1'], input='exit')
@@ -73,35 +76,30 @@ def test_one_match_do_shell(runner_slow):
     assert 'terminating pipes shell' in result.output.lower()
 
 
-@pytest.mark.skip
-@pytest.mark.slow
-def test_one_match_unlink(runner_slow):
-    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+def test_one_match_do_unlink(runner):
+    result = runner.invoke(pipes, args=['proj1', '--unlink'])
     assert result.exit_code == 0
     assert 'project directory cleared' in result.output.lower()
 
 
-@pytest.mark.skip
-@pytest.mark.slow
-def test_one_match_no_link(runner_slow):
-    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+def test_one_match_already_no_link(runner):
+    result = runner.invoke(pipes, args=['proj1', '--unlink'])
     assert result.exit_code == 0
-    assert 'project directory cleared' in result.output.lower()
-
-    result = runner_slow.invoke(pipes, args=['proj1'])
+    result = runner.invoke(pipes, args=['proj1', '--unlink'])
+    assert result.exit_code == 0
+    assert 'was already' in result.output.lower()
+    result = runner.invoke(pipes, args=['proj1'])
     assert result.exit_code == 0
     # Message telling use he needs to create link
     assert 'pipes --link' in result.output
 
 
-@pytest.mark.skip
-@pytest.mark.slow
-def test_do_link(runner_slow):
-    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'])
+def test_do_link(runner):
+    result = runner.invoke(pipes, args=['proj1', '--unlink'])
     assert result.exit_code == 0
     assert 'project directory cleared' in result.output.lower()
 
-    result = runner_slow.invoke(pipes, args=['--link', 'proj1'])
+    result = runner.invoke(pipes, args=['--link', 'proj1'])
     assert result.exit_code == 0
     assert 'proj1' in result.output.lower()
     assert 'project directory set' in result.output.lower()

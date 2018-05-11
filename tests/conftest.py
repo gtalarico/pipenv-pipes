@@ -106,6 +106,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
                 with open(pipfile, 'w') as fp:
                     fp.write('')
 
+
                 # Create a Fake Env folder
                 hash_ = resolve_envname_hash(project_dir=project_dir)
                 envname = '{}-{}'.format(project_name, hash_)
@@ -122,6 +123,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
                 os.makedirs(bin_path)
                 touch(activate)
                 copy(python_fp, bin_path, follow_symlinks=True)
+                write_project_dir_project_file(envpath, project_dir)
 
             yield pipenv_home, mock_projects_dir
             # Sometimes python.exe is still budy, this give time to unlock

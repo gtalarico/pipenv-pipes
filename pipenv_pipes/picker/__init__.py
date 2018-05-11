@@ -9,6 +9,7 @@ LICENSE MIT
 import re
 import sys
 import curses
+import json
 from itertools import cycle
 
 from .colors import get_colors
@@ -61,6 +62,12 @@ class Picker(object):
         return self.run_loop()
 
     def start(self):
+        if IS_TESTING:
+            data = json.dumps({
+                'query': self.query,
+                'envs': len(self.environments),
+                })
+            raise SystemExit(data)
         return curses.wrapper(self._start)
 
     def move_up(self, pos=1):
@@ -241,8 +248,3 @@ class Picker(object):
 
             elif key in KEYS_BACKSPACE:
                 self.query = self.query[:-1]
-
-            if IS_TESTING:
-                raise Exception('Testing')
-                # curses.endwin()
-                # import pdb; pdb.set_trace()
