@@ -54,8 +54,7 @@ def find_binary(envpath):
     if os.path.exists(binpath):
         return binpath
     else:
-        raise EnvironmentError(
-            'could not find python binary: {}'.format(envpath))
+        raise EnvironmentError('could not find python binary: {}'.format(envpath))
 
 
 def get_binary_version(envpath):

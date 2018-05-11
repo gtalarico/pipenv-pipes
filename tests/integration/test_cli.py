@@ -4,8 +4,11 @@
 """ Tests for `pipenv_pipes` cli."""
 
 import pytest  # noqa: F401
+import traceback
 from pipenv_pipes.cli import pipes
 
+
+#
 
 def test_cli_help(runner):
     help_result = runner.invoke(pipes, args=['--help'])
@@ -15,7 +18,7 @@ def test_cli_help(runner):
 
 def test_cli_version(runner):
     from pipenv_pipes import __version__
-    result = runner.invoke(pipes, args=['--version'])
+    result = runner.invoke(pipes, args=['--version'], catch_exceptions=False)
     assert result.exit_code == 0
     assert __version__ in result.output
 
@@ -37,7 +40,8 @@ def test_cli_no_args(runner):
 @pytest.mark.skip('Not needed')
 @pytest.mark.curses
 def test_cli_no_args_verbose(runner):
-    result = runner.invoke(pipes, ['--verbose'])
+    result = runner.invoke(pipes, ['--verbose'],
+                           catch_exceptions=False)
     assert result.exit_code == 0
     assert 'PIPENV_HOME' in result.output
 
@@ -51,39 +55,47 @@ def test_many_match(runner):
 
 
 def test_cli_list(runner):
-    result = runner.invoke(pipes, args=['--list'])
+    result = runner.invoke(pipes, args=['--list'],
+                           catch_exceptions=False)
     assert result.exit_code == 0
     assert 'proj1' in result.output
 
 
 def test_cli_list_verbose(runner):
-    result = runner.invoke(pipes, args=['--list', '--verbose'])
+    result = runner.invoke(pipes, args=['--list', '--verbose'],
+                           catch_exceptions=False)
     assert result.exit_code == 0
     assert 'PIPENV_HOME' in result.output
     assert 'Python' in result.output
 
 
 def test_no_match(runner):
-    result = runner.invoke(pipes, args=['projxxx'])
+    result = runner.invoke(pipes, args=['projxxx'],
+                           catch_exceptions=False)
     assert result.exit_code == 0
     assert 'no matches' in result.output.lower()
 
 
 @pytest.mark.slow
 def test_one_match_do_shell(runner_slow):
-    result = runner_slow.invoke(pipes, args=['proj1'], input='exit')
+    result = runner_slow.invoke(pipes, args=['proj1'], input='exit',
+                                catch_exceptions=False)
     assert result.exit_code == 0
     assert 'terminating pipes shell' in result.output.lower()
 
 
-def test_one_match_do_unlink(runner):
-    result = runner.invoke(pipes, args=['proj1', '--unlink'])
+@pytest.mark.slow
+def test_one_match_unlink(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'],
+                                catch_exceptions=False)
     assert result.exit_code == 0
     assert 'project directory cleared' in result.output.lower()
 
 
-def test_one_match_already_no_link(runner):
-    result = runner.invoke(pipes, args=['proj1', '--unlink'])
+@pytest.mark.slow
+def test_one_match_no_link(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'],
+                                catch_exceptions=False)
     assert result.exit_code == 0
     result = runner.invoke(pipes, args=['proj1', '--unlink'])
     assert result.exit_code == 0
@@ -94,8 +106,10 @@ def test_one_match_already_no_link(runner):
     assert 'pipes --link' in result.output
 
 
-def test_do_link(runner):
-    result = runner.invoke(pipes, args=['proj1', '--unlink'])
+@pytest.mark.slow
+def test_do_link(runner_slow):
+    result = runner_slow.invoke(pipes, args=['proj1', '--unlink'],
+                                catch_exceptions=False)
     assert result.exit_code == 0
     assert 'project directory cleared' in result.output.lower()
 
@@ -106,7 +120,8 @@ def test_do_link(runner):
 
 
 def test_do_link_no_assoc_env(runner, temp_folder):
-    result = runner.invoke(pipes, args=['--link', temp_folder])
+    result = runner.invoke(pipes, args=['--link', temp_folder],
+                           catch_exceptions=False)
     assert result.exception
     assert 'looking for associated' in result.output.lower()
     assert 'no virtualenv has been created' in result.output.lower()
