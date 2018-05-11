@@ -168,8 +168,6 @@ class Picker(object):
 
     def run_loop(self):
         debug_info = None
-        import os
-        os.environ.setdefault('ESCDELAY', '1000')
         while True:
             self.draw(debug_info=debug_info)
             key = self.screen.getch()
