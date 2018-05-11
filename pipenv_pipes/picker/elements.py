@@ -1,12 +1,12 @@
 from ..utils import collapse_path
 from ..core import get_binary_version
 
-MARGIN = 2
 
 
 class Line():
 
     MARKER = '●'
+    RIGHT_MARGIN = 2
 
     def __init__(self, text=None, color=None, pad=0):
         self._text = text
@@ -19,7 +19,7 @@ class Line():
 
     def render(self, screen, x, y):
         max_y, max_x = screen.getmaxyx()
-        max_width = max_x - MARGIN
+        max_width = max_x - Line.RIGHT_MARGIN
         color_pair = 0 if not self.color else self.color.as_pair
         screen.addnstr(y, x, self.text, max_width, color_pair)
 

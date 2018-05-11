@@ -30,8 +30,8 @@ from .keys import (
 __all__ = ['Picker']
 
 OPTION_COLOR = 'WHITE'
-SELECTED_OPTION = 'RED'
-TITLE_COLOR = 'GREEN'
+SELECTED_OPTION = 'YELLOW'
+TITLE_COLOR = 'BLUE'
 
 
 class Picker(object):
@@ -134,7 +134,7 @@ class Picker(object):
         max_y, max_x = self.screen.getmaxyx()
         max_rows = max_y - pad_top - pad_bottom
         max_cols = max_x - pad_right
-        if max_y < 4 or max_x < 10:
+        if max_y < 5 or max_x < 10:
             self.screen.addnstr(0, 0, 'Help!', max_cols)
             return
 
@@ -150,8 +150,10 @@ class Picker(object):
             y += 1
 
         last_line = len(visible_lines) + 1
-        query = '$ {}'.format(''.join(self.query))
-        self.screen.addnstr(last_line, pad_left, query, max_cols, curses.color_pair(2))
+
+        color = color = self.colors[SELECTED_OPTION]
+        query = Line('$ {}'.format(self.query), color=color)
+        query.render(self.screen, x=pad_left, y=last_line)
 
         if debug_info:
             self.print_debug_info(debug_info)
@@ -166,7 +168,8 @@ class Picker(object):
 
     def run_loop(self):
         debug_info = None
-
+        import os
+        os.environ.setdefault('ESCDELAY', '1000')
         while True:
             self.draw(debug_info=debug_info)
             key = self.screen.getch()
