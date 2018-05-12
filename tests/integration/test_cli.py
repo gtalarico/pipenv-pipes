@@ -33,8 +33,8 @@ def test_cli_from_shell():
 def test_cli_no_args(runner):
     result = runner.invoke(pipes)
     assert result.exit_code == 1
-    data = '{"query": "", "envs": 2}'
-    assert data in result.output
+    assert 'query": ""' in result.output
+    assert 'envs": 2}' in result.output
 
 
 @pytest.mark.skip('Not needed')
@@ -50,8 +50,8 @@ def test_cli_no_args_verbose(runner):
 def test_many_match(runner):
     result = runner.invoke(pipes, args=['proj'])
     assert result.exit_code == 1
-    data = '{"query": "proj", "envs": 2}'
-    assert data in result.output
+    assert 'query": "proj"' in  result.output
+    assert 'envs": 2' in result.output
 
 
 def test_cli_list(runner):
