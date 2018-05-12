@@ -93,10 +93,14 @@ class Picker(object):
     def clear_query(self):
         self.query = ''
 
-    def expand_next(self, negative=False):
+    def expand_next(self):
         if not hasattr(self, '_cycle'):
             self._cycle = cycle(self.CYCLES)
         self.expanded = next(self._cycle)
+
+    def expand_prev(self):
+        for _ in self.CYCLES[:-1]:
+            self.expand_next()
 
     def get_selected(self):
         return self.environments[self.index]
@@ -130,10 +134,10 @@ class Picker(object):
         color = self.colors[TITLE_COLOR]
         title = 'Pipenv Environments'
         title_line = Line(title, color=color, pad=2)
-        bar_line = Line('=' * len(title), color=color, pad=2)
+        bar_line = Line('-' * len(title), color=color, pad=2)
         blank_line = Line('', color=None)
         return [
-            bar_line, title_line, bar_line, blank_line]
+            blank_line, title_line, bar_line, blank_line]
 
     def get_lines(self):
         title_lines = self.get_title_lines()
@@ -218,6 +222,7 @@ class Picker(object):
 
             if re.search(r'[A-Za-z0-9\s\-_]', key_string):
                 self.query += key_string
+                self.expanded = 0
                 for n, environment in enumerate(self.environments):
                     if environment.envname.startswith(self.query):
                         self.index = n
@@ -248,7 +253,7 @@ class Picker(object):
                 self.expand_next()
 
             elif key in KEYS_LEFT:
-                self.expand_next(False)
+                self.expand_prev()
 
             elif key in KEYS_BACKSPACE:
                 self.query = self.query[:-1]
