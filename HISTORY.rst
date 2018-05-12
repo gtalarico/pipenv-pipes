@@ -2,7 +2,7 @@
 History
 =======
 
-0.5.0 (2018-05-12) - WIP
+0.5.0 (2018-05-12)
 --------------------------
 * Curses Interface
 * Show Python Version
