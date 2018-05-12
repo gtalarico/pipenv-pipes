@@ -1,5 +1,6 @@
 import pytest  # noqa: F401
 import os
+from subprocess import TimeoutExpired
 
 from pipenv_pipes.pipenv import (
     call_pipenv_venv,
@@ -24,6 +25,16 @@ def test_call_pipenv_venv(mock_env_home_empty):
         assert pipenv_home in output
 
 
-@pytest.mark.skip(reason='Not Sure how to mock this. Tested in test_cli')
-def test_call_pipenv_shell(temp_folder):
-    output, code, proc = call_pipenv_shell(cwd=temp_folder)
+@pytest.mark.skip
+def test_call_pipenv_shell(mock_env_home_slow):
+    """ This does not guarantee the shell was launched successful,
+    however it ensure it timed out, which means the command did went through
+    and it was open for at least 5 seconds which means the shell was most
+    likely opened """
+    pipenv_home, mock_projects_dir = mock_env_home_slow
+    project_name = os.listdir(mock_projects_dir)[0]
+    project_dir = os.path.join(mock_projects_dir, project_name)
+    # import pdb; pdb.set_trace()
+    # with pytest.raises(TimeoutExpired):
+    # import pdb; pdb.set_trace()
+    # output = call_pipenv_shell(cwd=project_dir, timeout=5)

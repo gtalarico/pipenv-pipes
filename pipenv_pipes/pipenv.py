@@ -24,22 +24,23 @@ def call_pipenv_venv(project_dir, timeout=10):
     return output, code
 
 
-def call_pipenv_shell(cwd, envname='pipenv-shell'):
+def call_pipenv_shell(cwd, envname='pipenv-shell', timeout=None):
     """ Calls ``pipenv shell``` from a given envname """
     environ = dict(os.environ)
     environ['PROMPT'] = '({}){}'.format(envname, os.getenv('PROMPT', ''))
 
     is_test = 'PYTEST_CURRENT_TEST' in os.environ
-    timeout = 10 if is_test else None
     stdout = PIPE if is_test else sys.stdout
+    stderr = PIPE if is_test else sys.stderr
 
     proc = Popen(
         ['pipenv', 'shell'],
         cwd=cwd,
         shell=False,
         stdout=stdout,
+        stderr=stderr,
+        env=environ,
         )
-
     out, err = proc.communicate(timeout=timeout)
     output = out or err
     code = proc.returncode

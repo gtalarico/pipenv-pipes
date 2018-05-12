@@ -128,7 +128,7 @@ def mock_env_home_empty(TempEnviron, mock_projects_dir):
 
             yield pipenv_home, mock_projects_dir
             # Sometimes python.exe is still budy, this give time to unlock
-            time.sleep(0.1)
+            time.sleep(0.)
 
 
 @pytest.fixture
