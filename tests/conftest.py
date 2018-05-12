@@ -1,18 +1,14 @@
 import pytest
 import os
-import sys
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
 import shutil
-import time
-import subprocess
 import tarfile
 
 from click.testing import CliRunner
 
 from pipenv.project import Project
 
-from pipenv_pipes.pipenv import PipedPopen
 from pipenv_pipes.core import (
     find_environments,
     write_project_dir_project_file,
