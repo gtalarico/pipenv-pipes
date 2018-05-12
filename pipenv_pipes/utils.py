@@ -40,10 +40,7 @@ def collapse_path(path):
     """ Replaces Home and WorkOn values in a path for their variable names """
     envvars = EnvVars()
     workon = envvars.PIPENV_HOME
-    if not envvars.IS_WINDOWS:
-        home = os.environ['HOME']
-    else:
-        home = os.environ['USERPROFILE']
+    home = os.path.expanduser("~")
     path = path.replace(workon, '$PIPENV_HOME')
     path = path.replace(home, '~')
     return path
