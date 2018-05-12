@@ -3,15 +3,18 @@ import sys
 from subprocess import Popen, PIPE
 
 
-def PipedPopen(*args, **kwargs):
+def PipedPopen(cmds, **kwargs):
     """ Helper Piped Process for drier code"""
     timeout = kwargs.pop('timeout', None)
-    kwargs['env'] = dict(os.environ)
-    proc = Popen(*args, **kwargs,
-                 stdout=PIPE,
-                 stderr=PIPE,
-                 universal_newlines=True,
-                )
+    env = kwargs.pop('env', dict(os.environ))
+    proc = Popen(
+        cmds,
+        stdout=PIPE,
+        stderr=PIPE,
+        universal_newlines=True,
+        env=env,
+        **kwargs
+    )
     out, err = proc.communicate(timeout=timeout)
     output = out.strip() or err.strip()
     code = proc.returncode
@@ -20,7 +23,7 @@ def PipedPopen(*args, **kwargs):
 
 def call_pipenv_venv(project_dir, timeout=10):
     """ Calls ``pipenv --venv`` from a given project directory """
-    output, code = PipedPopen(['pipenv', '--venv'], cwd=project_dir)
+    output, code = PipedPopen(cmds=['pipenv', '--venv'], cwd=project_dir)
     return output, code
 
 

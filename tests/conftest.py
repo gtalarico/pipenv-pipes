@@ -4,7 +4,6 @@ from contextlib import contextmanager
 from tempfile import TemporaryDirectory
 import shutil
 import tarfile
-
 from click.testing import CliRunner
 
 from pipenv.project import Project
