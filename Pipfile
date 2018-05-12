@@ -9,6 +9,7 @@ verify_ssl = true
 name = "curses-win"
 
 [packages]
+"e1839a8" = {path = ".", editable = true}
 
 [dev-packages]
 "bump2version" = "*"
