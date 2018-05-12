@@ -1,5 +1,5 @@
-Welcome to Pipenv Pipes's documentation!
-======================================
+Pipenv Pipes Documentation
+==========================
 
 .. toctree::
    :maxdepth: 2
