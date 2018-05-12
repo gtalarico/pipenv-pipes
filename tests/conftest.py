@@ -33,10 +33,10 @@ def unzip_tar(src, dst):
 
 @pytest.fixture
 def venv_archive_path():
+    filename = 'unix.tar.gz'
     if 'nt' in os.name:
-        return os.path.join(VENVS_ARCHIVE, 'win.tar.gz')
-    else:
-        raise NotImplementedError('Need to make a tar from unix')
+        filename = 'win.tar.gz'
+    return os.path.join(VENVS_ARCHIVE, filename)
 
 
 @pytest.fixture

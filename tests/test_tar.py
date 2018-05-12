@@ -1,4 +1,5 @@
 import os
+import tarfile
 from conftest import unzip_tar
 
 
@@ -12,3 +13,6 @@ def test_unzip(venv_archive_path, temp_folder):
     tarname = os.path.basename(venv_archive_path)
     tarpath = os.path.join(temp_folder, tarname)
     assert os.listdir(temp_folder)
+
+path = '/Users/gtalarico/dev/test/env'
+make_tarfile(path, '/Users/gtalarico/dev/test/unix.tar.gz')
