@@ -16,6 +16,10 @@ from pipenv_pipes.core import (
 )
 
 
+HERE = os.path.dirname(__file__)
+VENVS_ARCHIVE = os.path.join(HERE, 'venvs')
+
+
 def touch(filename):
     try:
         os.utime(filename, None)
@@ -24,11 +28,17 @@ def touch(filename):
 
 
 @pytest.fixture
+def venv_archive_path():
+    if 'nt' in os.name:
+        return os.path.join(VENVS_ARCHIVE, 'win.tar.gz')
+    else:
+        raise NotImplementedError('Need to make a tar from unix')
+
+
+@pytest.fixture
 def win_tempdir():
-    # Default Temp dirs use windows short path:
-    # 'C:\\Users\\GTALAR~1\\AppData'
-    # The ~1 breaks --venv hash resolution,
-    # so to ensure consitency will build the path manually
+    # Default %TEMP% returns windows short path (C:\\Users\\GTALAR~1\\AppData)
+    # The`~1`` breaks --venv hash resolution, so we must build path manually
     if 'nt' not in os.name:
         return None
     path = os.path.join(os.environ['USERPROFILE'], 'AppData', 'Local', 'Temp')
@@ -68,12 +78,8 @@ def project_names():
 @pytest.fixture()
 def TempEnviron():
     """
-    Context Manager Fixture for a controlled os.environ.
-    Use kwargs to set desired variables.
-
-    Usage:
-        >>> with TempEnviron(WORKON_HOME=temp_fake_venvs_home):
-        >>>    # do something
+    >>> with TempEnviron(WORKON_HOME=temp_fake_venvs_home):
+    >>>    # do something
     """
     return _TempEnviron
 

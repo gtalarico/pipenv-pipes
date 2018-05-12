@@ -76,7 +76,7 @@ def test_no_match(runner):
     assert 'no matches' in result.output.lower()
 
 
-# @pytest.mark.slow
+@pytest.mark.slow
 def test_one_match_do_shell(runner_slow):
     result = runner_slow.invoke(
         pipes, args=['proj1'], input='exit', catch_exceptions=False)
@@ -84,7 +84,6 @@ def test_one_match_do_shell(runner_slow):
     assert 'terminating pipes shell' in result.output.lower()
 
 
-# @pytest.mark.slow
 def test_one_match_unlink(runner):
     result = runner.invoke(
         pipes, args=['proj1', '--unlink'], catch_exceptions=False)
@@ -92,7 +91,6 @@ def test_one_match_unlink(runner):
     assert 'project directory cleared' in result.output.lower()
 
 
-# @pytest.mark.slow
 def test_one_match_no_link(runner):
     result = runner.invoke(
         pipes, args=['proj1', '--unlink'], catch_exceptions=False)
@@ -106,7 +104,6 @@ def test_one_match_no_link(runner):
     assert 'pipes --link' in result.output
 
 
-# @pytest.mark.slow
 def test_do_link(runner):
     result = runner.invoke(
         pipes, args=['proj1', '--unlink'], catch_exceptions=False)
