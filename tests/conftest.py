@@ -131,7 +131,8 @@ def mock_env_home(TempEnviron, mock_projects_dir, venv_archive_path):
                 project_dir=project_dir
             )
 
-        yield pipenv_home, mock_projects_dir
+        with TempEnviron(WORKON_HOME=pipenv_home):
+            yield pipenv_home, mock_projects_dir
         os.chdir(__cwd)
 
 
