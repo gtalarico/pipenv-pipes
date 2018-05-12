@@ -12,7 +12,7 @@ def test_call_pipenv_venv_not_a_venv(temp_folder):
     """ call venv on orphan folder: No virtual path has been created """
     output, code = call_pipenv_venv(temp_folder)
     assert code != 0
-    assert 'no virtualenv has been crpipeseate' in output.lower()
+    assert 'no virtualenv has been created' in output.lower()
 
 
 def test_call_pipenv_venv(mock_env_home):
