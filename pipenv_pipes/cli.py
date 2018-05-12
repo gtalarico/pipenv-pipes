@@ -143,7 +143,7 @@ def launch_env(environment):
 
 
 def do_pick(environments, query=None):
-    picker = Picker(environments, query=query, debug_mode=True)
+    picker = Picker(environments, query=query, debug_mode=False)
     selected = picker.start()
     return selected
 
