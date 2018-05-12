@@ -3,7 +3,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[source]]
+url = "https://github.com/gtalarico/curses-win/releases/tag/2.2.0"
+verify_ssl = true
+name = "curses-win"
+
 [packages]
+"e1839a8" = {path = ".", editable = true}
 
 [dev-packages]
 "bump2version" = "*"
@@ -15,6 +21,7 @@ pytest-cov = "*"
 sphinx-autobuild = "*"
 pytest-lazy-fixture = "*"
 pipenv = "*"
+curses = {version="*", index="curses-win", sys_platform = "== 'win32'"}
 
 [requires]
 python_version = "3.6"

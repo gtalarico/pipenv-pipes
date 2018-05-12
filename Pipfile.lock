@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6ab978ef606bf3bc670358de5b3442dd5417d2191a3402ce68e0cf43f58c96d1"
+            "sha256": "9493c483551f2f32b7cf0fb464a81357afee30d88a9f6777a8ba791420f2fa5b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -12,10 +12,49 @@
                 "name": "pypi",
                 "url": "https://pypi.org/simple",
                 "verify_ssl": true
+            },
+            {
+                "name": "curses-win",
+                "url": "https://github.com/gtalarico/curses-win/releases/tag/2.2.0",
+                "verify_ssl": true
             }
         ]
     },
-    "default": {},
+    "default": {
+        "click": {
+            "hashes": [
+                "sha256:29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d",
+                "sha256:f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+            ],
+            "version": "==6.7"
+        },
+        "colorama": {
+            "hashes": [
+                "sha256:463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda",
+                "sha256:48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"
+            ],
+            "version": "==0.3.9"
+        },
+        "curses": {
+            "hashes": [
+                "sha256:01b73a43e5e581be0cfc1489c4e7ac8200862aaa99766e3f647eb4586cfad2f6",
+                "sha256:115a79bc439eeaf13245bc189e84fba5ec6bf823a725b91c149f411fc8718459",
+                "sha256:14a8ba53b80d1eba0af0e843bd947317f0d5edbe897ed0e1b7990f20ee23db62",
+                "sha256:1615e2b346a6d093577baf8b71a94a0b3186a181616356dec8dfb39ba02377c7",
+                "sha256:17d62bd27ac19beb86473db1ac47214bad893239c5ad9bd54f88eddecf96818b",
+                "sha256:5308164b86813072fcc67d8442dba74c23722a11899b03baee031af26fd1c795",
+                "sha256:803a35f6e1a7fc1823e7ecfc44c72908c8d97d53ec854413b42b5fb12b709c69",
+                "sha256:a44d60e8fde61d341484b22b9902755ece7917972e65e505b014663b38143490",
+                "sha256:afe6d09e2f1eff3d11db44994dfcdbb66f6cf9237185e4414b6d40cdf94e4d67",
+                "sha256:cb0de53cd3ff8417fd53e7b7034800b8a96d046da5647171bbc1238b0e47bec4"
+            ],
+            "version": "==2.2.0"
+        },
+        "e1839a8": {
+            "editable": true,
+            "path": "."
+        }
+    },
     "develop": {
         "argh": {
             "hashes": [
@@ -58,7 +97,6 @@
                 "sha256:463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda",
                 "sha256:48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"
             ],
-            "markers": "sys_platform == 'win32'",
             "version": "==0.3.9"
         },
         "coverage": {
@@ -102,6 +140,21 @@
             ],
             "index": "pypi",
             "version": "==4.5.1"
+        },
+        "curses": {
+            "hashes": [
+                "sha256:01b73a43e5e581be0cfc1489c4e7ac8200862aaa99766e3f647eb4586cfad2f6",
+                "sha256:115a79bc439eeaf13245bc189e84fba5ec6bf823a725b91c149f411fc8718459",
+                "sha256:14a8ba53b80d1eba0af0e843bd947317f0d5edbe897ed0e1b7990f20ee23db62",
+                "sha256:1615e2b346a6d093577baf8b71a94a0b3186a181616356dec8dfb39ba02377c7",
+                "sha256:17d62bd27ac19beb86473db1ac47214bad893239c5ad9bd54f88eddecf96818b",
+                "sha256:5308164b86813072fcc67d8442dba74c23722a11899b03baee031af26fd1c795",
+                "sha256:803a35f6e1a7fc1823e7ecfc44c72908c8d97d53ec854413b42b5fb12b709c69",
+                "sha256:a44d60e8fde61d341484b22b9902755ece7917972e65e505b014663b38143490",
+                "sha256:afe6d09e2f1eff3d11db44994dfcdbb66f6cf9237185e4414b6d40cdf94e4d67",
+                "sha256:cb0de53cd3ff8417fd53e7b7034800b8a96d046da5647171bbc1238b0e47bec4"
+            ],
+            "version": "==2.2.0"
         },
         "flake8": {
             "hashes": [
