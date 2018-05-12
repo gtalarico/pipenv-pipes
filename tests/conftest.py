@@ -16,7 +16,6 @@ from pipenv_pipes.pipenv import PipedPopen
 from pipenv_pipes.core import (
     find_environments,
     write_project_dir_project_file,
-    resolve_envname_hash,
 )
 
 
