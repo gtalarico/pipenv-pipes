@@ -50,6 +50,7 @@ class TestFindEnvironments():
         envpath = os.path.join(pipenv_home, envname)
         assert 'Python' in get_binary_version(envpath)
 
+
 class TestProjectDirFile():
 
     """ Test functions for managing the .project file, aka project_dir file """
