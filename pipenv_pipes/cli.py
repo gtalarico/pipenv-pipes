@@ -80,12 +80,10 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
         sys.exit(1)
 
     if verbose:
-        click.echo('PIPENV_HOME: {}'.format(env_vars.PIPENV_HOME))
+        click.echo('\nPIPENV_HOME: {}\n'.format(env_vars.PIPENV_HOME))
 
     if list_:
         print_project_list(environments=environments, verbose=verbose)
-        msg = "\nCheck 'pipes --help' for usage"
-        click.echo(msg)
         sys.exit(0)
 
     if setlink:
