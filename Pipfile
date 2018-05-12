@@ -9,7 +9,6 @@ verify_ssl = true
 name = "curses-win"
 
 [packages]
-"e1839a8" = {path = ".", editable = true}
 
 [dev-packages]
 "bump2version" = "*"
@@ -22,6 +21,7 @@ sphinx-autobuild = "*"
 pytest-lazy-fixture = "*"
 pipenv = "*"
 curses = {version="*", index="curses-win", sys_platform = "== 'win32'"}
+"e1839a8" = {path = ".", editable = true}
 
 [requires]
 python_version = "3.6"
