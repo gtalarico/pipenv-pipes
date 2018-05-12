@@ -8,16 +8,14 @@ def PipedPopen(cmds, **kwargs):
     timeout = kwargs.pop('timeout', None)
     env = kwargs.pop('env', dict(os.environ))
     proc = Popen(
-        ' '.join(cmds),
+        cmds,
         stdout=PIPE,
         stderr=PIPE,
-        universal_newlines=True,
         env=env,
-        shell=True,
         **kwargs
     )
     out, err = proc.communicate(timeout=timeout)
-    output = out.strip() or err.strip()
+    output = out.decode().strip() or err.decode().strip()
     code = proc.returncode
     return output.strip(), code
 
