@@ -76,9 +76,8 @@ def test_no_match(runner):
     assert 'no matches' in result.output.lower()
 
 
-@pytest.mark.slow
-def test_one_match_do_shell(runner_slow):
-    result = runner_slow.invoke(
+def test_one_match_do_shell(runner):
+    result = runner.invoke(
         pipes, args=['proj1'], input='exit', catch_exceptions=False)
     assert result.exit_code == 0
     assert 'terminating pipes shell' in result.output.lower()

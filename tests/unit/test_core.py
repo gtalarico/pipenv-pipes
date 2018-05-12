@@ -16,11 +16,10 @@ from pipenv_pipes.core import (
 
 class TestFindEnvironments():
 
-    def test_find_environments(self, mock_env_home_empty):
-        pipenv_home, mock_projects_dir = mock_env_home_empty
+    def test_find_environments(self, mock_env_home):
+        pipenv_home, mock_projects_dir = mock_env_home
         # Add a non env to mock projects ensure it's not picked up
         os.makedirs(os.path.join(pipenv_home, 'notanenv'))
-
         environments = find_environments(pipenv_home)
         assert len(environments) == 2
         assert 'proj1' in [e.project_name for e in environments]

@@ -173,6 +173,9 @@ Known Issues
 
 * ``PIPENV_VENV_IN_PROJECT`` is not currently supported
 
+* ``pipenv install -e . `` failes on windows due to curses requirement.
+    Use `python setup.py develop` instead.
+
 Curses on Windows
 -----------------
 

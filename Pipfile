@@ -14,6 +14,7 @@ pytest = "*"
 pytest-cov = "*"
 sphinx-autobuild = "*"
 pytest-lazy-fixture = "*"
+pipenv = "*"
 
 [requires]
 python_version = "3.6"

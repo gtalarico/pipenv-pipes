@@ -15,23 +15,26 @@ def test_call_pipenv_venv_not_a_venv(temp_folder):
     assert 'no virtualenv has been create' in output.lower()
 
 
-def test_call_pipenv_venv(mock_env_home_empty):
-    pipenv_home, mock_projects_dir = mock_env_home_empty
-    for project_name in os.listdir(mock_projects_dir):
-        project_dir = os.path.join(mock_projects_dir, project_name)
-        output, code = call_pipenv_venv(project_dir=project_dir)
-        assert project_name in output
-        assert code == 0
-        assert pipenv_home in output
+def test_call_pipenv_venv(mock_env_home):
+    pipenv_home, mock_projects_dir = mock_env_home
+    first_project = os.listdir(mock_projects_dir)[0]
+    project_dir = os.path.join(mock_projects_dir, first_project)
+    output, code = call_pipenv_venv(project_dir=project_dir)
+    assert first_project in output
+    assert code == 0
+    assert pipenv_home in output
+
+        # Debug Venv
+        # os.system('explorer ' +pipenv_home)
 
 
 @pytest.mark.skip
-def test_call_pipenv_shell(mock_env_home_slow):
+def test_call_pipenv_shell(mock_env_home):
     """ This does not guarantee the shell was launched successful,
     however it ensure it timed out, which means the command did went through
     and it was open for at least 5 seconds which means the shell was most
     likely opened """
-    pipenv_home, mock_projects_dir = mock_env_home_slow
+    pipenv_home, mock_projects_dir = mock_env_home
     project_name = os.listdir(mock_projects_dir)[0]
     project_dir = os.path.join(mock_projects_dir, project_name)
     # import pdb; pdb.set_trace()

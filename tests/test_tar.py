@@ -1,16 +1,10 @@
-import tarfile
 import os
-# from .utils import make_tarfile, unzip_tar
+from conftest import unzip_tar
 
 
 def make_tarfile(src_dir, dst):
     with tarfile.open(dst, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
-
-
-def unzip_tar(src, dst):
-    with tarfile.open(src, "r:gz") as tar:
-        tar.extractall(path=dst)
 
 
 def test_unzip(venv_archive_path, temp_folder):
