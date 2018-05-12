@@ -17,11 +17,6 @@ Report Bugs
 
 Report bugs at https://github.com/gtalarico/pipenv-pipes/issues.
 
-If you are reporting a bug, please include:
-
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
 
 Fix Bugs
 ~~~~~~~~
@@ -54,8 +49,8 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-Get Started!
-------------
+Setup Pipes Development Environment
+-----------------------------------
 
 Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
 
@@ -66,8 +61,8 @@ Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv pipenv_pipes
-    $ cd pipenv_pipes/
+    $ cd pipenv_pipes
+    $ pipenv install --dev
     $ python setup.py develop
 
 4. Create a branch for local development::
@@ -86,7 +81,6 @@ Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
    To get flake8 and tox, just pip install them into your virtualenv.
 
 6. Commit your changes and push your branch to GitHub::
-
     $ git add .
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
@@ -111,7 +105,12 @@ Tips
 
 To run a subset of tests::
 
-$ py.test tests.test_pipenv_pipes
+$ pytest
+
+or
+
+$ tox
+
 
 
 Deploying
@@ -121,7 +120,7 @@ A reminder for the maintainers on how to deploy.
 Make sure all your changes are committed (including an entry in HISTORY.rst).
 Then run::
 
-$ bumpversion patch # possible: major / minor / patch
+$ bump2version patch # possible: major / minor / patch
 $ git push
 $ git push --tags
 

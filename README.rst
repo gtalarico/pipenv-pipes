@@ -42,10 +42,11 @@ Install
 .. code:: bash
 
     # MacOs + Ubuntu
-    $ pip install pipenv-pipes --user
+    $ pip3 install pipenv-pipes --user
 
     # Windows
-    $ pip install pipenv-pipes --find-links https://github.com/gtalarico/curses-win/releases/tag/2.2.0
+    $ pip3 install pipenv-pipes --find-links https://github.com/gtalarico/curses-win/releases/tag/2.2.0
+
 
 Compatibility
 ^^^^^^^^^^^^
@@ -173,7 +174,7 @@ Known Issues
 
 * ``PIPENV_VENV_IN_PROJECT`` is not currently supported
 
-* ``pipenv install -e . `` failes on windows due to curses requirement.
+* ``pip install -e . `` failes on windows due to curses requirement
     Use `python setup.py develop` instead.
 
 Curses on Windows
