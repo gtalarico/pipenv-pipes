@@ -10,7 +10,7 @@ Pipenv Environment Switcher ⚡
         :target: https://pypi.python.org/pypi/pipenv_pipes
         :alt: Pypi
 
-.. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=master
+.. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=release
         :target: https://travis-ci.org/gtalarico/pipenv-pipes
         :alt: Traves CI
 
