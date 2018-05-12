@@ -26,7 +26,8 @@ Pipenv Environment Switcher ⚡
 Overview
 ---------
 
-Pipes is a Pipenv companion CLI tool that provides a quick way to jump between your pipenv powered projects.
+Pipes is a Pipenv companion CLI tool that provides a
+quick way to jump between your pipenv powered projects.
 
 .. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
 
@@ -49,7 +50,7 @@ Install
 
 
 Compatibility
-^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 * Python 3.4+ (PRs for 2.7 welcome)
 * Unix + Windows Support 💖
@@ -76,13 +77,18 @@ List Pipenv Environments
 
 The `*` indicates the Environment has a project directory associated.
 
-*The lack of a* `*`, indicates the Environment has not yet been associated with a project directory.
-If you try switching into an environment without the `*`, Pipes will tell you need to *link* the environment
+*The lack of a* `*`, indicates the Environment has not yet been
+associated with a project directory.
+
+If you try switching into an environment without the `*`,
+Pipes will tell you need to *link* the environment
 with a project directory first.
 
-To understand how Pipes links Project Directories with corresponding virtualenvs see `Link Environment to Project Directory`_.
+To understand how Pipes links Project Directories with corresponding
+virtualenvs see `Link Environment to Project Directory`_.
 
-To see a detail output of the detected pipenv enviroments and the maped project directories use the ``--verbose`` option:
+To see a detail output of the detected pipenv enviroments and the maped
+project directories use the ``--verbose`` option:
 
 .. code:: bash
 
@@ -104,13 +110,15 @@ To see a detail output of the detected pipenv enviroments and the maped project 
          Project Dir: /Users/username/dev/project2
 
 
-*Project Dir* will show as `Not Set` if the Environment has not been associated with a Project directory.
+*Project Dir* will show as `Not Set` if the Environment
+has not been associated with a Project directory.
 
 
 Link Environment to Project Directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before you can switch into a project using Pipes, the selected environment must have a project directory associated with it.
+Before you can switch into a project using Pipes,
+the selected environment must have a project directory associated with it.
 
 To link a project directory with its environment use the ``--link`` flag:
 
@@ -118,8 +126,11 @@ To link a project directory with its environment use the ``--link`` flag:
 
     $ pipes --link /path/to/project1
 
-Pipes will find the associated Pipenv Environmnet by running ``pipenv --venv`` from from the target directory.
-Once detected, the project directory path is stored in the pipenv environemnt in a ``.project`` file.
+Pipes will find the associated Pipenv Environmnet by
+running ``pipenv --venv`` from from the target directory.
+
+Once detected, the project directory path is stored in the
+pipenv environemnt in a ``.project`` file.
 
 
 Go To a Project by Name
@@ -132,13 +143,17 @@ we can use pipes to navigate our projects:
 
     $ pipes project1
 
-This would cd into directory ``/path/to/project1`` and the corresponding Pipenv Shell is activated.
+This would cd into directory ``/path/to/project1``
+and the corresponding Pipenv Shell is activated.
 
-If query term (eg. ``project1``) returns two or more matches, Pipes will tell you that a more specific query term needs to be used.
+If query term (eg. ``project1``) returns two or more matches,
+Pipes will tell you that a more specific query term needs to be used.
 
-For instance, to match ``0: project1-LwEMcb8W`` user would need to type ``project1`` to get a single match.
-If query argument was ``project`` activation would fail since Pipes cannot guess which enviroment users wants
-(``project1`` or ``project2``).
+For instance, to match ``0: project1-LwEMcb8W`` user would need
+to type ``project1`` to get a single match.
+
+If query argument was ``project`` activation would fail since
+Pipes cannot guess which enviroment users wants (``project1`` or ``project2``).
 
 
 Go To a Project by Index
@@ -175,7 +190,7 @@ Known Issues
 * ``PIPENV_VENV_IN_PROJECT`` is not currently supported
 
 * ``pip install -e . `` failes on windows due to curses requirement
-    Use `python setup.py develop` instead.
+    Use ``$ python setup.py develop`` instead.
 
 Curses on Windows
 -----------------
@@ -183,7 +198,8 @@ Curses on Windows
 Curses are not natively supported on windows.
 To enable curses on windows you must get Windows binaries from `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#curses>`_
 
-First download the appropriate wheel from the link above, then use pip to install it:
+First download the appropriate wheel from the link above,
+then use pip to install it:
 ```
 pip install C:\..packetPath..\curses-2.2-cp35-none-win_amd64.whl
 ```
