@@ -88,7 +88,8 @@ def TempEnviron():
 @pytest.fixture
 def mock_projects_dir(project_names, win_tempdir):
     """ A folderpath with 2 sample project folders """
-    with TemporaryDirectory(prefix='projects', dir=win_tempdir) as projects_dir:
+    with TemporaryDirectory(
+            prefix='projects', dir=win_tempdir) as projects_dir:
         for project_name in project_names:
             os.makedirs(os.path.join(projects_dir, project_name))
         yield projects_dir
@@ -109,8 +110,8 @@ def mock_env_home(TempEnviron, mock_projects_dir, venv_archive_path):
             with TempEnviron(WORKON_HOME=pipenv_home):
                 project = Project()
                 envname = project.virtualenv_name
+            os.chdir(__cwd)
 
-            dst = os.path.join(pipenv_home, envname)
             unzip_tar(venv_archive_path, pipenv_home)
             fake_env = os.path.join(pipenv_home, 'env')
             envpath = os.path.join(pipenv_home, envname)

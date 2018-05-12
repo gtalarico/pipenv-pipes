@@ -40,15 +40,12 @@ class EnvLine(Line):
         if not has_project_dir:
             project_dir = '-- Not Set --'
 
-
         if self.expanded == 0:
             text = self.env.envname
             text = text if not has_project_dir else text + ' *'
         if self.expanded == 1:
-            text = '{} ({})'.format(
-                self.env.envname,
-                get_binary_version(self.env.envpath
-                ))
+            binpath = get_binary_version(self.env.envpath)
+            text = '{} ({})'.format(self.env.envname, binpath)
         if self.expanded == 2:
             text = collapse_path(self.env.envpath)
         if self.expanded == 3:

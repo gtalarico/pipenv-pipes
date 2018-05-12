@@ -2,14 +2,13 @@
 
 """ Pipes: Pipenv Shell Switcher """
 
-import os
 import sys
 import click
 
 from . import __version__
 from .environment import EnvVars
 from .picker import Picker
-from .utils import get_query_matches, get_index_from_query, collapse_path
+from .utils import get_query_matches, collapse_path
 from .pipenv import (
     call_pipenv_venv,
     call_pipenv_shell,
@@ -70,7 +69,7 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
     env_vars = EnvVars()
 
     if env_vars.HAS_CURSES:
-        import curses
+        import curses # noqa flake8
 
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
@@ -175,7 +174,7 @@ def print_project_list(environments, verbose):
                 '{entry}\n'
                 '    Environment: \t {envpath}\n'
                 '    Binary: \t\t {binversion}\n'
-                '    Project Dir: \t {project_dir}\n'\
+                '    Project Dir: \t {project_dir}\n'
                 .format(
                     entry=entry,
                     envpath=collapse_path(envpath),

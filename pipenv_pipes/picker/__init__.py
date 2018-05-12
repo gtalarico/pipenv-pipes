@@ -1,4 +1,4 @@
-#-*-coding:utf-8-*-
+# -*-coding:utf-8-*-
 
 """
 Modified from https://github.com/wong2/pick/

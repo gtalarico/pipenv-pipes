@@ -1,9 +1,6 @@
 
 import os
 from collections import namedtuple
-import pathlib
-import hashlib
-import base64
 
 from .pipenv import call_python_version
 from .utils import (
@@ -54,7 +51,8 @@ def find_binary(envpath):
     if os.path.exists(binpath):
         return binpath
     else:
-        raise EnvironmentError('could not find python binary: {}'.format(envpath))
+        raise EnvironmentError(
+            'could not find python binary: {}'.format(envpath))
 
 
 def get_binary_version(envpath):
@@ -65,7 +63,6 @@ def get_binary_version(envpath):
         return version
     else:
         raise EnvironmentError('could not get binary version')
-
 
 
 ###############################

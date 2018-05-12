@@ -25,7 +25,7 @@ class EnvVars():
         self.VENV_IS_ACTIVE = os.getenv('VENV', '')
 
         try:
-            import curses
+            import curses  # noqa flake8
         except ImportError:
             self.HAS_CURSES = False
         else:
