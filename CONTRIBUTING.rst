@@ -71,14 +71,7 @@ Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass flake8 and the
-   tests, including testing other Python versions with tox::
-
-    $ flake8 pipenv_pipes tests
-    $ python setup.py test or py.test
-    $ tox
-
-   To get flake8 and tox, just pip install them into your virtualenv.
+5. When you're done making changes, check that your changes pass all tests (see below).
 
 6. Commit your changes and push your branch to GitHub::
     $ git add .
@@ -86,6 +79,24 @@ Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
     $ git push origin name-of-your-bugfix-or-feature
 
 7. Submit a pull request through the GitHub website.
+
+Testing
+----
+
+To run the test suite:
+
+$ flake8 pipenv_pipes tests
+$ python setup.py test or pytest
+$ tox
+
+To get flake8 and tox, just install them into your virtualenv.
+
+$ pipenv install --dev
+
+To run a subset of tests::
+
+$ pytest -k test_name
+
 
 Pull Request Guidelines
 -----------------------
@@ -99,18 +110,6 @@ Before you submit a pull request, check that it meets these guidelines:
 3. The pull request should work for Python 2.7, 3.4, 3.5 and 3.6, and for PyPy. Check
    https://travis-ci.org/gtalarico/pipenv_pipes/pull_requests
    and make sure that the tests pass for all supported Python versions.
-
-Tips
-----
-
-To run a subset of tests::
-
-$ pytest
-
-or
-
-$ tox
-
 
 
 Deploying
