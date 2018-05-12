@@ -3,13 +3,14 @@
 import pytest  # noqa: F401
 import os
 from os.path import join
-import pathlib
 
 from pipenv_pipes.core import (
     find_environments,
     read_project_dir_file,
     write_project_dir_project_file,
     delete_project_dir_file,
+    find_binary,
+    get_binary_version,
 )
 
 
@@ -33,6 +34,21 @@ class TestFindEnvironments():
         with pytest.raises(IOError):
             find_environments('/fakedir/')
 
+    def test_find_binary(self, mock_env_home, temp_folder):
+        pipenv_home, mock_projects_dir = mock_env_home
+        envname = os.listdir(pipenv_home)[0]
+        envpath = os.path.join(pipenv_home, envname)
+        binpath = find_binary(envpath)
+        assert 'python' in binpath
+        assert envpath in binpath
+        with pytest.raises(EnvironmentError):
+            find_binary(temp_folder)
+
+    def test_get_python_version(self, mock_env_home, temp_folder):
+        pipenv_home, mock_projects_dir = mock_env_home
+        envname = os.listdir(pipenv_home)[0]
+        envpath = os.path.join(pipenv_home, envname)
+        assert 'Python' in get_binary_version(envpath)
 
 class TestProjectDirFile():
 

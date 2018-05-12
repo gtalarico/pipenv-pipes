@@ -57,8 +57,8 @@ def find_binary(envpath):
 
 def get_binary_version(envpath):
     """ Returns a string indicating the Python version (Python 3.5.6) """
-    binpath = find_binary(envpath)
-    version, code = call_python_version(binpath)
+    pybinpath = find_binary(envpath)
+    version, code = call_python_version(pybinpath)
     if not code:
         return version
     else:
