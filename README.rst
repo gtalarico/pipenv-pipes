@@ -6,8 +6,8 @@ Pipes
 Pipenv Environment Switcher ⚡
 
 
-.. image:: https://img.shields.io/pypi/v/pipenv_pipes.svg
-        :target: https://pypi.python.org/pypi/pipenv_pipes
+.. image:: https://img.shields.io/pypi/v/pipenv-pipes.svg
+        :target: https://pypi.python.org/pypi/pipenv-pipes
         :alt: Pypi
 
 .. image:: https://travis-ci.org/gtalarico/pipenv-pipes.svg?branch=release
