@@ -89,7 +89,7 @@ Here's how to set up Pipes for local development.
 
 5. When you're done making changes, check that your changes pass all tests. See the `Testing`_ section below for more details on testing.
 
-6. Commit your changes and push your branch to GitHub::
+6. Commit your changes and push your branch to GitHub:
 
 .. code:: console
 
