@@ -2,6 +2,11 @@
 History
 =======
 
+0.5.1 (2018-05-13)
+--------------------------
+* Bug fix: Setup.py missing picker package
+
+
 0.5.0 (2018-05-12)
 --------------------------
 * Curses Interface
