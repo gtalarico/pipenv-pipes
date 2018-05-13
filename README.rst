@@ -22,14 +22,16 @@ Pipenv Environment Switcher ⚡
         :target: https://pipenv-pipes.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation
 
+-------------------------------------------------------------------------
+
 
 Overview
----------
+--------
 
 Pipes is a Pipenv companion CLI tool that provides a
 quick way to jump between your pipenv powered projects.
 
-.. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/pipes-gif.gif
+.. image:: https://raw.githubusercontent.com/gtalarico/pipenv-pipes/master/docs/static/gif-curses-2.gif
 
 Documentation
 -------------
