@@ -81,7 +81,7 @@ Ready to contribute? Here's how to set up `pipenv_pipes` for local development.
 7. Submit a pull request through the GitHub website.
 
 Testing
-----
+-------
 
 To run the test suite:
 
@@ -124,3 +124,8 @@ $ git push
 $ git push --tags
 
 Travis will then deploy to PyPI if tests pass.
+
+
+
+* ``pip install -e . `` failes on windows due to curses requirement
+    Use ``$ python setup.py develop`` instead.
