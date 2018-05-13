@@ -66,7 +66,11 @@ setup(
     dependency_links=depenency_links,
     install_requires=requirements,
     include_package_data=True,
-    packages=find_packages(include=['pipenv_pipes']),
+    packages=find_packages(
+        include=[
+            'pipenv_pipes',
+            'pipenv_pipes.picker'
+            ]),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
