@@ -1,4 +1,4 @@
-.. highlight:: shell
+.. highlight:: console
 
 =====
 Usage
@@ -144,10 +144,7 @@ directory.
   and the feature will be removed.
 
 
-  .. _`Pull Request`
-
-
-
+  .. _`Pull Request`: https://github.com/pypa/pipenv/pull/1861
 
 --------------------------------------------------------
 
@@ -157,9 +154,12 @@ Unlink a Project
 
 To unlink ``project1`` directory from its Pipenv Environment run:
 
-.. code:: bash
+.. code:: console
 
     $ pipes --unlink project1
+
+This will delete the ``.project`` file created
+by the `Set Project Directory`_ command.
 
 
 ----------------------------------------------------------
@@ -171,6 +171,6 @@ Usage Help
 You can see the list of available commands directly from
 the command line:
 
-.. code::
+.. code:: console
 
     $ pipes --help
