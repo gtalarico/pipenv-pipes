@@ -36,7 +36,7 @@ quick way to jump between your pipenv powered projects.
 Documentation
 -------------
 
-Documentation is hosted on `pipenv-pipes.readthedocs.io <pipenv-pipes.readthedocs.io>`_
+Documentation is hosted on `pipenv-pipes.readthedocs.io <https://pipenv-pipes.readthedocs.io/en/latest/index.html>`_
 
 
 License
