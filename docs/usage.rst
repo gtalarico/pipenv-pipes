@@ -35,7 +35,6 @@ The Interactive environment switcher accepts the following commands:
 * ``ESC``: Exit Pipes
 * ``LEFT`` + ``RIGHT``: Cycles through the available
   information on each virtual environment
-* ``LEFT`` + ``RIGHT``: Cycles through the available
 * ``QUERY``: Use any alphanumeric characters to filter the list
 * ``BACKSPACE``: Delete last character from filter term
 * ``DEL``: Clear filter
@@ -67,7 +66,7 @@ the entered query term.
 List Environments
 -----------------
 
-Use Pipes to see all ther detected Pipenv Environments.
+Use Pipes to see all detected Pipenv Environments.
 
 .. code:: console
 
@@ -81,10 +80,10 @@ Output:
   project2-R1v7_ynT
 
 
-The ``--list`` command can also be used with the ``--verbose`` options,
-which shows helpful information about the environments
-including environment path, project directory (if available) and
-the python version of the environment.
+The ``--list`` flag can also be used with the ``--verbose`` option,
+which show additional information about the environments
+such as the environment path, project directory (if available) and
+the python version of the virtual environment.
 
 .. code:: console
 
@@ -107,7 +106,7 @@ Vebose Output:
       Project Dir: 	 ~/dev/project2
 
 The presence of an asterisk (``*``) on the environment list
-indicates the Virtual Environment already has a project directory associated.
+indicates if the virtual environment already has a project directory associated.
 
 The `lack` of a ``*`` indicates the Environment has not yet been
 associated with a project directory. If you try switching into an
