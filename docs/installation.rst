@@ -42,33 +42,34 @@ Known Issues
 ------------
 
 ``PIPENV_VENV_IN_PROJECT`` is not currently supported.
-If have ideas on how Pipes could support local venvs please start
-with the proposed implementation.
+If have ideas on how Pipes could support local venvs please start an issue
+and include your proposed implementation.
 
 
 Curses on Windows
 -----------------
 
-The interactive selector uses Curses, and  is not natively supported on windows.
+The interactive selector uses Curses, which is not natively supported on windows.
 To enable curses on Windows we must install additional Windows binaries,
 which were obtained from `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#curses>`_
 
-The installer should automatically install the windows curses binaries, for should you need to install
-them manually, just download the appropriate wheel from the link above and then use pip to install it:
-
+The installer should automatically install the windows curses binaries if you include the ``find-link`` as shown above.
+Should you need to install them manually, 
+just download the appropriate wheel from the link above and use pip to install it:
 
 .. code-block:: console
 
-    $ pip install ..packetPath..\curses-2.2-cp35-none-win_amd64.whl
+    $ pip install ..packetPath..\curses-2.2-cpXX-none-win_XXX.whl
 
 You can read more about windows support for curses here:
 https://bugs.python.org/issue2889
 
+
 Terminal
 ~~~~~~~~
 
-While Pipes should work on the standard terminal (cmd.exe)
-a terminal like `Cmder`_ is highly recommended over cmd.
+While Pipes should work on the standard Windows console (cmd.exe)
+a terminal like `Cmder`_ is highly recommended:
 
 .. _Cmder: http://cmder.net/
 
