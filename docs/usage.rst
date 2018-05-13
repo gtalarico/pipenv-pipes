@@ -15,7 +15,7 @@ The easiest way to use Pipes is to use the interactive switcher.
 
 .. note::
 
-  Before you can use Pipes to switch into a project using Pipes,
+  Before you can use Pipes to activate a given project, 
   the selected environment must have a project directory associated with it.
   To understand how Pipes links Project Directories with corresponding
   virtualenvs read the section on how to `Set Project Directory`_.
