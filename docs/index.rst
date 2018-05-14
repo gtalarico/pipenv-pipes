@@ -8,6 +8,7 @@ Pipenv Pipes Documentation
    readme
    installation
    usage
+   completions
    contributing
    history
 

@@ -40,8 +40,9 @@ from .core import (
               help='Unlink Project Directory from this Environment')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
 @click.option('--version', is_flag=True, help='Show Version')
+@click.option('--_completion', is_flag=True)
 @click.pass_context
-def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
+def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
     """
 
     Pipes - PipEnv Environment Switcher
@@ -70,13 +71,15 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version):
 
     if env_vars.HAS_CURSES:
         import curses # noqa flake8
-
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
     if not environments:
         click.echo(
             'No pipenv environments found in {}'.format(env_vars.PIPENV_HOME))
         sys.exit(1)
+
+    if _completion:
+        return [click.echo(e.envname) for e in environments]
 
     if verbose:
         click.echo('\nPIPENV_HOME: {}\n'.format(env_vars.PIPENV_HOME))
