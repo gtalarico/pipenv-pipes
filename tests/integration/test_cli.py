@@ -123,6 +123,13 @@ def test_do_link_no_assoc_env(runner, temp_folder):
     assert 'no virtualenv has been created' in result.output.lower()
 
 
+def test_completions(runner):
+    result = runner.invoke(
+        pipes, args=['--_completion'], catch_exceptions=False)
+    assert result.exit_code == 0
+    assert 'proj1' in result.output
+
+
 class TestEnsureVars():
     """ Check for errors raised if Certain conditions are not met """
 
