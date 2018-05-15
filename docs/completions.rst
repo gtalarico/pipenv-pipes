@@ -1,8 +1,8 @@
 .. highlight:: console
 
-===============
-Bash Completion
-===============
+================
+Shell Completion
+================
 
 Pipes includes a helper ``--_completion`` flag which can be
 used by terminals to provide autocomplete options.
