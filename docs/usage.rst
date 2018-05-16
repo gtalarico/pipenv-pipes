@@ -81,7 +81,7 @@ Output:
 
 
 The ``--list`` flag can also be used with the ``--verbose`` option,
-which show additional information about the environments
+which shows additional information about the environments
 such as the environment path, project directory (if available) and
 the python version of the virtual environment.
 
