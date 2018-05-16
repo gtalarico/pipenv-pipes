@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.0 (2018-05-15)
+--------------------------
+* Added completion helper flag and completion docs
+
+
 0.5.1 (2018-05-13)
 --------------------------
 * Bug fix: Setup.py missing picker package
