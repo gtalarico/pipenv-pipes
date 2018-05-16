@@ -1,6 +1,6 @@
 import pytest
 import os
-import sys
+from subprocess import Popen, PIPE
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
 import shutil
@@ -16,7 +16,6 @@ from pipenv_pipes.core import (
 from pipenv_pipes.environment import EnvVars
 
 HERE = os.path.dirname(__file__)
-VENVS_ARCHIVE = os.path.join(HERE, 'venvs')
 
 
 def touch(filename):
@@ -36,12 +35,16 @@ def env_vars():
     return EnvVars()
 
 
-@pytest.fixture
-def venv_archive_path(env_vars):
-    """ Note: This provides a path to zipped envs create for the
-    for the purpose of optimizing test run time """
-    filename = '{}.tar.gz'.format(sys.platform)
-    return os.path.join(VENVS_ARCHIVE, filename)
+@pytest.fixture(scope='session')
+def venv_fresh():
+    with TemporaryDirectory() as folder:
+        venv_cmd = 'virtualenv --no-pip --no-wheel --no-setuptools'
+        cmd = '{} {}'.format(venv_cmd, folder)
+        proc = Popen(cmd.split(' '), stderr=PIPE, stdout=PIPE)
+        out, err = proc.communicate()
+        if err:
+            raise Exception(err)
+        yield folder
 
 
 @pytest.fixture
@@ -102,7 +105,7 @@ def mock_projects_dir(project_names, win_tempdir):
 
 
 @pytest.fixture
-def mock_env_home(TempEnviron, mock_projects_dir, venv_archive_path):
+def mock_env_home(TempEnviron, mock_projects_dir, venv_fresh):
     __cwd = os.getcwd()
     with TemporaryDirectory(prefix='pipenv_home_real') as pipenv_home:
 
@@ -118,10 +121,8 @@ def mock_env_home(TempEnviron, mock_projects_dir, venv_archive_path):
                 envname = project.virtualenv_name
             os.chdir(__cwd)
 
-            unzip_tar(venv_archive_path, pipenv_home)
-            fake_env = os.path.join(pipenv_home, 'env')
             envpath = os.path.join(pipenv_home, envname)
-            shutil.move(fake_env, envpath)
+            shutil.copytree(venv_fresh, envpath)
 
         # Make Project Links
         envs = find_environments(pipenv_home)
