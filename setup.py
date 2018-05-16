@@ -42,7 +42,7 @@ setup(
     license="MIT license",
     keywords='pipenv_pipes',
     url='https://github.com/gtalarico/pipenv-pipes',
-    version='0.6.0',
+    version='0.6.1',
     author="Gui Talarico",
     author_email='gui.talarico+pip@gmail.com',
     long_description=readme + '\n\n' + history,
