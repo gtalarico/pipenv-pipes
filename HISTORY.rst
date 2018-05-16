@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.1 (2018-05-15)
+--------------------------
+* Fix Python binary version detect call
+
+
 0.6.0 (2018-05-15)
 --------------------------
 * Added completion helper flag and completion docs
