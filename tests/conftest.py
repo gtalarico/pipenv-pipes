@@ -1,5 +1,6 @@
 import pytest
 import os
+import sys
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
 import shutil
@@ -12,7 +13,7 @@ from pipenv_pipes.core import (
     find_environments,
     write_project_dir_project_file,
 )
-
+from pipenv_pipes.environment import EnvVars
 
 HERE = os.path.dirname(__file__)
 VENVS_ARCHIVE = os.path.join(HERE, 'venvs')
@@ -31,19 +32,24 @@ def unzip_tar(src, dst):
 
 
 @pytest.fixture
-def venv_archive_path():
-    filename = 'unix.tar.gz'
-    if 'nt' in os.name:
-        filename = 'win.tar.gz'
+def env_vars():
+    return EnvVars()
+
+
+@pytest.fixture
+def venv_archive_path(env_vars):
+    """ Note: This provides a path to zipped envs create for the
+    for the purpose of optimizing test run time """
+    filename = '{}.tar.gz'.format(sys.platform)
     return os.path.join(VENVS_ARCHIVE, filename)
 
 
 @pytest.fixture
-def win_tempdir():
+def win_tempdir(env_vars):
     # Default %TEMP% returns windows short path (C:\\Users\\GTALAR~1\\AppData)
     # The`~1`` breaks --venv hash resolution, so we must build path manually
     # On other systems this will be none, so default env will be used
-    if 'nt' not in os.name:
+    if not env_vars.IS_WINDOWS:
         return None
     path = os.path.join(os.environ['USERPROFILE'], 'AppData', 'Local', 'Temp')
     assert '~' not in path

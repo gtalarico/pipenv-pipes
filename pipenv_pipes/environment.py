@@ -3,12 +3,15 @@
 """ Pipes: Pipenv Shell Switcher """
 
 import os
+import sys
 
 
 class EnvVars():
 
     def __init__(self):
-        self.IS_WINDOWS = os.name == 'nt'
+        self.IS_WINDOWS = sys.platform == 'win32'
+        self.IS_MAC = sys.platform == 'darwin'
+        self.IS_LINUX = sys.platform == 'linux'
 
         if self.IS_WINDOWS:
             default_home = '~/.virtualenvs'

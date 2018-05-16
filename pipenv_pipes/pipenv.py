@@ -52,5 +52,5 @@ def call_pipenv_shell(cwd, envname='pipenv-shell', timeout=None):
 def call_python_version(pybinpath):
     # TODO Rename this module
     binpath = os.path.dirname(pybinpath)
-    output, code = PipedPopen(cmds=['python', '--version'], cwd=binpath)
+    output, code = PipedPopen(cmds=['./python', '--version'], cwd=binpath)
     return output, code
