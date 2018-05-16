@@ -62,7 +62,8 @@ def get_binary_version(envpath):
     if not code:
         return version
     else:
-        raise EnvironmentError('could not get binary version')
+        d = str([code, version, envpath, pybinpath, os.listdir(os.path.dirname(pybinpath))])
+        raise EnvironmentError('could not get binary version: {}'.format(d))
 
 
 ###############################
