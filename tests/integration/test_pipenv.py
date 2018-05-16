@@ -29,6 +29,7 @@ def test_call_pipenv_venv(mock_env_home):
 def test_call_python_version(mock_env_home, project_names):
     """ Tested in test_core + cli  """
 
+
 @pytest.mark.skip
 def test_call_pipenv_shell(mock_env_home):
     """ This does not guarantee the shell was launched successful,
