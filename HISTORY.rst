@@ -5,6 +5,8 @@ History
 0.6.1 (2018-05-15)
 --------------------------
 * Fix Python binary version detect call
+* Improved testing speed and fixtures"
+
 
 
 0.6.0 (2018-05-15)
