@@ -77,4 +77,3 @@ class TestProjectDirFile():
             fp.write('fakePath')
         delete_project_dir_file(temp_folder)
         assert not os.path.exists(project_file)
-
