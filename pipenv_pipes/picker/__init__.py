@@ -12,7 +12,7 @@ import curses
 import json
 from itertools import cycle
 
-from .colors import get_colors
+from .colors import colors
 from .elements import Line, EnvLine
 from .keys import (
     KEYS_UP,
@@ -52,9 +52,8 @@ class Picker(object):
         self.expand_next()
 
     def config_curses(self):
-        curses.use_default_colors()  # use the default colors of the terminal
         curses.curs_set(0)           # hide the cursor
-        self.colors = get_colors()   # initialize temrinal colors
+        colors.initialize()
 
     def _start(self, screen):
         self.screen = screen
@@ -119,9 +118,9 @@ class Picker(object):
         for index, environment in enumerate(envs):
             is_selected = index == self.index
             if is_selected:
-                color = self.colors[SELECTED_OPTION]
+                color = SELECTED_OPTION
             else:
-                color = self.colors[OPTION_COLOR]
+                color = OPTION_COLOR
             line = EnvLine(
                 env=environment,
                 color=color,
@@ -131,11 +130,10 @@ class Picker(object):
         return lines
 
     def get_title_lines(self):
-        color = self.colors[TITLE_COLOR]
         title = 'Pipenv Environments'
-        title_line = Line(title, color=color, pad=2)
-        bar_line = Line('-' * len(title), color=color, pad=2)
-        blank_line = Line('', color=None)
+        title_line = Line(title, color=TITLE_COLOR, pad=2)
+        bar_line = Line('-' * len(title), color=TITLE_COLOR, pad=2)
+        blank_line = Line('')
         return [
             blank_line, title_line, bar_line, blank_line]
 
@@ -174,10 +172,7 @@ class Picker(object):
             y += 1
 
         last_line = len(visible_lines) + 1
-        # header = len(self.get_title_lines())
-        # height = header - 2
-        color = self.colors[SELECTED_OPTION]
-        query = Line('$ {}'.format(self.query), color=color)
+        query = Line('$ {}'.format(self.query), color=SELECTED_OPTION)
         query.render(self.screen, x=pad_left, y=last_line)
 
         if debug_info:
