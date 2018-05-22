@@ -15,7 +15,7 @@ The easiest way to use Pipes is to use the interactive switcher.
 
 .. note::
 
-  Before you can use Pipes to activate a given project, 
+  Before you can use Pipes to activate a given project,
   the selected environment must have a project directory associated with it.
   To understand how Pipes links Project Directories with corresponding
   virtualenvs read the section on how to `Set Project Directory`_.
@@ -137,12 +137,13 @@ directory.
 
 .. note::
 
-  There is an open Pipenv `Pull Request`_ which would make Pipenv
-  create the ``.project`` when the environment is created.
-  If this PR is merged this process will become unecessary
-  and the feature will be removed.
+  If you are using the latest release of Pipenv (v2018.05.18 or later),
+  it should automatically create a ``.project`` file
+  to store your project path and the use of ``--link`` is unnecessary.
 
+  Credit: `Charlie Denton`_ for sending this `Pull Request`_.
 
+  .. _`Charlie Denton`: https://github.com/meshy
   .. _`Pull Request`: https://github.com/pypa/pipenv/pull/1861
 
 --------------------------------------------------------
