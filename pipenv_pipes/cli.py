@@ -134,8 +134,12 @@ def launch_env(environment):
     """ Launch Pipenv Shell """
 
     project_dir = ensure_has_project_dir_file(environment)
-    click.echo("Project dir is '{}'".format(project_dir))
-    click.echo("Environment is '{}'".format(environment.envpath))
+    msg_dir = click.style(
+        "Project directory: '{}'".format(project_dir), fg='yellow')
+    msg_env = click.style(
+        "Environment: '{}'".format(environment.envpath), fg='yellow')
+    click.echo(msg_dir)
+    click.echo(msg_env)
 
     ensure_project_dir_has_env(project_dir)
     call_pipenv_shell(cwd=project_dir, envname=environment.envname)

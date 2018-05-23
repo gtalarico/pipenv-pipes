@@ -10,6 +10,7 @@ import pytest
 from collections import defaultdict
 
 from pipenv_pipes.picker import Picker
+from pipenv_pipes.picker.colors import colors
 
 
 class TestPick():
@@ -18,8 +19,8 @@ class TestPick():
     def picker(self, environments):
         # Colors cannot be initialized outside of application
         # so let's replace color objects with a mock dict.
+        colors = defaultdict(str)
         picker = Picker(environments)
-        picker.colors = defaultdict(list)
         return picker
 
     def test_move_up_down(self, picker, environments):
