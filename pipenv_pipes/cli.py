@@ -73,7 +73,7 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
         import curses # noqa flake8
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
-    if not environments:
+    if not environments and not _completion:
         click.echo(
             'No pipenv environments found in {}'.format(env_vars.PIPENV_HOME))
         sys.exit(1)
