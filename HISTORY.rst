@@ -2,9 +2,10 @@
 History
 =======
 
-WIP
+0.6.3
 -------------------------
 * Add Color to paths on activation
+* Fix: Autocompletion with no envs - Issues #18
 
 0.6.2 (2018-05-19)
 --------------------------
