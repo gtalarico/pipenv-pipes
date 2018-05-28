@@ -27,12 +27,6 @@ class EnvVars():
         self.PIPENV_VENV_IN_PROJECT = os.getenv('PIPENV_VENV_IN_PROJECT', '')
         self.VENV_IS_ACTIVE = os.getenv('VENV', '')
 
-        try:
-            import curses  # noqa flake8
-        except ImportError:
-            self.HAS_CURSES = False
-        else:
-            self.HAS_CURSES = True
 
     def validate_environment(self):
 

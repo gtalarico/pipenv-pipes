@@ -7,6 +7,7 @@ History
 * Add Color to paths on activation
 * Fix: Autocompletion with no envs - Issues #18
 * Separated curses dependency for Windows
+* Print friendly message w/ instruction if missing curses
 
 0.6.2 (2018-05-19)
 --------------------------

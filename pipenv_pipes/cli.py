@@ -7,7 +7,6 @@ import click
 
 from . import __version__
 from .environment import EnvVars
-from .picker import Picker
 from .utils import get_query_matches, collapse_path
 from .pipenv import (
     call_pipenv_venv,
@@ -20,6 +19,21 @@ from .core import (
     write_project_dir_project_file,
     get_binary_version,
 )
+
+
+try:
+    from .picker import Picker  # noqa flake8
+except ImportError:
+    # Windows User without curses, print install instructions
+    msg = click.style(
+        "Curses library was not found. If you are on Windows, run:", fg='red')
+    cmd = click.style(
+        "$ pip3 install curses "
+        "--find-links=https://github.com/gtalarico/curses-win/releases",
+        fg='yellow')
+    click.echo(msg)
+    click.echo(cmd)
+    sys.exit(1)
 
 
 @click.command()
@@ -69,8 +83,6 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
 
     env_vars = EnvVars()
 
-    if env_vars.HAS_CURSES:
-        import curses # noqa flake8
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
     if not environments and not _completion:
