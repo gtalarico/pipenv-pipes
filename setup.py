@@ -6,8 +6,6 @@
 from setuptools import setup, find_packages
 import os
 
-is_windows = os.name == 'nt'
-
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -16,15 +14,8 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',        # Required
-    'colorama>=0.3',     # Optional but nice
+    'colorama>=0.3',     # Note required, but nice as default
 ]
-
-depenency_links = []
-if is_windows:
-    requirements.append('curses==2.2.0')
-    depenency_links.append(
-        'https://github.com/gtalarico/curses-win/releases/tag/2.2.0'
-    )
 
 setup_requirements = [
     'pytest-runner'
@@ -63,7 +54,6 @@ setup(
             'pipes=pipenv_pipes.cli:pipes',
         ],
     },
-    dependency_links=depenency_links,
     install_requires=requirements,
     include_package_data=True,
     packages=find_packages(

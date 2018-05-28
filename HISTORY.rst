@@ -2,10 +2,11 @@
 History
 =======
 
-0.6.3
+0.6.3 (2018-05-27)
 -------------------------
 * Add Color to paths on activation
 * Fix: Autocompletion with no envs - Issues #18
+* Separated curses dependency for Windows
 
 0.6.2 (2018-05-19)
 --------------------------
