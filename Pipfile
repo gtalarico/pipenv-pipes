@@ -24,6 +24,7 @@ pipenv = "*"
 curses = {version="*", index="curses-win", sys_platform = "== 'win32'"}
 "e1839a8" = {path = ".", editable = true}
 sphinx-rtd-theme = "*"
+readme-renderer = "*"
 
 [requires]
 python_version = "3.6"
