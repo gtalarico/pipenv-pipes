@@ -30,7 +30,7 @@ Windows:
     $ pip3 install curses --find-links=https://github.com/gtalarico/curses-win/releases
 
 .. note::
-    Pipes require the curses moduls, which is part of the python standard library.
+    Pipes require the curses module, which is part of the python standard library.
     Unfortunately, curses it's currently not supported on Windows, so Windows users need to install
     the unofficial curses windows binaries, kindly created Christoph Gohlke.
     You can see the bug tracker on the issue `here <https://bugs.python.org/issue2889#msg237857>`_.
