@@ -27,14 +27,20 @@ class EnvVars():
         self.PIPENV_VENV_IN_PROJECT = os.getenv('PIPENV_VENV_IN_PROJECT', '')
         self.VENV_IS_ACTIVE = os.getenv('VENV', '')
 
+    def validate_environment(self):
+
         try:
             import curses  # noqa flake8
         except ImportError:
-            self.HAS_CURSES = False
-        else:
-            self.HAS_CURSES = True
-
-    def validate_environment(self):
+            return (
+                'Curses module is required but was not found.\n\n'
+                'If you are on a Windows computer run:\n'
+                '$ pip3 install curses '
+                '--find-links=https://github.com/gtalarico/curses-win/releases'
+                '\n\n'
+                'For more information see '
+                'https://pipenv-pipes.readthedocs.io/en/latest/installation.html'
+            )
 
         if not os.path.exists(self.PIPENV_HOME):
             error = (

@@ -7,7 +7,6 @@ import click
 
 from . import __version__
 from .environment import EnvVars
-from .picker import Picker
 from .utils import get_query_matches, collapse_path
 from .pipenv import (
     call_pipenv_venv,
@@ -74,9 +73,6 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, delete,
         return
 
     env_vars = EnvVars()
-
-    if env_vars.HAS_CURSES:
-        import curses # noqa flake8
     ensure_env_vars_are_ok(env_vars)
     environments = find_environments(env_vars.PIPENV_HOME)
     if not environments and not _completion:
@@ -131,6 +127,7 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, delete,
 
 
 def set_env_dir(project_dir):
+    """ Sets Project directory inside environment """
 
     click.echo('Target Project Directory is: ', nl=False)
     click.echo(click.style(project_dir, fg='blue'))
@@ -169,6 +166,7 @@ def launch_env(environment):
 
 
 def do_pick(environments, query=None):
+    from .picker import Picker # noqa Imported here to allow env valiration to run
     picker = Picker(environments, query=query, debug_mode=False)
     selected = picker.start()
     return selected
