@@ -19,6 +19,7 @@ from .core import (
     delete_project_dir_file,
     write_project_dir_project_file,
     get_binary_version,
+    delete_directory,
 )
 
 
@@ -38,11 +39,15 @@ from .core import (
 @click.option('--unlink', '-u', 'unlink',
               is_flag=True,
               help='Unlink Project Directory from this Environment')
+@click.option('--delete', '-d', 'delete',
+              is_flag=True,
+              help='Deletes the target Enviroment')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose')
 @click.option('--version', is_flag=True, help='Show Version')
 @click.option('--_completion', is_flag=True)
 @click.pass_context
-def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
+def pipes(ctx, envname, list_, setlink, unlink, verbose, version, delete,
+          _completion):
     """
 
     Pipes - PipEnv Environment Switcher
@@ -50,13 +55,14 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
     Go To Project:\n
         >>> pipes envname
 
+    Delete an Environment:\n
+        >>> pipes envname --delete
+
     Set Project Directory:\n
         >>> pipes --link path/to/project/path
 
     Unset Project Directory:\n
         >>> pipes envname --unlink
-
-    Remove link between enviroment and project directory
 
     See all Pipenv Environments:\n
         >>> pipes --list
@@ -97,6 +103,21 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
     matches = get_query_matches(environments, envname)
     environment = ensure_one_match(envname, matches, environments)
 
+    if delete:
+        if not click.confirm(
+            "Are you sure you want to delete '{}'".format(environment.envpath),
+            default=False
+        ):
+            click.echo('Environment not deleted')
+            sys.exit(0)
+        if delete_directory(environment.envpath):
+            msg = "Environment '{}' deleted".format(environment.envname)
+            click.echo(click.style(msg, fg='yellow'))
+        else:
+            msg = 'Could not delete enviroment {}'.format(environment.envpath)
+            click.echo(click.style(msg, fg='red'))
+        sys.exit(0)
+
     if unlink:
         if delete_project_dir_file(environment.envpath):
             click.echo(
@@ -109,7 +130,6 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, _completion):
         launch_env(environment)
 
 
-# def set_env_dir(envname, envpath, project_dir):
 def set_env_dir(project_dir):
 
     click.echo('Target Project Directory is: ', nl=False)
