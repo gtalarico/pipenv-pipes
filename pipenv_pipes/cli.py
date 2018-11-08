@@ -65,7 +65,7 @@ def pipes(ctx, envname, list_, setlink, unlink, verbose, version, delete,
         >>> pipes envname --unlink
 
     See all Pipenv Environments:\n
-        >>> pipes --list
+        >>> pipes --list \n
         >>> pipes --list --verbose
 
     """
