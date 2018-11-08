@@ -1,5 +1,7 @@
 
 import os
+import shutil
+import time
 from collections import namedtuple
 
 from .pipenv import call_python_version
@@ -64,6 +66,20 @@ def get_binary_version(envpath):
     else:
         raise EnvironmentError(
             'could not get binary version: {}'.format(output))
+
+
+def delete_directory(envpath):
+    """ Deletes the enviroment by its path """
+    attempt = 0
+    while attempt < 5:
+        try:
+            shutil.rmtree(envpath)
+        except (FileNotFoundError, OSError):
+            pass
+        if not os.path.exists(envpath):
+            return True
+        attempt += 1
+        time.sleep(0.25)
 
 
 ###############################

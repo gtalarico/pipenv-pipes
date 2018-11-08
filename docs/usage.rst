@@ -114,6 +114,23 @@ environment without the ``*``, Pipes will tell you need to
 *link* the environment with a project directory first.
 
 .. image:: static/gif-list.gif
+------------------------------------------------------
+
+
+Delete Environment
+-----------------
+
+Use Pipes to delete a Pipenv Environment.
+
+.. code:: console
+
+  $ pipes project1 --delete
+
+Output:
+
+.. code:: bash
+
+  Environment 'project1-LwEMcb8W' deleted
 
 
 ------------------------------------------------------
@@ -156,7 +173,7 @@ To unlink ``project1`` directory from its Pipenv Environment run:
 
 .. code:: console
 
-    $ pipes --unlink project1
+    $ pipes project1 --unlink
 
 This will delete the ``.project`` file created
 by the `Set Project Directory`_ command.
