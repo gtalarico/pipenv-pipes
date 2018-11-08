@@ -2,6 +2,11 @@
 History
 =======
 
+0.7.0 (2018-11-07)
+-------------------------
+* Add `--delete` feature
+
+
 0.6.3 (2018-05-27)
 -------------------------
 * Add Color to paths on activation

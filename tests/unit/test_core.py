@@ -3,6 +3,7 @@
 import pytest  # noqa: F401
 import os
 from os.path import join
+from tempfile import mkdtemp
 
 from pipenv_pipes.core import (
     find_environments,
@@ -11,6 +12,7 @@ from pipenv_pipes.core import (
     delete_project_dir_file,
     find_binary,
     get_binary_version,
+    delete_directory,
 )
 
 
@@ -28,6 +30,13 @@ class TestFindEnvironments():
         """ Environment could be empty """
         environments = find_environments(temp_folder)
         assert len(environments) == 0
+
+    def test_delete_directory(self):
+        """ Ensure delete directory  """
+        temp_folder = mkdtemp()
+        assert os.path.isdir(temp_folder)
+        assert delete_directory(temp_folder)
+        assert not os.path.exists(temp_folder)
 
     def test_find_environments_does_not_exit(self):
         """ Invalid Folder. CLI Entry should catch, core func should fail """

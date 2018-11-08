@@ -26,6 +26,7 @@ def touch(filename):
 
 
 def unzip_tar(src, dst):
+    # TODO: Delete
     with tarfile.open(src, "r:gz") as tar:
         tar.extractall(path=dst)
 

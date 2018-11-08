@@ -8,9 +8,6 @@ url = "https://github.com/gtalarico/curses-win/releases/tag/2.2.0"
 verify_ssl = true
 name = "curses-win"
 
-[packages]
-"e1839a8" = {path = ".", editable = true}
-
 [dev-packages]
 "bump2version" = "*"
 "flake8" = "*"
@@ -22,7 +19,6 @@ sphinx-autobuild = "*"
 pytest-lazy-fixture = "*"
 pipenv = "*"
 curses = {version="*", index="curses-win", sys_platform = "== 'win32'"}
-"e1839a8" = {path = ".", editable = true}
 sphinx-rtd-theme = "*"
 readme-renderer = "*"
 
