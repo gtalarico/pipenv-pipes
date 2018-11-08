@@ -47,7 +47,7 @@ def test_cli_no_args_verbose(runner):
 def test_many_match(runner):
     result = runner.invoke(pipes, args=['proj'])
     assert result.exit_code == 1
-    assert 'query": "proj' in  result.output
+    assert 'query": "proj' in result.output
     assert 'envs": 2' in result.output
 
 

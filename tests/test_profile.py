@@ -5,7 +5,7 @@ here: https://github.com/manahl/pytest-plugins/issues/40
 import pytest  # noqa
 import os
 from tempfile import TemporaryDirectory
-import time
+
 
 
 @pytest.fixture
