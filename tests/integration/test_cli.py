@@ -4,11 +4,8 @@
 """ Tests for `pipenv_pipes` cli."""
 
 import pytest  # noqa: F401
-import traceback
 from pipenv_pipes.cli import pipes
 
-
-#
 
 def test_cli_help(runner):
     help_result = runner.invoke(pipes, args=['--help'])
@@ -67,6 +64,22 @@ def test_cli_list_verbose(runner):
     assert result.exit_code == 0
     assert 'PIPENV_HOME' in result.output
     assert 'Python' in result.output
+
+
+def test_cli_delete_env(runner):
+    result = runner.invoke(
+        pipes, args=['proj1', '--delete'], catch_exceptions=False,
+        input='y')
+    assert result.exit_code == 0
+    assert 'deleted' in result.output
+
+
+def test_cli_delete_env_abort(runner):
+    result = runner.invoke(
+        pipes, args=['proj1', '--delete'], catch_exceptions=False,
+        input='n')
+    assert result.exit_code == 0
+    assert 'not deleted' in result.output
 
 
 def test_no_match(runner):
