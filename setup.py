@@ -35,7 +35,7 @@ setup(
     url='https://github.com/gtalarico/pipenv-pipes',
     version='0.7.1',
     author="Gui Talarico",
-    author_email='gui.talarico+pip@gmail.com',
+    author_email='gtalarico.dev@gmail.com',
     long_description=readme + '\n\n' + history,
     description="CLI Tool to help manage Pipenv Enviroments "
                 "and corresponding Project Directories.",
