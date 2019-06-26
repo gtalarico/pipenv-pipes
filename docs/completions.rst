@@ -7,7 +7,7 @@ Shell Completion
 Pipes includes a helper ``--_completion`` flag which can be
 used by terminals to provide autocomplete options.
 Below are instructions for setting up autocompletion
-for Bash, Zsh, and Fish.
+for Bash, Zsh, Fish, and pdksh.
 
 If you have ideas for improving these please share them with use
 over at the `Pipes repo <http://www.github.com/gtalarico/pipenv-pipes>`_
@@ -61,3 +61,19 @@ Add the code below to your `.bashrc`:
     complete -F _pipenv-pipes_completions pipes
 
 .. image:: static/gif-autocomplete-bash.gif
+
+
+----------------------------
+
+pdksh 
+-----------
+
+pdksh is native shell on OpenBSD. 
+
+To have a shell completion, write into your personal ``~/.profile``, after the call of exported environments variables for your Python, as WORKON_HOME: 
+
+.. code:: console
+    
+    set -A complete_pipes -- $(pipes --_completion)
+
+Restart your session or a new terminal ;) 
