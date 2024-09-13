@@ -68,7 +68,7 @@ Curses on Windows
 
 The interactive selector uses Curses, which is not natively supported on windows.
 To enable curses on Windows we must install additional Windows binaries,
-which were obtained from `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#curses>`_
+which were obtained from `here <https://github.com/gtalarico/curses-win?tab=readme-ov-file>`_
 
 The installer should automatically install the windows curses binaries if you include the ``find-link`` as shown above.
 Should you need to install them manually,
@@ -88,6 +88,6 @@ Terminal
 While Pipes should work on the standard Windows console (cmd.exe)
 a terminal like `Cmder`_ is highly recommended:
 
-.. _Cmder: http://cmder.net/
+.. _Cmder: https://cmder.app/
 
 .. image:: static/gif-pipes-curses-win-2.gif
